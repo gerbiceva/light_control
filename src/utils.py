@@ -1,12 +1,12 @@
 import time
-import numpy as np
+from matplotlib.colors import hsv_to_rgb
 
 class FrameLimiter:
     def __init__(self, fps):
         self.interval = 1.0 / fps  # Time per frame in seconds
         self.last_time = time.time()
 
-    def set_fps(fps):
+    def set_fps(self, fps):
         self.interval = 1.0 / fps
 
     def tick(self):
@@ -18,7 +18,7 @@ class FrameLimiter:
 
 def print_strip(strip):
     bar = ""
-    strip = (hsv_to_rgb(strip.T).flatten() * 255
+    strip = hsv_to_rgb(strip.T).flatten() * 255
     for i in range(strip.shape[1]):
         r, g, b = strip[:, i]
         bar += f"\033[48;2;{r};{g};{b}m  \033[0m"

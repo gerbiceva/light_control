@@ -1,11 +1,6 @@
-from evdev import InputDevice, categorize, ecodes
+from evdev import InputDevice, ecodes
 import threading
-
-# List all input devices
-# from evdev import list_devices
-# devices = [InputDevice(path) for path in list_devices()]
-# for device in devices:
-#     print(f"Device: {device.name} at {device.path}")
+import numpy as np
 
 class Gamepad():
     def __init__(self, input_device):
@@ -46,8 +41,8 @@ class Gamepad():
 
 
         self.sticks = {
-            "Left": [0, 0],
-            "Right": [0, 0]
+            "Left": np.array([0, 0]),
+            "Right": np.array([0, 0])
         }
         self.thread.start()
 
