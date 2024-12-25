@@ -1,5 +1,5 @@
-from ..node import Node
-from ..data import ColorArray, Integer
+from node import Node
+from data import ColorArray, Integer
 import numpy as np
 from matplotlib.colors import hsv_to_rgb
 from sacn import sACNsender
@@ -8,8 +8,8 @@ from sacn import sACNsender
 class StripNode(Node):
     def __init__(self, sender: sACNsender):
         super().__init__(self.send_data)
-        self.inputs["Universe"] = Integer()
-        self.inputs["LED Colors"] = ColorArray()
+        self.inputs["Universe"] = Integer(self)
+        self.inputs["LED Colors"] = ColorArray(self)
         self.inputs["Universe"].data = 1
         self.universe = 1
         self.sender: sACNsender = sender
@@ -29,3 +29,4 @@ class StripNode(Node):
             mode="constant",
             constant_values=0,
         ).tobytes()
+        print(f"sent data {hsv}")

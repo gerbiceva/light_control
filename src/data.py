@@ -1,10 +1,5 @@
-from node import Node
 import numpy as np
-
-class Data:
-    def __init__(self, node: Node, initial_data=None):
-        self.node = node
-        self.data = initial_data
+from node import Data, Node
 
 class ColorArray(Data):
     def __init__(self, node: Node, initial_data=None):
