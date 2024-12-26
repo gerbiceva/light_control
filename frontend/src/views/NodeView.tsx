@@ -86,7 +86,7 @@ const initialNodes: Node[] = [
 const initialEdges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
 
 const fitViewOptions: FitViewOptions = {
-  padding: 0.2,
+  padding: 0.5,
 };
 
 const defaultEdgeOptions: DefaultEdgeOptions = {

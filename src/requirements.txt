@@ -1,0 +1,7 @@
+grpcio
+grpcio-tools
+sonora
+uvicorn
+starlette
+sacn
+numpy
