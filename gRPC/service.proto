@@ -1,13 +1,48 @@
 syntax = "proto3";
 
 service MyService {
-    rpc SayHello (HelloRequest) returns (HelloResponse);
+    // get the list of nodes that the server supports along with their descriptions
+    rpc GetCapabilities (Void) returns (Capabilities);
+    // Get the new edges and nodes from the frontend
+    rpc NodesUpdated (GraphUpdated) returns (Void);
 }
 
-message HelloRequest {
+message Void {
+}
+
+
+enum BaseType {
+    Int = 0;
+    Float = 2;
+    String = 3;
+    Color = 4;
+    Curve = 5;
+}
+
+message Port {
     string name = 1;
+    string description = 2;
+    BaseType type = 3;
 }
 
-message HelloResponse {
-    string message = 1;
+message Node {
+    string name = 1;
+    string description = 2;
+    string id = 3;
+    repeated Port inputs = 4;
+    repeated Port outputs = 5;
+}
+
+message Edge {
+    string from = 1;
+    string to = 2;
+}
+
+message Capabilities {
+    repeated Node nodes = 1;
+}
+
+message GraphUpdated {
+    repeated Node nodes = 1;
+    repeated Edge edges= 2;
 }
