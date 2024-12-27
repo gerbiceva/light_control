@@ -2,7 +2,7 @@ import numpy as np
 from node import Data, Node
 
 class ColorArray(Data):
-    def __init__(self, node: Node, initial_data=None):
+    def __init__(self, node: Node, initial_data=np.array([[0], [1], [0]])):
         super().__init__(node, initial_data)
 
 class Vector2D(Data):
