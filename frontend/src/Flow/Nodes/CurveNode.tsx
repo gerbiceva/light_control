@@ -23,8 +23,8 @@ export const CurveNode = memo(({ data }: CurveNode) => {
           </Text>
         </Group>
 
-        <Group className="nodrag">
-          <Card p="xl" withBorder>
+        <Group className="nodrag" p="xs" pr="0">
+          <Card p="xl" withBorder radius="0">
             <BezierSplineEditor
               width={200}
               height={200}

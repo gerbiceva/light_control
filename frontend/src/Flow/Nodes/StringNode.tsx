@@ -18,7 +18,7 @@ export const StringNode = memo(({ data }: StringNode) => {
           </Text>
         </Group>
 
-        <Group pl="md">
+        <Group p="xs" pr="0">
           <TextInput
             size="xs"
             defaultValue={data.str}

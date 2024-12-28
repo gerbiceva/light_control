@@ -18,7 +18,7 @@ export const ColorNode = memo(({ data }: ColorNode) => {
           </Text>
         </Group>
 
-        <Group pl="md">
+        <Group p="xs" pr="0">
           <ColorInput
             size="xs"
             defaultValue={data.color}

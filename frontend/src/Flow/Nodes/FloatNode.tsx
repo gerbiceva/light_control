@@ -18,7 +18,7 @@ export const FloatNode = memo(({ data }: ColorNode) => {
           </Text>
         </Group>
 
-        <Group pl="md">
+        <Group p="xs" pr="0">
           <NumberInput
             size="xs"
             defaultValue={data.float}
