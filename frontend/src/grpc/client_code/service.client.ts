@@ -4,9 +4,10 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { MyService } from "./service";
+import type { GraphUpdated } from "./service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
-import type { HelloResponse } from "./service";
-import type { HelloRequest } from "./service";
+import type { Capabilities } from "./service";
+import type { Void } from "./service";
 import type { UnaryCall } from "@protobuf-ts/runtime-rpc";
 import type { RpcOptions } from "@protobuf-ts/runtime-rpc";
 /**
@@ -14,9 +15,17 @@ import type { RpcOptions } from "@protobuf-ts/runtime-rpc";
  */
 export interface IMyServiceClient {
     /**
-     * @generated from protobuf rpc: SayHello(HelloRequest) returns (HelloResponse);
+     * get the list of nodes that the server supports along with their descriptions
+     *
+     * @generated from protobuf rpc: GetCapabilities(Void) returns (Capabilities);
      */
-    sayHello(input: HelloRequest, options?: RpcOptions): UnaryCall<HelloRequest, HelloResponse>;
+    getCapabilities(input: Void, options?: RpcOptions): UnaryCall<Void, Capabilities>;
+    /**
+     * Get the new edges and nodes from the frontend
+     *
+     * @generated from protobuf rpc: NodesUpdated(GraphUpdated) returns (Void);
+     */
+    nodesUpdated(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void>;
 }
 /**
  * @generated from protobuf service MyService
@@ -28,10 +37,21 @@ export class MyServiceClient implements IMyServiceClient, ServiceInfo {
     constructor(private readonly _transport: RpcTransport) {
     }
     /**
-     * @generated from protobuf rpc: SayHello(HelloRequest) returns (HelloResponse);
+     * get the list of nodes that the server supports along with their descriptions
+     *
+     * @generated from protobuf rpc: GetCapabilities(Void) returns (Capabilities);
      */
-    sayHello(input: HelloRequest, options?: RpcOptions): UnaryCall<HelloRequest, HelloResponse> {
+    getCapabilities(input: Void, options?: RpcOptions): UnaryCall<Void, Capabilities> {
         const method = this.methods[0], opt = this._transport.mergeOptions(options);
-        return stackIntercept<HelloRequest, HelloResponse>("unary", this._transport, method, opt, input);
+        return stackIntercept<Void, Capabilities>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * Get the new edges and nodes from the frontend
+     *
+     * @generated from protobuf rpc: NodesUpdated(GraphUpdated) returns (Void);
+     */
+    nodesUpdated(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void> {
+        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        return stackIntercept<GraphUpdated, Void>("unary", this._transport, method, opt, input);
     }
 }

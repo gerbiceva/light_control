@@ -1,21 +1,14 @@
 import { memo } from "react";
 import { Node, NodeProps } from "@xyflow/react";
-import {
-  Text,
-  Card,
-  Group,
-  Stack,
-  useMantineTheme,
-  NumberInput,
-} from "@mantine/core";
+import { Text, Card, Group, Stack, NumberInput } from "@mantine/core";
 import { TypedHandle } from "../Components/TypedHandle";
+import { BaseType } from "../../grpc/client_code/service";
+import { getColorFromEnum } from "./ComputeNodes/nodeUtils";
 
 type ColorNodeData = { float: number };
 type ColorNode = NodeProps<Node<ColorNodeData, "floatPrimitive">>;
 
 export const FloatNode = memo(({ data }: ColorNode) => {
-  const theme = useMantineTheme();
-
   return (
     <Card withBorder p="0">
       <Stack pb="0" gap="0">
@@ -40,7 +33,7 @@ export const FloatNode = memo(({ data }: ColorNode) => {
               data.float = int;
             }}
           />
-          <TypedHandle color={theme.colors["green"][5]} id={"a"} />
+          <TypedHandle color={getColorFromEnum(BaseType.Float)[5]} id={"a"} />
         </Group>
       </Stack>
     </Card>

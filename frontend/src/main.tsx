@@ -6,17 +6,24 @@ import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/spotlight/styles.css";
 
-import { createTheme, MantineProvider } from "@mantine/core";
+import {
+  createTheme,
+  DEFAULT_THEME,
+  MantineProvider,
+  mergeMantineTheme,
+} from "@mantine/core";
 import { MainLayout } from "./views/MainLayout.tsx";
 
-const theme = createTheme({
+const appTheme = createTheme({
   primaryColor: "dark",
   fontFamily: "monospace",
 });
 
+export const theme = mergeMantineTheme(DEFAULT_THEME, appTheme);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MantineProvider theme={theme} forceColorScheme="light">
+    <MantineProvider theme={appTheme} forceColorScheme="light">
       <MainLayout />
     </MantineProvider>
   </StrictMode>

@@ -1,21 +1,14 @@
 import { memo } from "react";
 import { Node, NodeProps } from "@xyflow/react";
-import {
-  Text,
-  Card,
-  Group,
-  Stack,
-  useMantineTheme,
-  TextInput,
-} from "@mantine/core";
+import { Text, Card, Group, Stack, TextInput } from "@mantine/core";
 import { TypedHandle } from "../Components/TypedHandle";
+import { BaseType } from "../../grpc/client_code/service";
+import { getColorFromEnum } from "./ComputeNodes/nodeUtils";
 
 type StringNodeData = { str: string };
 type StringNode = NodeProps<Node<StringNodeData, "stringPrimitive">>;
 
 export const StringNode = memo(({ data }: StringNode) => {
-  const theme = useMantineTheme();
-
   return (
     <Card withBorder p="0">
       <Stack pb="0" gap="0">
@@ -34,7 +27,7 @@ export const StringNode = memo(({ data }: StringNode) => {
               data.str = ev.target.value;
             }}
           />
-          <TypedHandle color={theme.colors["pink"][5]} id={"a"} />
+          <TypedHandle color={getColorFromEnum(BaseType.String)[5]} id={"a"} />
         </Group>
       </Stack>
     </Card>

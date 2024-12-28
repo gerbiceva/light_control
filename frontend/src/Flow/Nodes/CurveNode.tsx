@@ -4,6 +4,8 @@ import { Text, Card, Group, Stack, useMantineTheme } from "@mantine/core";
 import { TypedHandle } from "../Components/TypedHandle";
 import { Point } from "react-bezier-spline-editor/core";
 import { BezierSplineEditor } from "react-bezier-spline-editor/react";
+import { BaseType } from "../../grpc/client_code/service";
+import { getColorFromEnum } from "./ComputeNodes/nodeUtils";
 
 type CurveNodeData = { points: Point[] };
 type CurveNode = NodeProps<Node<CurveNodeData, "curvePrimitive">>;
@@ -38,7 +40,7 @@ export const CurveNode = memo(({ data }: CurveNode) => {
             />
           </Card>
 
-          <TypedHandle color={theme.colors["violet"][5]} id={"a"} />
+          <TypedHandle color={getColorFromEnum(BaseType.Curve)[5]} id={"a"} />
         </Group>
       </Stack>
     </Card>

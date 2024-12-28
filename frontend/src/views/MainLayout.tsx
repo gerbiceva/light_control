@@ -11,7 +11,6 @@ import {
 import { NodeAdderSpotlight } from "./Spotlight";
 import { NodeView } from "./NodeView";
 import { IconSettings } from "@tabler/icons-react";
-import { client } from "../grpc/grpcClient";
 
 export const MainLayout = () => {
   return (
@@ -29,8 +28,8 @@ export const MainLayout = () => {
                 <Button
                   size="sm"
                   onClick={async () => {
-                    const data = await client.sayHello({ name: "lan" });
-                    console.log(data.response.message);
+                    // const data = await client.({ name: "lan" });
+                    // console.log(data.response.message);
                   }}
                 >
                   Force apply

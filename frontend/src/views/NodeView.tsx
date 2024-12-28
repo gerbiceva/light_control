@@ -26,6 +26,8 @@ import { IntNode } from "../Flow/Nodes/IntNode";
 import { FloatNode } from "../Flow/Nodes/FloatNode";
 import { StringNode } from "../Flow/Nodes/StringNode";
 import { CurveNode } from "../Flow/Nodes/CurveNode";
+import { GenerateComputeNodeFromCapability } from "../Flow/Nodes/ComputeNodes/ComputeNodeFactory";
+import { testingCapabilityNode } from "../Flow/Nodes/ComputeNodes/test";
 
 const nodeTypes: NodeTypes = {
   colorNode: ColorNode,
@@ -33,6 +35,9 @@ const nodeTypes: NodeTypes = {
   floatNode: FloatNode,
   stringNode: StringNode,
   curveNode: CurveNode,
+  [testingCapabilityNode.name]: GenerateComputeNodeFromCapability(
+    testingCapabilityNode
+  ),
 };
 const initialNodes: Node[] = [
   { id: "1", data: { label: "Node 1" }, position: { x: 5, y: 5 } },
@@ -80,6 +85,12 @@ const initialNodes: Node[] = [
       ],
     },
     type: "curveNode",
+  },
+  {
+    id: "8",
+    position: { x: 300, y: 10 },
+    data: {},
+    type: testingCapabilityNode.name,
   },
 ];
 
