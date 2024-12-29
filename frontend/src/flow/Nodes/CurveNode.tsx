@@ -5,7 +5,7 @@ import { TypedHandle } from "../Components/TypedHandle";
 import { Point } from "react-bezier-spline-editor/core";
 import { BezierSplineEditor } from "react-bezier-spline-editor/react";
 import { BaseType } from "../../grpc/client_code/service";
-import { getColorFromEnum } from "./ComputeNodes/nodeUtils";
+import { getColorFromEnum } from "../../utils/colorUtils";
 
 type CurveNodeData = { points: Point[] };
 type CurveNode = NodeProps<Node<CurveNodeData, "curvePrimitive">>;

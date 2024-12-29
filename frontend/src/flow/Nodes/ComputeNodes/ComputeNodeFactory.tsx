@@ -1,8 +1,9 @@
 import { Node } from "../../../grpc/client_code/service";
-import { Node as FlowNode } from "@xyflow/react";
+
 import { Card, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { DynamicPort } from "./DynamicPort";
 import { theme } from "../../../theme";
+import { NodeProps, Node as FlowNode } from "@xyflow/react";
 
 export const GenerateComputeNodeFromCapability = (capability: Node) => {
   const inputStack = (
@@ -21,7 +22,7 @@ export const GenerateComputeNodeFromCapability = (capability: Node) => {
     </Stack>
   );
 
-  const ComputeNode = ({ selected }: FlowNode) => {
+  const ComputeNode = ({ selected }: NodeProps<FlowNode>) => {
     return (
       <Card
         withBorder

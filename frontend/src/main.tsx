@@ -6,14 +6,17 @@ import { createRoot } from "react-dom/client";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "@mantine/spotlight/styles.css";
+import "@mantine/notifications/styles.css";
 
 import { MantineProvider } from "@mantine/core";
 
 import { MainLayout } from "./views/MainLayout.tsx";
+import { Notifications } from "@mantine/notifications";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={appTheme} forceColorScheme="light">
+      <Notifications position="top-left" />
       <MainLayout />
     </MantineProvider>
   </StrictMode>

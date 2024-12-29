@@ -4,6 +4,7 @@ import {
   Card,
   Group,
   Indicator,
+  LoadingOverlay,
   Stack,
   Title,
   Tooltip,
@@ -11,8 +12,16 @@ import {
 import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { IconSettings } from "@tabler/icons-react";
+import { useStore } from "@nanostores/react";
+import { $capabilities } from "../globalStore/capabilitiesStore";
 
 export const MainLayout = () => {
+  const caps = useStore($capabilities);
+
+  if (caps.length == 0) {
+    return <LoadingOverlay visible={true} />;
+  }
+
   return (
     <Stack w="100vw" h="100vh" p="lg" gap="xl">
       <Card withBorder shadow="md">

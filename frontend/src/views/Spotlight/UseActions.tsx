@@ -5,7 +5,7 @@ import {
 } from "@mantine/spotlight";
 import { useStore } from "@nanostores/react";
 import { useMemo } from "react";
-import { getColorFromEnum } from "../../flow/Nodes/ComputeNodes/nodeUtils";
+import { getColorFromEnum } from "../../utils/colorUtils";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { BaseType } from "../../grpc/client_code/service";
 import { theme } from "../../theme";
