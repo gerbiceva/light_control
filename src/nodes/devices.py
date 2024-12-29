@@ -2,6 +2,7 @@ from node import Node
 from device_drivers import Gamepad
 from data import Integer, Float, Vector2D
 
+
 class GamepadNode(Node):
     def __init__(self, pad: Gamepad):
         super().__init__(self.get_game_state)
@@ -19,7 +20,7 @@ class GamepadNode(Node):
             "Left",
             "Right",
             "Up",
-            "Down"
+            "Down",
         ]
 
         for button in self.buttons:
@@ -31,13 +32,10 @@ class GamepadNode(Node):
         self.outputs["Left stick"] = Vector2D(self)
         self.outputs["Right stick"] = Vector2D(self)
 
-
     def get_gamepad_state(self):
-        for button in self.buttons:
-            self.outputs[button].data = self.pad.buttons[button]
-
-        self.outputs["R2"] = self.pad.buttons["R2"]
-        self.outputs["L2"] = self.pad.buttons["L2"]
-
-        self.outputs["Left stick"] = self.pad.sticks["Left"]
-        self.outputs["Right stick"] = self.pad.sticks["Right"]
+        return (self.pad.buttons[button] for button in self.buttons) + (
+            self.pad.buttons["R2"],
+            self.pad.buttons["L2"],
+            self.pad.sticks["Left"],
+            self.pad.sticks["Right"],
+        )

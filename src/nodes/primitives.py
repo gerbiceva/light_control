@@ -67,11 +67,14 @@ class ColorArrayNode(Node):
         super().__init__(self.give_color_array)
         self.inputs["# Colors"] = Integer(self)
         self.outputs["Output"] = ColorArray(self)
+        self.array = np.zeros((3,1))
+        self.array[1,:] = 1
 
     def give_color_array(self, nm_colors: int) -> np.array:
-        new = np.zeros((3, nm_colors))
-        new[1, :] = 1
-        return new
+        if nm_colors != self.array.shape[1]:
+            self.array = np.zeros((3, nm_colors))
+            self.array[1, :] = 1
+        return self.array
 
 # class ColorArrayStoreNode(Node):
 #     def __init__(self):

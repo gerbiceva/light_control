@@ -26,10 +26,16 @@ nodes.append(start)
 
 nm_leds = IntegerNode(5)
 start.inputs["# Colors"] = nm_leds.outputs["Output"]
+nodes.append(nm_leds)
 
 level = FloatNode(0.5)
 bright.inputs["Brightness"] = level.outputs["Output"]
+nodes.append(level)
 
+strip.evaluate()
+for node in nodes:
+    node.evaluated = False
+level.number = 0.7
 strip.evaluate()
 
 
