@@ -8,7 +8,7 @@ import {
   Title,
   Tooltip,
 } from "@mantine/core";
-import { NodeAdderSpotlight } from "./Spotlight";
+import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { IconSettings } from "@tabler/icons-react";
 

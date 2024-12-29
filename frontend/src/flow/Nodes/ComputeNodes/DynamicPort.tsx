@@ -18,7 +18,7 @@ export const DynamicPort = ({ port, type }: IPortProps) => {
         align="center"
         gap="sm"
       >
-        <TypedHandle color={col[4]} id={port.name} type={type} />
+        <TypedHandle color={col[5]} id={port.name} type={type} />
         <Text size="xs">{port.name}</Text>
       </Flex>
     </Tooltip>

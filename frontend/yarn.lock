@@ -297,6 +297,11 @@
   resolved "https://registry.yarnpkg.com/@mantine/store/-/store-7.15.2.tgz#90fb34f257a4a7514747a035eee76c41055128d6"
   integrity sha512-8ZVRr6D/8GEu2VmUVU447w4H+hl9dwefl//GpSGI2vKxXBqlud5X9PJQkSwi5J7I5FAxvlG5dr/zCxC3r3nsIQ==
 
+"@nanostores/react@^0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@nanostores/react/-/react-0.8.4.tgz#fc32d38311f5cbd63280cc28459e52596bbd5dae"
+  integrity sha512-EciHSzDXg7GmGODjegGG1VldPEinbAK+12/Uz5+MAdHmxf082Rl6eXqKFxAAu4pZAcr5dNTpv6wMfEe7XacjkQ==
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -1774,6 +1779,11 @@ nanoid@^3.3.7:
   version "3.3.8"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.8.tgz#b1be3030bee36aaff18bacb375e5cce521684baf"
   integrity sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==
+
+nanostores@^0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/nanostores/-/nanostores-0.11.3.tgz#8f66d341011ca97ffc38ba67a80c1a6b78ee63c6"
+  integrity sha512-TUes3xKIX33re4QzdxwZ6tdbodjmn3tWXCEc1uokiEmo14sI1EaGYNs2k3bU2pyyGNmBqFGAVl6jAGWd06AVIg==
 
 natural-compare@^1.4.0:
   version "1.4.0"

@@ -21,13 +21,13 @@ import {
   Controls,
   MiniMap,
 } from "@xyflow/react";
-import { ColorNode } from "../Flow/Nodes/ColorNode";
-import { IntNode } from "../Flow/Nodes/IntNode";
-import { FloatNode } from "../Flow/Nodes/FloatNode";
-import { StringNode } from "../Flow/Nodes/StringNode";
-import { CurveNode } from "../Flow/Nodes/CurveNode";
-import { GenerateComputeNodeFromCapability } from "../Flow/Nodes/ComputeNodes/ComputeNodeFactory";
-import { testingCapabilityNode } from "../Flow/Nodes/ComputeNodes/test";
+import { ColorNode } from "../flow/Nodes/ColorNode";
+import { IntNode } from "../flow/Nodes/IntNode";
+import { FloatNode } from "../flow/Nodes/FloatNode";
+import { StringNode } from "../flow/Nodes/StringNode";
+import { CurveNode } from "../flow/Nodes/CurveNode";
+import { GenerateComputeNodeFromCapability } from "../flow/Nodes/ComputeNodes/ComputeNodeFactory";
+import { testingCapabilityNode } from "../flow/Nodes/ComputeNodes/test";
 
 const nodeTypes: NodeTypes = {
   colorNode: ColorNode,
