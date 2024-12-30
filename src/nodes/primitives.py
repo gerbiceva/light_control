@@ -1,88 +1,23 @@
-from node import Node
-from data import Integer, Float, String, ColorArray
-import numpy as np
+from datatypes import ColorArray
+from typing import Callable
+import jax.numpy as jnp
 
-class IntegerNode(Node):
-    def __init__(self, number: int = 0):
-        super().__init__(self.give_number)
-        self.outputs["Output"] = Integer(self)
-        self.number = number
+def make_integer(a: int) -> Callable:
+    def integer() -> int:
+        return a
 
-    def give_number(self) -> int:
-        return self.number
+    return integer
 
-class IntegerStoreNode(Node):
-    def __init__(self):
-        super().__init__(self.change_number)
-        self.inputs["Input"] = Integer(self)
-        self.outputs["Output"] = Integer(self)
-        self.number = 0
+def make_floating_point(a: float) -> Callable:
+    def floating_point() -> float:
+        return a
 
-    def change_number(self, number: int) -> int:
-        previous = self.number
-        return previous
+    return floating_point
 
-class FloatNode(Node):
-    def __init__(self, number: float = 0):
-        super().__init__(self.give_number)
-        self.outputs["Output"] = Float(self)
-        self.number = number
+def make_string(a: str) -> Callable:
+    def string() -> str:
+        return a
+    return string
 
-    def give_number(self) -> float:
-        return self.number
-
-class FloatStoreNode(Node):
-    def __init__(self):
-        super().__init__(self.change_number)
-        self.inputs["Input"] = Float(self)
-        self.outputs["Output"] = Float(self)
-        self.number = 0
-
-    def change_number(self, number: float) -> float:
-        previous = self.number
-        return previous
-
-class StringNode(Node):
-    def __init__(self, string: str = ""):
-        super().__init__(self.give_string)
-        self.outputs["Output"] = String(self)
-        self.string = string
-
-    def give_string(self) -> str:
-        return self.string
-
-class StringStoreNode(Node):
-    def __init__(self):
-        super().__init__(self.change_string)
-        self.inputs["Input"] = String(self)
-        self.outputs["Output"] = String(self)
-        self.string = ""
-
-    def change_string(self, string):
-        previous = self.string
-        return previous
-
-class ColorArrayNode(Node):
-    def __init__(self):
-        super().__init__(self.give_color_array)
-        self.inputs["# Colors"] = Integer(self)
-        self.outputs["Output"] = ColorArray(self)
-        self.array = np.zeros((3,1))
-        self.array[1,:] = 1
-
-    def give_color_array(self, nm_colors: int) -> np.array:
-        if nm_colors != self.array.shape[1]:
-            self.array = np.zeros((3, nm_colors))
-            self.array[1, :] = 1
-        return self.array
-
-# class ColorArrayStoreNode(Node):
-#     def __init__(self):
-#         super().__init__(self.change_string)
-#         self.inputs["Input"] = String()
-#         self.outputs["Output"] = String()
-#         self.string = ""
-
-#     def change_string(self, string):
-#         previous = self.string
-#         return previous
+def color_array(n: int) -> ColorArray:
+    return jnp.zeros((3, n))

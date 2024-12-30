@@ -1,13 +1,15 @@
-from node import Node
 import time
-from data import Float, Integer
 
-class TimeNode(Node):
+def seconds() -> float:
+    return time.time()
+
+class SpeedMaster:
     def __init__(self):
-        super().__init__(self.get_time)
-        self.outputs["Seconds (Float)"] = Float(self)
-        self.outputs["Seconds (Integer)"] = Integer(self)
-
-    def get_time(self) -> (float, int):
-        current = time.time()
-        return current, int(current)
+        self.speed = 1
+        self.time = 0
+    def increment(self):
+        self.time = (self.time + 0.033333 * self.speed) % 1
+    def speed_up(self):
+        self.speed *= 2.0
+    def slow_down(self):
+        self.speed *= 0.5
