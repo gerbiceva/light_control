@@ -31,7 +31,7 @@ export const inputNodesActions = [
     id: "curve",
     label: "Curve",
     description: "Parametric curve input",
-    onClick: () => addNode(generateNodeInstFromInput("curve")),
+    onClick: () => addNode(generateNodeInstFromInput("Curve")),
     leftSection: (
       <Avatar radius={0} color={getColorFromEnum(BaseType.Curve)[5]}>
         COL

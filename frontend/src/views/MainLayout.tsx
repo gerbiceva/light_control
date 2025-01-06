@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   Button,
   Card,
   Group,
@@ -11,9 +10,9 @@ import {
 } from "@mantine/core";
 import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
-import { IconSettings } from "@tabler/icons-react";
 import { useStore } from "@nanostores/react";
 import { $capabilities } from "../globalStore/capabilitiesStore";
+import { LoaderIndicator } from "../flow/Components/LoaderIndicator";
 
 export const MainLayout = () => {
   const caps = useStore($capabilities);
@@ -31,23 +30,29 @@ export const MainLayout = () => {
           {/* spotlight for adding nodes */}
           <NodeAdderSpotlight />
           {/*Settings and server indicator*/}
-          <Group gap="xl">
-            <Tooltip label="Connection to server is active. Click to force apply layout">
-              <Indicator processing color="green" size="1rem">
-                <Button
-                  size="sm"
-                  onClick={async () => {
-                    // const data = await client.({ name: "lan" });
-                    // console.log(data.response.message);
-                  }}
-                >
-                  Force apply
-                </Button>
+          <Group gap="lg">
+            <Button
+              leftSection={
+                <LoaderIndicator isLoading={false}></LoaderIndicator>
+              }
+              size="sm"
+              onClick={async () => {
+                // const data = await client.({ name: "lan" });
+                // console.log(data.response.message);
+              }}
+            >
+              Force apply
+            </Button>
+            <Tooltip label="Connection to server is active.">
+              <Indicator
+                processing
+                color="green"
+                size="0.7rem"
+                position="top-end"
+              >
+                <div />
               </Indicator>
             </Tooltip>
-            <ActionIcon variant="light">
-              <IconSettings />
-            </ActionIcon>
           </Group>
         </Group>
       </Card>

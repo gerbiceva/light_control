@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
 import { Node, NodeProps } from "@xyflow/react";
 import { Text, Card, Group, Stack, useMantineTheme } from "@mantine/core";
-import { TypedHandle } from "../../Components/TypedHandle";
+import { TypedHandle } from "../TypedHandle";
 import { Point } from "react-bezier-spline-editor/core";
 import { BezierSplineEditor } from "react-bezier-spline-editor/react";
 import { BaseType } from "../../../grpc/client_code/service";

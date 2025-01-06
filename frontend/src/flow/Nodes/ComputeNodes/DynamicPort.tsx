@@ -1,7 +1,7 @@
 import { Flex, Text, Tooltip } from "@mantine/core";
 import { Port } from "../../../grpc/client_code/service";
 import { getColorFromEnum } from "../../../utils/colorUtils";
-import { TypedHandle } from "../../Components/TypedHandle";
+import { TypedHandle } from "../TypedHandle";
 import { HandleType } from "@xyflow/react";
 
 export interface IPortProps {

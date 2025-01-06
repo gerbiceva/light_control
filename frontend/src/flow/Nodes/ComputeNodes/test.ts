@@ -40,4 +40,19 @@ export const testingCapabilityNode: Node = {
   ],
 };
 
-export const testCapabilitiesList: Node[] = [testingCapabilityNode];
+export const testCapabilitiesList: Node[] = [
+  testingCapabilityNode,
+  {
+    name: "nekaj",
+    description: "zan le jto",
+    id: "13",
+    inputs: [
+      {
+        description: "nek input",
+        name: "waaw",
+        type: BaseType.Curve,
+      },
+    ],
+    outputs: [],
+  },
+];
