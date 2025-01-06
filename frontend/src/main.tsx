@@ -16,7 +16,7 @@ import { Notifications } from "@mantine/notifications";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={appTheme} forceColorScheme="light">
-      <Notifications position="top-left" />
+      <Notifications position="bottom-center" />
       <MainLayout />
     </MantineProvider>
   </StrictMode>

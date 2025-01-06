@@ -44,16 +44,22 @@ message Capabilities {
 
 // graph state update 
 
-message Edge {
+message EdgeMsg {
     string from = 1;
-    string to = 2;
+    string fromPort = 2;
+    string to = 3;
+    string toPort = 4;
 }
 
+message NodeMsg {
+    string id = 1;
+    string name = 2;
+}
 
-// message GraphUpdated {
-//     repeated Node nodes = 1;
-//     repeated Edge edges= 2;
-// }
+message GraphUpdated {
+    repeated NodeMsg nodes = 1;
+    repeated EdgeMsg edges= 2;
+}
 
 
 
