@@ -13,9 +13,10 @@ export const useSync = () => {
   const [debouncedEdges] = useDebouncedValue(edges, updateIntervalMs);
   const [debouncedNodes] = useDebouncedValue(nodes, updateIntervalMs);
 
+  /**
+   * @deprecated this is just a placeholder
+   */
   const update = () => {
-    console.log("changeee");
-
     addSyncPromise(
       new Promise((resolve) => {
         setTimeout(() => {

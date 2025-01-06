@@ -1,13 +1,4 @@
-import {
-  Button,
-  Card,
-  Group,
-  Indicator,
-  LoadingOverlay,
-  Stack,
-  Title,
-  Tooltip,
-} from "@mantine/core";
+import { Card, Group, LoadingOverlay, Stack, Title } from "@mantine/core";
 import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
@@ -30,7 +21,8 @@ export const MainLayout = () => {
           <NodeAdderSpotlight />
           {/*Settings and server indicator*/}
           <Group gap="lg">
-            <Button
+            <LoaderIndicator />
+            {/* <Button
               leftSection={<LoaderIndicator />}
               size="sm"
               onClick={async () => {
@@ -39,8 +31,9 @@ export const MainLayout = () => {
               }}
             >
               Force apply
-            </Button>
-            <Tooltip label="Connection to server is active.">
+            </Button> */}
+
+            {/* <Tooltip label="Connection to server is active.">
               <Indicator
                 processing
                 color="green"
@@ -49,7 +42,7 @@ export const MainLayout = () => {
               >
                 <div />
               </Indicator>
-            </Tooltip>
+            </Tooltip> */}
           </Group>
         </Group>
       </Card>

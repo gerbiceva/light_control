@@ -6,11 +6,11 @@ import { $isSyncing } from "../globalStore/loadingStore";
 export const LoaderIndicator = () => {
   const isSyncing = useStore($isSyncing);
   return (
-    <Group align="center">
+    <Group align="center" opacity={0.4}>
       {isSyncing ? (
-        <Loader size="1.3rem" color="white" />
+        <Loader size="1.8rem" />
       ) : (
-        <IconSquareRoundedCheck size="1.3rem" />
+        <IconSquareRoundedCheck size="1.8rem" />
       )}
     </Group>
   );

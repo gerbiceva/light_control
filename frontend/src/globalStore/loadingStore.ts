@@ -1,4 +1,5 @@
 import { atom, computed } from "nanostores";
+// import { timeElapsedPreety } from "../utils/timeUtils";
 
 interface syncTrack {
   lastSync: Date;
@@ -13,6 +14,10 @@ const $sync = atom<syncTrack>({
 export const $isSyncing = computed($sync, (sync) => {
   return sync.lastChange.getTime() >= sync.lastSync.getTime();
 });
+
+// export const $lastSyncPreety = computed($sync, (sync) => {
+//   return timeElapsedPreety(sync.lastSync);
+// });
 
 export const syncFinished = () => {
   $sync.set({
