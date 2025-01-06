@@ -8,6 +8,8 @@ import { MessageType } from "@protobuf-ts/runtime";
  */
 export interface Void {
 }
+// Capabilities
+
 /**
  * @generated from protobuf message Port
  */
@@ -17,18 +19,14 @@ export interface Port {
      */
     name: string;
     /**
-     * @generated from protobuf field: string description = 2;
-     */
-    description: string;
-    /**
      * @generated from protobuf field: BaseType type = 3;
      */
     type: BaseType;
 }
 /**
- * @generated from protobuf message Node
+ * @generated from protobuf message NodeCapability
  */
-export interface Node {
+export interface NodeCapability {
     /**
      * @generated from protobuf field: string name = 1;
      */
@@ -38,10 +36,6 @@ export interface Node {
      */
     description: string;
     /**
-     * @generated from protobuf field: string id = 3;
-     */
-    id: string;
-    /**
      * @generated from protobuf field: repeated Port inputs = 4;
      */
     inputs: Port[];
@@ -50,6 +44,17 @@ export interface Node {
      */
     outputs: Port[];
 }
+/**
+ * @generated from protobuf message Capabilities
+ */
+export interface Capabilities {
+    /**
+     * @generated from protobuf field: repeated NodeCapability nodes = 1;
+     */
+    nodes: NodeCapability[];
+}
+// graph state update 
+
 /**
  * @generated from protobuf message Edge
  */
@@ -62,28 +67,6 @@ export interface Edge {
      * @generated from protobuf field: string to = 2;
      */
     to: string;
-}
-/**
- * @generated from protobuf message Capabilities
- */
-export interface Capabilities {
-    /**
-     * @generated from protobuf field: repeated Node nodes = 1;
-     */
-    nodes: Node[];
-}
-/**
- * @generated from protobuf message GraphUpdated
- */
-export interface GraphUpdated {
-    /**
-     * @generated from protobuf field: repeated Node nodes = 1;
-     */
-    nodes: Node[];
-    /**
-     * @generated from protobuf field: repeated Edge edges = 2;
-     */
-    edges: Edge[];
 }
 /**
  * @generated from protobuf enum BaseType
@@ -108,7 +91,25 @@ export enum BaseType {
     /**
      * @generated from protobuf enum value: Curve = 5;
      */
-    Curve = 5
+    Curve = 5,
+    /**
+     * Non inputable
+     *
+     * @generated from protobuf enum value: ColorArray = 6;
+     */
+    ColorArray = 6,
+    /**
+     * @generated from protobuf enum value: Array = 7;
+     */
+    Array = 7,
+    /**
+     * @generated from protobuf enum value: Vector2D = 8;
+     */
+    Vector2D = 8,
+    /**
+     * @generated from protobuf enum value: Vector3D = 9;
+     */
+    Vector3D = 9
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Void$Type extends MessageType<Void> {
@@ -125,7 +126,6 @@ class Port$Type extends MessageType<Port> {
     constructor() {
         super("Port", [
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "type", kind: "enum", T: () => ["BaseType", BaseType] }
         ]);
     }
@@ -135,21 +135,32 @@ class Port$Type extends MessageType<Port> {
  */
 export const Port = new Port$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class Node$Type extends MessageType<Node> {
+class NodeCapability$Type extends MessageType<NodeCapability> {
     constructor() {
-        super("Node", [
+        super("NodeCapability", [
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "inputs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Port },
             { no: 5, name: "outputs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Port }
         ]);
     }
 }
 /**
- * @generated MessageType for protobuf message Node
+ * @generated MessageType for protobuf message NodeCapability
  */
-export const Node = new Node$Type();
+export const NodeCapability = new NodeCapability$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class Capabilities$Type extends MessageType<Capabilities> {
+    constructor() {
+        super("Capabilities", [
+            { no: 1, name: "nodes", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => NodeCapability }
+        ]);
+    }
+}
+/**
+ * @generated MessageType for protobuf message Capabilities
+ */
+export const Capabilities = new Capabilities$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Edge$Type extends MessageType<Edge> {
     constructor() {
@@ -163,35 +174,9 @@ class Edge$Type extends MessageType<Edge> {
  * @generated MessageType for protobuf message Edge
  */
 export const Edge = new Edge$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class Capabilities$Type extends MessageType<Capabilities> {
-    constructor() {
-        super("Capabilities", [
-            { no: 1, name: "nodes", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Node }
-        ]);
-    }
-}
-/**
- * @generated MessageType for protobuf message Capabilities
- */
-export const Capabilities = new Capabilities$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class GraphUpdated$Type extends MessageType<GraphUpdated> {
-    constructor() {
-        super("GraphUpdated", [
-            { no: 1, name: "nodes", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Node },
-            { no: 2, name: "edges", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Edge }
-        ]);
-    }
-}
-/**
- * @generated MessageType for protobuf message GraphUpdated
- */
-export const GraphUpdated = new GraphUpdated$Type();
 /**
  * @generated ServiceType for protobuf service MyService
  */
 export const MyService = new ServiceType("MyService", [
-    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities },
-    { name: "NodesUpdated", options: {}, I: GraphUpdated, O: Void }
+    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities }
 ]);
