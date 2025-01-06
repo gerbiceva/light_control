@@ -11,14 +11,7 @@ from starlette.types import ASGIApp
 class MyService(service_pb2_grpc.MyServiceServicer):
 
     def GetCapabilities(self, request, context):
-        """get the list of nodes that the server supports along with their descriptions
-        """
-        raise NotImplementedError('Method not implemented!')
-
-    def NodesUpdated(self, request, context):
-        """Get the new edges and nodes from the frontend
-        """
-        raise NotImplementedError('Method not implemented!')
+        return service_pb2.Capabilities()
 
 
 class GRPCWebMiddleware(BaseHTTPMiddleware):
