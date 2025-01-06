@@ -1,13 +1,13 @@
 import { Group, Loader } from "@mantine/core";
+import { useStore } from "@nanostores/react";
 import { IconSquareRoundedCheck } from "@tabler/icons-react";
+import { $isSyncing } from "../globalStore/loadingStore";
 
-export interface LoaderIndicatorProps {
-  isLoading: boolean;
-}
-export const LoaderIndicator = ({ isLoading }: LoaderIndicatorProps) => {
+export const LoaderIndicator = () => {
+  const isSyncing = useStore($isSyncing);
   return (
     <Group align="center">
-      {isLoading ? (
+      {isSyncing ? (
         <Loader size="1.3rem" color="white" />
       ) : (
         <IconSquareRoundedCheck size="1.3rem" />

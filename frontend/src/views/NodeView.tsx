@@ -25,6 +25,7 @@ import { getComputedNodes } from "../flow/Nodes/ComputeNodes/getComputedNodes";
 import { $edges, $nodes, setEdges, setNodes } from "../globalStore/flowStore";
 import { useStore } from "@nanostores/react";
 import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
+import { useSync } from "../sync/useSync";
 
 const nodeTypes: NodeTypes = {
   ...inputNodes,
@@ -102,6 +103,7 @@ const onNodeDrag: OnNodeDrag = (_, node) => {
 export const NodeView = () => {
   const nodes = useStore($nodes);
   const edges = useStore($edges);
+  useSync(); // sync backend
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes(applyNodeChanges(changes, nodes)),

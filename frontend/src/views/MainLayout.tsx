@@ -12,11 +12,10 @@ import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
 import { $capabilities } from "../globalStore/capabilitiesStore";
-import { LoaderIndicator } from "../flow/Components/LoaderIndicator";
+import { LoaderIndicator } from "../components/LoaderIndicator";
 
 export const MainLayout = () => {
   const caps = useStore($capabilities);
-
   if (caps.length == 0) {
     return <LoadingOverlay visible={true} />;
   }
@@ -32,9 +31,7 @@ export const MainLayout = () => {
           {/*Settings and server indicator*/}
           <Group gap="lg">
             <Button
-              leftSection={
-                <LoaderIndicator isLoading={false}></LoaderIndicator>
-              }
+              leftSection={<LoaderIndicator />}
               size="sm"
               onClick={async () => {
                 // const data = await client.({ name: "lan" });
