@@ -42,7 +42,7 @@ message Capabilities {
     repeated NodeCapability nodes = 1;
 }
 
-// graph state update 
+// graph state update
 
 message EdgeMsg {
     string from = 1;

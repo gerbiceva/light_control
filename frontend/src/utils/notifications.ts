@@ -11,6 +11,7 @@ export const notifSuccess = ({ message, title }: NotifMessage) => {
     title,
     message,
     color: theme.colors["green"][5],
+    id: title,
   });
 };
 
@@ -19,6 +20,7 @@ export const notifError = ({ message, title }: NotifMessage) => {
     title,
     message,
     color: theme.colors["red"][5],
+    id: title,
   });
 };
 
