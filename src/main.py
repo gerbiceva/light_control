@@ -19,13 +19,13 @@ from utils import FrameLimiter
 # G.evaluate()
 # G.evaluate()
 
-from nodes.curves import pad_curve, linear_curve, move_curve, sample_array
+from nodes.curves import pad_curve, linear_curve, move_curve, sample_array, sin_curve
 from nodes.lights import sender
-from nodes.primitives import color_array
+from nodes.constructors import color_array
 from nodes.timing import seconds, SpeedMaster
 from nodes.color import set_brightness_array, set_brightness_all, set_saturation_all
 from nodes.lights import light_strip
-from nodes.devices import get_gamepad_state, get_gain
+from nodes.devices import get_gamepad_state
 from datatypes import ColorArray, Array
 import jax.numpy as jnp
 import jax
@@ -38,9 +38,9 @@ noise_amount = 0.0
 latch1 = False
 latch2 = False
 
-while True:
-    out = [None, None, None]
-    gamepad_state = get_gamepad_state()
+# while True:
+    # out = [None, None, None]
+    # gamepad_state = get_gamepad_state()
     # if jnp.linalg.norm(gamepad_state[-1]) > 0.4:
     #     color1 = (
     #         jnp.arctan2(gamepad_state[-1][1], gamepad_state[-1][0]) % (2 * jnp.pi)
@@ -121,17 +121,24 @@ while True:
     #         out[0] = output
     #         out[1] = output
     #         out[2] = output
-    print(get_gain())
-    out[0] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
-    out[1] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
-    out[2] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
 
-    light_strip(2, out[0])
-    light_strip(3, out[1])
-    light_strip(4, out[2])
-    noise_amount -= 0.06
-    speed_master1.increment()
-    limiter.tick()
-    sender.flush()
+
+    # print(get_gain())
+    # out[0] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
+    # out[1] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
+    # out[2] = set_saturation_all(set_brightness_array(color_array(100), min(1, (get_gain()/80))/3), 0)
+    # print(sample_array(sin_curve(gamepad_state[-4] * 5), 100))
+    # out[0] = set_saturation_all(set_brightness_array(color_array(100), sample_array(sin_curve(gamepad_state[-4] * 10), 100)/2 + 0.5), 0)
+    # out[1] = set_saturation_all(set_brightness_array(color_array(100), sample_array(sin_curve(gamepad_state[-4] * 10), 100)/2 + 0.5), 0)
+    # out[2] = set_saturation_all(set_brightness_array(color_array(100), sample_array(sin_curve(gamepad_state[-4] * 10), 100)/2 + 0.5), 0)
+
+
+    # light_strip(5, out[0])
+    # light_strip(6, out[1])
+    # light_strip(7, out[2])
+    # noise_amount -= 0.06
+    # speed_master1.increment()
+    # limiter.tick()
+    # sender.flush()
 
 print("slo mimo")

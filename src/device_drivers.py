@@ -1,13 +1,18 @@
-from evdev import InputDevice, ecodes
+from evdev import InputDevice, ecodes, list_devices
 import threading
 import jax.numpy as jnp
 import numpy as np
 import pyaudio
 from utils import FrameLimiter
 
+
 class Gamepad():
     def __init__(self, input_device):
-        self.device = InputDevice(input_device)
+        self.device = None
+        for device in [InputDevice(path) for path in list_devices()]:
+            print(f"Device: {device.name} at {device.path}")
+            if "Controller" in device.name:
+                self.device = InputDevice(device.path)
         self.thread = threading.Thread(target=self.loop)
         self.buttons = {
             "A": 0,

@@ -1,6 +1,4 @@
-from datatypes import ColorArray
 from typing import Callable
-import jax.numpy as jnp
 
 def make_integer(a: int) -> Callable:
     def integer() -> int:
@@ -18,6 +16,3 @@ def make_string(a: str) -> Callable:
     def string() -> str:
         return a
     return string
-
-def color_array(n: int) -> ColorArray:
-    return jnp.zeros((3, n))

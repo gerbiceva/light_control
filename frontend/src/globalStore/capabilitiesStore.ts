@@ -17,12 +17,13 @@ export function setCapabilites(capabilities: NodeCapability[]) {
   $serverCapabilities.set(capabilities);
 }
 
-setCapabilites(testCapabilitiesList);
+// setCapabilites(testCapabilitiesList);
 
 // initially get capabilities
 client.getCapabilities({}).then(
   (data) => {
     setCapabilites(data.response.nodes);
+    console.log(data.response)
     notifSuccess({
       title: "Capabilities initialized",
       message: "Node information loaded from server. App is ready to use",

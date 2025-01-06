@@ -13,3 +13,8 @@ class SpeedMaster:
         self.speed *= 2.0
     def slow_down(self):
         self.speed *= 0.5
+
+speed_master = SpeedMaster()
+
+def get_synced_time() -> float:
+    return speed_master.time
