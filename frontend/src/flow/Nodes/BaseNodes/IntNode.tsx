@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { Node, NodeProps } from "@xyflow/react";
 import { Text, Card, Group, Stack, NumberInput } from "@mantine/core";
-import { TypedHandle } from "../Components/TypedHandle";
-import { BaseType } from "../../grpc/client_code/service";
-import { getColorFromEnum } from "../../utils/colorUtils";
+import { TypedHandle } from "../../Components/TypedHandle";
+import { BaseType } from "../../../grpc/client_code/service";
+import { getColorFromEnum } from "../../../utils/colorUtils";
 
 type ColorNodeData = { int: number };
 type ColorNode = NodeProps<Node<ColorNodeData, "intPrimitive">>;

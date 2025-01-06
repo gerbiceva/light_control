@@ -10,7 +10,7 @@ export const NodeAdderSpotlight = () => {
     <>
       <Button onClick={spotlight.open} variant="subtle">
         <Group>
-          <Kbd>CTRl + K</Kbd>
+          <Kbd>CTRl + SPACE</Kbd>
           <Text c="dimmed"> open node picker</Text>
         </Group>
       </Button>
@@ -21,6 +21,7 @@ export const NodeAdderSpotlight = () => {
           nothingFound="Nothing found..."
           highlightQuery
           scrollable
+          shortcut="ctrl+space"
           maxHeight={400}
           searchProps={{
             leftSection: (

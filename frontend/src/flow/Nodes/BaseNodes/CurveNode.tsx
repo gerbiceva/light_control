@@ -1,11 +1,11 @@
 import { memo, useState } from "react";
 import { Node, NodeProps } from "@xyflow/react";
 import { Text, Card, Group, Stack, useMantineTheme } from "@mantine/core";
-import { TypedHandle } from "../Components/TypedHandle";
+import { TypedHandle } from "../../Components/TypedHandle";
 import { Point } from "react-bezier-spline-editor/core";
 import { BezierSplineEditor } from "react-bezier-spline-editor/react";
-import { BaseType } from "../../grpc/client_code/service";
-import { getColorFromEnum } from "../../utils/colorUtils";
+import { BaseType } from "../../../grpc/client_code/service";
+import { getColorFromEnum } from "../../../utils/colorUtils";
 
 type CurveNodeData = { points: Point[] };
 type CurveNode = NodeProps<Node<CurveNodeData, "curvePrimitive">>;

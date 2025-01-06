@@ -1,7 +1,7 @@
 import { BaseType, Node } from "../../../grpc/client_code/service";
 
 export const testingCapabilityNode: Node = {
-  name: "special node za pedre",
+  name: "Special multi mega node",
   description: "special node can do special things and is special",
   id: "12",
   inputs: [
@@ -11,7 +11,7 @@ export const testingCapabilityNode: Node = {
       type: BaseType.Color,
     },
     {
-      description: "Peder peder gay homo",
+      description: "helo melo belo",
       name: "Pederchina",
       type: BaseType.Float,
     },
