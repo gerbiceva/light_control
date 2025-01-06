@@ -68,10 +68,6 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
   animated: true,
 };
 
-// const onNodeDrag: OnNodeDrag = (_, node) => {
-//   console.log("drag event", node.data);
-// };
-
 export const NodeView = () => {
   const nodes = useStore($nodes);
   const edges = useStore($edges);

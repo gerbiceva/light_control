@@ -15,9 +15,9 @@ export const $isSyncing = computed($sync, (sync) => {
   return sync.lastChange.getTime() >= sync.lastSync.getTime();
 });
 
-// export const $lastSyncPreety = computed($sync, (sync) => {
-//   return timeElapsedPreety(sync.lastSync);
-// });
+export const $lastSync = computed($sync, (sync) => {
+  return sync.lastSync;
+});
 
 export const syncFinished = () => {
   $sync.set({

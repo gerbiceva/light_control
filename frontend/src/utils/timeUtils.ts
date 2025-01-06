@@ -32,8 +32,7 @@ export function timeElapsedPreety(inputDate: Date): string {
   }
 }
 
-export function timeElapsed(datetime: string): number {
-  const inputDate = new Date(datetime);
+export function timeElapsed(inputDate: Date): number {
   const now = new Date();
 
   const diffInSeconds = Math.floor(

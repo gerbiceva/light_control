@@ -1,18 +1,38 @@
-import { Card, Group, LoadingOverlay, Stack, Title } from "@mantine/core";
+import {
+  Card,
+  Group,
+  Loader,
+  LoadingOverlay,
+  Stack,
+  Title,
+} from "@mantine/core";
 import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
-import { $capabilities } from "../globalStore/capabilitiesStore";
+import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 
 export const MainLayout = () => {
-  const caps = useStore($capabilities);
+  const caps = useStore($serverCapabilities);
+
   if (caps.length == 0) {
-    return <LoadingOverlay visible={true} />;
+    return (
+      <LoadingOverlay
+        visible={true}
+        loaderProps={{
+          children: (
+            <Stack align="center" gap="xl">
+              <Loader />
+              <Title size="sm">Loading node capabilities from the server</Title>
+            </Stack>
+          ),
+        }}
+      />
+    );
   }
 
   return (
-    <Stack w="100vw" h="100vh" p="lg" gap="xl">
+    <Stack w="100vw" h="100vh" p="sm" gap="sm">
       <Card withBorder shadow="md">
         <Group justify="space-between" px="lg">
           {/* title */}
@@ -22,16 +42,6 @@ export const MainLayout = () => {
           {/*Settings and server indicator*/}
           <Group gap="lg">
             <LoaderIndicator />
-            {/* <Button
-              leftSection={<LoaderIndicator />}
-              size="sm"
-              onClick={async () => {
-                // const data = await client.({ name: "lan" });
-                // console.log(data.response.message);
-              }}
-            >
-              Force apply
-            </Button> */}
 
             {/* <Tooltip label="Connection to server is active.">
               <Indicator
