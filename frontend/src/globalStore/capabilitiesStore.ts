@@ -1,16 +1,17 @@
 // store/users.ts
 import { atom, computed } from "nanostores";
-import { Node } from "../grpc/client_code/service";
 import { testCapabilitiesList } from "../flow/Nodes/ComputeNodes/test";
 import { baseCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
+import { NodeCapability } from "../grpc/client_code/service";
 
-export const $serverCapabilities = atom<Node[]>(testCapabilitiesList);
+export const $serverCapabilities = atom<NodeCapability[]>(testCapabilitiesList);
 
 export const $capabilities = computed($serverCapabilities, (cap) => {
-  return [...cap, ...baseCapabilities];
+  const out: NodeCapability[] = [...cap, ...baseCapabilities];
+  return out;
 });
 
-export function setCapabilites(capabilities: Node[]) {
+export function setCapabilites(capabilities: NodeCapability[]) {
   $serverCapabilities.set(capabilities);
 }
 

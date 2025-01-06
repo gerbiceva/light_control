@@ -26,7 +26,7 @@ export const UseActions = () => {
   const actionsFromCapabilities: SpotlightActionData[] = useMemo(() => {
     return capabilities.map((cap) => {
       return {
-        id: cap.id,
+        id: cap.name,
         label: cap.name,
         description: cap.description,
         onClick: () => {

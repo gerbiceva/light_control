@@ -5,10 +5,10 @@ import { addNode, generateFlowId } from "../../../../globalStore/flowStore";
 import { baseCapabilities } from "./baseCapabilities";
 
 export const inputNodesActions = baseCapabilities.map((cap) => ({
-  id: cap.id,
+  id: cap.name,
   label: cap.name,
   description: cap.description,
-  onClick: () => addNode(generateNodeInstFromInput(cap.id)),
+  onClick: () => addNode(generateNodeInstFromInput(cap.name)),
   leftSection: (
     <Avatar radius={0} color={getColorFromEnum(cap.outputs[0].type)[5]}>
       {cap.name.slice(0, 3)}

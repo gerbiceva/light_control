@@ -54,7 +54,7 @@ const initialNodes: Node[] = [
     id: "8",
     position: { x: 300, y: 10 },
     data: {},
-    type: testingCapabilityNode.id,
+    type: testingCapabilityNode.name,
   },
 ];
 

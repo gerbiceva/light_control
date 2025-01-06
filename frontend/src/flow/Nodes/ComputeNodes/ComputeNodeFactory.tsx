@@ -1,4 +1,4 @@
-import { Node } from "../../../grpc/client_code/service";
+import { NodeCapability } from "../../../grpc/client_code/service";
 
 import { Card, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { DynamicPort } from "./DynamicPort";
@@ -7,12 +7,12 @@ import { NodeProps, Node as FlowNode } from "@xyflow/react";
 import { generateFlowId } from "../../../globalStore/flowStore";
 
 export const generateNodeInstFromCapability = (
-  capability: Node
+  capability: NodeCapability
   // inst: ReactFlowInstance<FlowNode, Edge>
 ): FlowNode => {
   return {
     id: generateFlowId(),
-    type: capability.id,
+    type: capability.name,
     position: {
       x: 0,
       y: 0,
@@ -25,7 +25,9 @@ export const generateNodeInstFromCapability = (
   };
 };
 
-export const generateComputeNodeFromCapability = (capability: Node) => {
+export const generateComputeNodeFromCapability = (
+  capability: NodeCapability
+) => {
   const inputStack = (
     <Stack gap="xs">
       {capability.inputs.map((input) => (

@@ -10,13 +10,13 @@ export const getTypesFromConnection = (
   const capabilities = $capabilities.get();
 
   const from = nodes.find((node) => node.id == edge.source);
-  const fromCap = capabilities.find((cap) => cap.id == from?.type);
+  const fromCap = capabilities.find((cap) => cap.name == from?.type);
   const fromPort = fromCap?.outputs.find(
     (cap) => cap.name == edge.sourceHandle
   );
 
   const to = nodes.find((node) => node.id == edge.target);
-  const toCap = capabilities.find((cap) => cap.id == to?.type);
+  const toCap = capabilities.find((cap) => cap.name == to?.type);
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
 
   return [fromPort, toPort];

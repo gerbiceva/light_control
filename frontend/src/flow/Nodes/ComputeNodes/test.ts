@@ -1,54 +1,45 @@
-import { BaseType, Node } from "../../../grpc/client_code/service";
+import { BaseType, NodeCapability } from "../../../grpc/client_code/service";
 
-export const testingCapabilityNode: Node = {
+export const testingCapabilityNode: NodeCapability = {
   name: "Special multi mega node",
   description: "special node can do special things and is special",
-  id: "12",
   inputs: [
     {
-      description: "changes led colors",
       name: "Color for led",
       type: BaseType.Color,
     },
     {
-      description: "helo melo belo",
       name: "Pederchina",
       type: BaseType.Float,
     },
     {
-      description: "controlls intensity",
       name: "VDIM",
       type: BaseType.Int,
     },
     {
-      description: "gives it a name for no reason whatsoever",
       name: "Name",
       type: BaseType.String,
     },
   ],
   outputs: [
     {
-      description: "controlls nekaj",
       name: "VDIM",
       type: BaseType.Int,
     },
     {
-      description: "gives it a name for no reason whatsoever",
       name: "Curve",
       type: BaseType.Curve,
     },
   ],
 };
 
-export const testCapabilitiesList: Node[] = [
+export const testCapabilitiesList: NodeCapability[] = [
   testingCapabilityNode,
   {
     name: "nekaj",
     description: "zan le jto",
-    id: "13",
     inputs: [
       {
-        description: "nek input",
         name: "waaw",
         type: BaseType.Curve,
       },

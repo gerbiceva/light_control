@@ -8,7 +8,7 @@ export const getComputedNodes = () => {
   const customNodes: NodeTypes = {};
 
   capabilities.get().forEach((cap) => {
-    customNodes[cap.id] = generateComputeNodeFromCapability(cap);
+    customNodes[cap.name] = generateComputeNodeFromCapability(cap);
   });
 
   return customNodes;
