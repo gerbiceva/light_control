@@ -240,5 +240,6 @@ export const GraphUpdated = new GraphUpdated$Type();
  * @generated ServiceType for protobuf service MyService
  */
 export const MyService = new ServiceType("MyService", [
-    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities }
+    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities },
+    { name: "GraphUpdate", options: {}, I: GraphUpdated, O: Void }
 ]);

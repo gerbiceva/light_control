@@ -4,7 +4,7 @@ service MyService {
     // get the list of nodes that the server supports along with their descriptions
     rpc GetCapabilities (Void) returns (Capabilities);
     // Get the new edges and nodes from the frontend
-    // rpc NodesUpdated (GraphUpdated) returns (Void);
+    rpc GraphUpdate (GraphUpdated) returns (Void);
 }
 
 message Void {
