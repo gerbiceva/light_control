@@ -29,6 +29,7 @@ export const sync = (nodes: FlowNode[], edges: FlowEdge[]) => {
             title: "Cant send graph update",
             message: JSON.stringify(status, null, 1),
           });
+          console.error(status);
         }
       );
   });

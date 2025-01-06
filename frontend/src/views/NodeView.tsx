@@ -61,7 +61,7 @@ const initialNodes: Node[] = [
 const initialEdges: Edge[] = [];
 
 const fitViewOptions: FitViewOptions = {
-  padding: 0.5,
+  padding: 3,
 };
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
@@ -104,7 +104,6 @@ export const NodeView = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        // onNodeDrag={onNodeDrag}
         fitView
         fitViewOptions={fitViewOptions}
         defaultEdgeOptions={defaultEdgeOptions}
