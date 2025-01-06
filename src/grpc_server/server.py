@@ -9,9 +9,17 @@ from starlette.types import ASGIApp
 
 # class for handling actual communication with the client
 class MyService(service_pb2_grpc.MyServiceServicer):
-    async def SayHello(self, request, context):
-        print("hello")
-        return service_pb2.HelloResponse(message=f"Hello, {request.name}!")
+
+    def GetCapabilities(self, request, context):
+        """get the list of nodes that the server supports along with their descriptions
+        """
+        raise NotImplementedError('Method not implemented!')
+
+    def NodesUpdated(self, request, context):
+        """Get the new edges and nodes from the frontend
+        """
+        raise NotImplementedError('Method not implemented!')
+
 
 class GRPCWebMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp):
@@ -24,7 +32,7 @@ class GRPCWebMiddleware(BaseHTTPMiddleware):
         # modifying raw headers is necesarry
         del response.raw_headers[0]
         return response
-    
+
 async def main():
     application = grpcASGI(uvicorn, False)
     # Attach your gRPC server implementation.

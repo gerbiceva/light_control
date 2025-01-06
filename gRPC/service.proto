@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+ 
 service MyService {
     // get the list of nodes that the server supports along with their descriptions
     rpc GetCapabilities (Void) returns (Capabilities);

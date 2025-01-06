@@ -34,18 +34,31 @@ class MyServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SayHello = channel.unary_unary(
-                '/MyService/SayHello',
-                request_serializer=service__pb2.HelloRequest.SerializeToString,
-                response_deserializer=service__pb2.HelloResponse.FromString,
+        self.GetCapabilities = channel.unary_unary(
+                '/MyService/GetCapabilities',
+                request_serializer=service__pb2.Void.SerializeToString,
+                response_deserializer=service__pb2.Capabilities.FromString,
+                _registered_method=True)
+        self.NodesUpdated = channel.unary_unary(
+                '/MyService/NodesUpdated',
+                request_serializer=service__pb2.GraphUpdated.SerializeToString,
+                response_deserializer=service__pb2.Void.FromString,
                 _registered_method=True)
 
 
 class MyServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SayHello(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+    def GetCapabilities(self, request, context):
+        """get the list of nodes that the server supports along with their descriptions
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def NodesUpdated(self, request, context):
+        """Get the new edges and nodes from the frontend
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -53,10 +66,15 @@ class MyServiceServicer(object):
 
 def add_MyServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SayHello': grpc.unary_unary_rpc_method_handler(
-                    servicer.SayHello,
-                    request_deserializer=service__pb2.HelloRequest.FromString,
-                    response_serializer=service__pb2.HelloResponse.SerializeToString,
+            'GetCapabilities': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCapabilities,
+                    request_deserializer=service__pb2.Void.FromString,
+                    response_serializer=service__pb2.Capabilities.SerializeToString,
+            ),
+            'NodesUpdated': grpc.unary_unary_rpc_method_handler(
+                    servicer.NodesUpdated,
+                    request_deserializer=service__pb2.GraphUpdated.FromString,
+                    response_serializer=service__pb2.Void.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -70,7 +88,7 @@ class MyService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SayHello(request,
+    def GetCapabilities(request,
             target,
             options=(),
             channel_credentials=None,
@@ -83,9 +101,36 @@ class MyService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/MyService/SayHello',
-            service__pb2.HelloRequest.SerializeToString,
-            service__pb2.HelloResponse.FromString,
+            '/MyService/GetCapabilities',
+            service__pb2.Void.SerializeToString,
+            service__pb2.Capabilities.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def NodesUpdated(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/MyService/NodesUpdated',
+            service__pb2.GraphUpdated.SerializeToString,
+            service__pb2.Void.FromString,
             options,
             channel_credentials,
             insecure,

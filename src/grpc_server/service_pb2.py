@@ -24,17 +24,27 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rservice.proto\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\" \n\rHelloResponse\x12\x0f\n\x07message\x18\x01 \x01(\t26\n\tMyService\x12)\n\x08SayHello\x12\r.HelloRequest\x1a\x0e.HelloResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rservice.proto\"\x06\n\x04Void\"B\n\x04Port\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x17\n\x04type\x18\x03 \x01(\x0e\x32\t.BaseType\"d\n\x04Node\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\t\x12\x15\n\x06inputs\x18\x04 \x03(\x0b\x32\x05.Port\x12\x16\n\x07outputs\x18\x05 \x03(\x0b\x32\x05.Port\" \n\x04\x45\x64ge\x12\x0c\n\x04\x66rom\x18\x01 \x01(\t\x12\n\n\x02to\x18\x02 \x01(\t\"$\n\x0c\x43\x61pabilities\x12\x14\n\x05nodes\x18\x01 \x03(\x0b\x32\x05.Node\":\n\x0cGraphUpdated\x12\x14\n\x05nodes\x18\x01 \x03(\x0b\x32\x05.Node\x12\x14\n\x05\x65\x64ges\x18\x02 \x03(\x0b\x32\x05.Edge*@\n\x08\x42\x61seType\x12\x07\n\x03Int\x10\x00\x12\t\n\x05\x46loat\x10\x02\x12\n\n\x06String\x10\x03\x12\t\n\x05\x43olor\x10\x04\x12\t\n\x05\x43urve\x10\x05\x32Z\n\tMyService\x12\'\n\x0fGetCapabilities\x12\x05.Void\x1a\r.Capabilities\x12$\n\x0cNodesUpdated\x12\r.GraphUpdated\x1a\x05.Voidb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_HELLOREQUEST']._serialized_start=17
-  _globals['_HELLOREQUEST']._serialized_end=45
-  _globals['_HELLORESPONSE']._serialized_start=47
-  _globals['_HELLORESPONSE']._serialized_end=79
-  _globals['_MYSERVICE']._serialized_start=81
-  _globals['_MYSERVICE']._serialized_end=135
+  _globals['_BASETYPE']._serialized_start=327
+  _globals['_BASETYPE']._serialized_end=391
+  _globals['_VOID']._serialized_start=17
+  _globals['_VOID']._serialized_end=23
+  _globals['_PORT']._serialized_start=25
+  _globals['_PORT']._serialized_end=91
+  _globals['_NODE']._serialized_start=93
+  _globals['_NODE']._serialized_end=193
+  _globals['_EDGE']._serialized_start=195
+  _globals['_EDGE']._serialized_end=227
+  _globals['_CAPABILITIES']._serialized_start=229
+  _globals['_CAPABILITIES']._serialized_end=265
+  _globals['_GRAPHUPDATED']._serialized_start=267
+  _globals['_GRAPHUPDATED']._serialized_end=325
+  _globals['_MYSERVICE']._serialized_start=393
+  _globals['_MYSERVICE']._serialized_end=483
 # @@protoc_insertion_point(module_scope)
