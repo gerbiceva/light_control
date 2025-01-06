@@ -109,6 +109,7 @@ export const NodeView = () => {
         fitViewOptions={fitViewOptions}
         defaultEdgeOptions={defaultEdgeOptions}
         isValidConnection={isValidConnection}
+        deleteKeyCode={"Delete"}
       >
         <Controls />
         <MiniMap />
