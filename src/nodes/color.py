@@ -1,27 +1,22 @@
-from node import Node
-from data import Float, ColorArray
-import numpy as np
+from datatypes import ColorArray, Color, Array
 
-class SetBrightnessAllNode(Node):
-    def __init__(self):
-        super().__init__(self.change_number)
-        self.inputs["Color Array"] = ColorArray(self)
-        self.inputs["Brightness"] = Float(self)
-        self.outputs["Color Array"] = ColorArray(self)
+def set_brightness_all(hsv: ColorArray, value: float) -> ColorArray:
+    return hsv.at[2, :].set(value)
 
-    def change_number(self, hsv: np.array, value: float) -> ColorArray:
-        new = hsv.copy()
-        new[2, :] = value
-        return new
+def set_saturation_all(hsv: ColorArray, value: float) -> ColorArray:
+    return hsv.at[1, :].set(value)
 
-class SetHueAllNode(Node):
-    def __init__(self):
-        super().__init__(self.change_number)
-        self.inputs["Color Array"] = ColorArray(self)
-        self.inputs["Hue"] = Float(self)
-        self.outputs["Color Array"] = ColorArray(self)
+def set_hue_all(hsv: ColorArray, value: float) -> ColorArray:
+    return hsv.at[0, :].set(value)
 
-    def change_number(self, hsv: np.array, value: float) -> ColorArray:
-        new = hsv.copy()
-        new[0, :] = value
-        return new
+def set_color_all(hsv: ColorArray, color: Color) -> ColorArray:
+    return hsv.at[:, :].set(color)
+
+def set_hue_array(hsv: ColorArray, array: Array) -> ColorArray:
+    return hsv.at[0, :].set(array)
+
+def set_saturation_array(hsv: ColorArray, array: Array) -> ColorArray:
+    return hsv.at[1, :].set(array)
+
+def set_brightness_array(hsv: ColorArray, array: Array) -> ColorArray:
+    return hsv.at[2, :].set(array)

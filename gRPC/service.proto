@@ -4,7 +4,7 @@ service MyService {
     // get the list of nodes that the server supports along with their descriptions
     rpc GetCapabilities (Void) returns (Capabilities);
     // Get the new edges and nodes from the frontend
-    rpc NodesUpdated (GraphUpdated) returns (Void);
+    // rpc NodesUpdated (GraphUpdated) returns (Void);
 }
 
 message Void {
@@ -17,32 +17,43 @@ enum BaseType {
     String = 3;
     Color = 4;
     Curve = 5;
+    // Non inputable
+    ColorArray = 6;
+    Array = 7;
+    Vector2D = 8;
+    Vector3D = 9;
 }
+
+// Capabilities
 
 message Port {
     string name = 1;
-    string description = 2;
     BaseType type = 3;
 }
 
-message Node {
+message NodeCapability {
     string name = 1;
     string description = 2;
-    string id = 3;
     repeated Port inputs = 4;
     repeated Port outputs = 5;
 }
+
+message Capabilities {
+    repeated NodeCapability nodes = 1;
+}
+
+// graph state update 
 
 message Edge {
     string from = 1;
     string to = 2;
 }
 
-message Capabilities {
-    repeated Node nodes = 1;
-}
 
-message GraphUpdated {
-    repeated Node nodes = 1;
-    repeated Edge edges= 2;
-}
+// message GraphUpdated {
+//     repeated Node nodes = 1;
+//     repeated Edge edges= 2;
+// }
+
+
+
