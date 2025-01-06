@@ -4,6 +4,7 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { MyService } from "./service";
+import type { GraphUpdated } from "./service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { Capabilities } from "./service";
 import type { Void } from "./service";
@@ -16,12 +17,15 @@ export interface IMyServiceClient {
     /**
      * get the list of nodes that the server supports along with their descriptions
      *
-     * Get the new edges and nodes from the frontend
-     * rpc NodesUpdated (GraphUpdated) returns (Void);
-     *
      * @generated from protobuf rpc: GetCapabilities(Void) returns (Capabilities);
      */
     getCapabilities(input: Void, options?: RpcOptions): UnaryCall<Void, Capabilities>;
+    /**
+     * Get the new edges and nodes from the frontend
+     *
+     * @generated from protobuf rpc: GraphUpdate(GraphUpdated) returns (Void);
+     */
+    graphUpdate(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void>;
 }
 /**
  * @generated from protobuf service MyService
@@ -35,13 +39,19 @@ export class MyServiceClient implements IMyServiceClient, ServiceInfo {
     /**
      * get the list of nodes that the server supports along with their descriptions
      *
-     * Get the new edges and nodes from the frontend
-     * rpc NodesUpdated (GraphUpdated) returns (Void);
-     *
      * @generated from protobuf rpc: GetCapabilities(Void) returns (Capabilities);
      */
     getCapabilities(input: Void, options?: RpcOptions): UnaryCall<Void, Capabilities> {
         const method = this.methods[0], opt = this._transport.mergeOptions(options);
         return stackIntercept<Void, Capabilities>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * Get the new edges and nodes from the frontend
+     *
+     * @generated from protobuf rpc: GraphUpdate(GraphUpdated) returns (Void);
+     */
+    graphUpdate(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void> {
+        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        return stackIntercept<GraphUpdated, Void>("unary", this._transport, method, opt, input);
     }
 }

@@ -57,9 +57,29 @@ class Capabilities(_message.Message):
     nodes: _containers.RepeatedCompositeFieldContainer[NodeCapability]
     def __init__(self, nodes: _Optional[_Iterable[_Union[NodeCapability, _Mapping]]] = ...) -> None: ...
 
-class Edge(_message.Message):
-    __slots__ = ("to",)
+class EdgeMsg(_message.Message):
+    __slots__ = ("fromPort", "to", "toPort")
     FROM_FIELD_NUMBER: _ClassVar[int]
+    FROMPORT_FIELD_NUMBER: _ClassVar[int]
     TO_FIELD_NUMBER: _ClassVar[int]
+    TOPORT_FIELD_NUMBER: _ClassVar[int]
+    fromPort: str
     to: str
-    def __init__(self, to: _Optional[str] = ..., **kwargs) -> None: ...
+    toPort: str
+    def __init__(self, fromPort: _Optional[str] = ..., to: _Optional[str] = ..., toPort: _Optional[str] = ..., **kwargs) -> None: ...
+
+class NodeMsg(_message.Message):
+    __slots__ = ("id", "name")
+    ID_FIELD_NUMBER: _ClassVar[int]
+    NAME_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    name: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+
+class GraphUpdated(_message.Message):
+    __slots__ = ("nodes", "edges")
+    NODES_FIELD_NUMBER: _ClassVar[int]
+    EDGES_FIELD_NUMBER: _ClassVar[int]
+    nodes: _containers.RepeatedCompositeFieldContainer[NodeMsg]
+    edges: _containers.RepeatedCompositeFieldContainer[EdgeMsg]
+    def __init__(self, nodes: _Optional[_Iterable[_Union[NodeMsg, _Mapping]]] = ..., edges: _Optional[_Iterable[_Union[EdgeMsg, _Mapping]]] = ...) -> None: ...

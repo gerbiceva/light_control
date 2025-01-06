@@ -56,17 +56,51 @@ export interface Capabilities {
 // graph state update 
 
 /**
- * @generated from protobuf message Edge
+ * @generated from protobuf message EdgeMsg
  */
-export interface Edge {
+export interface EdgeMsg {
     /**
      * @generated from protobuf field: string from = 1;
      */
     from: string;
     /**
-     * @generated from protobuf field: string to = 2;
+     * @generated from protobuf field: string fromPort = 2;
+     */
+    fromPort: string;
+    /**
+     * @generated from protobuf field: string to = 3;
      */
     to: string;
+    /**
+     * @generated from protobuf field: string toPort = 4;
+     */
+    toPort: string;
+}
+/**
+ * @generated from protobuf message NodeMsg
+ */
+export interface NodeMsg {
+    /**
+     * @generated from protobuf field: string id = 1;
+     */
+    id: string;
+    /**
+     * @generated from protobuf field: string name = 2;
+     */
+    name: string;
+}
+/**
+ * @generated from protobuf message GraphUpdated
+ */
+export interface GraphUpdated {
+    /**
+     * @generated from protobuf field: repeated NodeMsg nodes = 1;
+     */
+    nodes: NodeMsg[];
+    /**
+     * @generated from protobuf field: repeated EdgeMsg edges = 2;
+     */
+    edges: EdgeMsg[];
 }
 /**
  * @generated from protobuf enum BaseType
@@ -162,21 +196,50 @@ class Capabilities$Type extends MessageType<Capabilities> {
  */
 export const Capabilities = new Capabilities$Type();
 // @generated message type with reflection information, may provide speed optimized methods
-class Edge$Type extends MessageType<Edge> {
+class EdgeMsg$Type extends MessageType<EdgeMsg> {
     constructor() {
-        super("Edge", [
+        super("EdgeMsg", [
             { no: 1, name: "from", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "to", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "fromPort", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "to", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "toPort", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
 }
 /**
- * @generated MessageType for protobuf message Edge
+ * @generated MessageType for protobuf message EdgeMsg
  */
-export const Edge = new Edge$Type();
+export const EdgeMsg = new EdgeMsg$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class NodeMsg$Type extends MessageType<NodeMsg> {
+    constructor() {
+        super("NodeMsg", [
+            { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+}
+/**
+ * @generated MessageType for protobuf message NodeMsg
+ */
+export const NodeMsg = new NodeMsg$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GraphUpdated$Type extends MessageType<GraphUpdated> {
+    constructor() {
+        super("GraphUpdated", [
+            { no: 1, name: "nodes", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => NodeMsg },
+            { no: 2, name: "edges", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => EdgeMsg }
+        ]);
+    }
+}
+/**
+ * @generated MessageType for protobuf message GraphUpdated
+ */
+export const GraphUpdated = new GraphUpdated$Type();
 /**
  * @generated ServiceType for protobuf service MyService
  */
 export const MyService = new ServiceType("MyService", [
-    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities }
+    { name: "GetCapabilities", options: {}, I: Void, O: Capabilities },
+    { name: "GraphUpdate", options: {}, I: GraphUpdated, O: Void }
 ]);

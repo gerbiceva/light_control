@@ -4,7 +4,7 @@ service MyService {
     // get the list of nodes that the server supports along with their descriptions
     rpc GetCapabilities (Void) returns (Capabilities);
     // Get the new edges and nodes from the frontend
-    // rpc NodesUpdated (GraphUpdated) returns (Void);
+    rpc GraphUpdate (GraphUpdated) returns (Void);
 }
 
 message Void {
@@ -42,18 +42,24 @@ message Capabilities {
     repeated NodeCapability nodes = 1;
 }
 
-// graph state update 
+// graph state update
 
-message Edge {
+message EdgeMsg {
     string from = 1;
-    string to = 2;
+    string fromPort = 2;
+    string to = 3;
+    string toPort = 4;
 }
 
+message NodeMsg {
+    string id = 1;
+    string name = 2;
+}
 
-// message GraphUpdated {
-//     repeated Node nodes = 1;
-//     repeated Edge edges= 2;
-// }
+message GraphUpdated {
+    repeated NodeMsg nodes = 1;
+    repeated EdgeMsg edges= 2;
+}
 
 
 

@@ -1,8 +1,9 @@
 import { useStore } from "@nanostores/react";
 import { $edges, $nodes } from "../globalStore/flowStore";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
 import { addSyncPromise, changeHappened } from "../globalStore/loadingStore";
+import { sync } from "./syncFunc";
 
 const updateIntervalMs = 500;
 
@@ -13,18 +14,19 @@ export const useSync = () => {
   const [debouncedEdges] = useDebouncedValue(edges, updateIntervalMs);
   const [debouncedNodes] = useDebouncedValue(nodes, updateIntervalMs);
 
-  /**
-   * @deprecated this is just a placeholder
-   */
-  const update = () => {
-    addSyncPromise(
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(0);
-        }, 300);
-      })
-    );
-  };
+  // const update = () => {
+  //   addSyncPromise(
+  //     new Promise((resolve) => {
+  //       setTimeout(() => {
+  //         resolve(0);
+  //       }, 300);
+  //     })
+  //   );
+  // };
+
+  const update = useCallback(() => {
+    addSyncPromise(sync(nodes, edges));
+  }, [edges, nodes]);
 
   useEffect(() => {
     changeHappened();
@@ -32,5 +34,5 @@ export const useSync = () => {
 
   useEffect(() => {
     update();
-  }, [debouncedEdges, debouncedNodes]);
+  }, [debouncedEdges, debouncedNodes, update]);
 };
