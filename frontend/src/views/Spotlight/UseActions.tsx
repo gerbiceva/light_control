@@ -5,7 +5,7 @@ import {
 } from "@mantine/spotlight";
 import { useStore } from "@nanostores/react";
 import { useCallback, useMemo } from "react";
-import { $capabilities } from "../../globalStore/capabilitiesStore";
+import { $serverCapabilities } from "../../globalStore/capabilitiesStore";
 import { theme } from "../../theme";
 import { generateNodeInstFromCapability } from "../../flow/Nodes/ComputeNodes/ComputeNodeFactory";
 import { $nodes, setNodes } from "../../globalStore/flowStore";
@@ -13,7 +13,7 @@ import { Node } from "@xyflow/react";
 import { inputNodesActions } from "../../flow/Nodes/BaseNodes/utils/SpotlightActions";
 
 export const UseActions = () => {
-  const capabilities = useStore($capabilities);
+  const capabilities = useStore($serverCapabilities);
   const nodes = useStore($nodes);
 
   const addNode = useCallback(
@@ -78,7 +78,7 @@ export const UseActions = () => {
         group: "Inputs",
         actions: inputNodesActions,
       },
-      { group: "Nodes", actions: [...actionsFromCapabilities] },
+      { group: "Nodes", actions: actionsFromCapabilities },
     ];
   }, [actionsFromCapabilities]);
 
