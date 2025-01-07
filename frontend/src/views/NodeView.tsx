@@ -2,7 +2,7 @@ import { Box } from "@mantine/core";
 
 import "@xyflow/react/dist/style.css";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   ReactFlow,
   applyNodeChanges,
@@ -26,37 +26,9 @@ import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { useSync } from "../sync/useSync";
 import { addColoredEdge } from "../flow/Edges/addColoredEdge";
 import { isValidConnection } from "../flow/Edges/isValidCOnnection";
-import { testingCapabilityNode } from "../flow/Nodes/ComputeNodes/test";
+import { $capabilities } from "../globalStore/capabilitiesStore";
 
-const nodeTypes: NodeTypes = {
-  ...inputNodes,
-  ...getComputedNodes(), // get all custom nodes, computed from capabilities
-};
-const initialNodes: Node[] = [
-  {
-    id: "3",
-    position: { x: 100, y: 10 },
-    data: {
-      color: "hsl(78, 45%, 72%)",
-    },
-    type: "Color",
-  },
-  {
-    id: "4",
-    position: { x: 200, y: 10 },
-    data: {
-      int: 0,
-    },
-    type: "Int",
-  },
-
-  {
-    id: "8",
-    position: { x: 300, y: 10 },
-    data: {},
-    type: testingCapabilityNode.name,
-  },
-];
+const initialNodes: Node[] = [];
 
 const initialEdges: Edge[] = [];
 
@@ -71,7 +43,17 @@ const defaultEdgeOptions: DefaultEdgeOptions = {
 export const NodeView = () => {
   const nodes = useStore($nodes);
   const edges = useStore($edges);
+  const caps = useStore($capabilities);
   useSync(); // sync backend
+
+  const nodeTypes: NodeTypes = useMemo(
+    () => ({
+      ...getComputedNodes(), // get all custom nodes, computed from capabilities
+      ...inputNodes,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [caps]
+  );
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes(applyNodeChanges(changes, nodes)),

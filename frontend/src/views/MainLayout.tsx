@@ -6,11 +6,11 @@ import {
   Stack,
   Title,
 } from "@mantine/core";
-import { NodeAdderSpotlight } from "./Spotlight/Spotlight";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
 import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
+import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
@@ -36,9 +36,12 @@ export const MainLayout = () => {
       <Card withBorder shadow="md">
         <Group justify="space-between" px="lg">
           {/* title */}
-          <Title size="lg">LightControll</Title>
+          <Group>
+            <img src="/icon.svg" height="30px" width="30px"></img>
+            <Title size="lg">LightControll</Title>
+          </Group>
           {/* spotlight for adding nodes */}
-          <NodeAdderSpotlight />
+          <CustomSpotlight />
           {/*Settings and server indicator*/}
           <Group gap="lg">
             <LoaderIndicator />

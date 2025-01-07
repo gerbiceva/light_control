@@ -1,8 +1,4 @@
 import { Avatar } from "@mantine/core";
-import {
-  SpotlightActionData,
-  SpotlightActionGroupData,
-} from "@mantine/spotlight";
 import { useStore } from "@nanostores/react";
 import { useCallback, useMemo } from "react";
 import { $serverCapabilities } from "../../globalStore/capabilitiesStore";
@@ -12,7 +8,10 @@ import { $nodes, setNodes } from "../../globalStore/flowStore";
 import { Node } from "@xyflow/react";
 import { inputNodesActions } from "../../flow/Nodes/BaseNodes/utils/SpotlightActions";
 
-export const UseActions = () => {
+import { CustomSpotData } from "./CustomSpot/CustomSpotData";
+import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
+
+export const useActions = (): CustomSpotlightGroups[] => {
   const capabilities = useStore($serverCapabilities);
   const nodes = useStore($nodes);
 
@@ -23,15 +22,15 @@ export const UseActions = () => {
     [nodes]
   );
 
-  const actionsFromCapabilities: SpotlightActionData[] = useMemo(() => {
+  const actionsFromCapabilities: CustomSpotData[] = useMemo(() => {
     return capabilities.map((cap) => {
       return {
         id: cap.name,
         label: cap.name,
         description: cap.description,
+        capability: cap,
+
         onClick: () => {
-          console.log({ cap });
-          console.log(generateNodeInstFromCapability(cap));
           addNode(generateNodeInstFromCapability(cap));
         },
         leftSection: (
@@ -39,46 +38,24 @@ export const UseActions = () => {
             {cap.name.slice(0, 2)}
           </Avatar>
         ),
-        // description: (
-        //   <Stack gap="8px">
-        //     <Text size="xs">{cap.description}</Text>
-        //     <Group wrap="nowrap" gap="3rem">
-        //       <Group gap="xs">
-        //         {cap.inputs.map((inp) => (
-        //           <ColorSwatch
-        //             key={inp.name}
-        //             size="8px"
-        //             color={getColorFromEnum(inp.type)[5]}
-        //           />
-        //         ))}
-        //       </Group>
-        //       <Group gap="xs">
-        //         {cap.outputs.map((inp) => (
-        //           <ColorSwatch
-        //             key={inp.name}
-        //             size="8px"
-        //             color={getColorFromEnum(inp.type)[5]}
-        //           />
-        //         ))}
-        //       </Group>
-        //     </Group>
-        //   </Stack>
-        // ),
       };
     });
   }, [addNode, capabilities]);
 
-  const actions: SpotlightActionGroupData[] = useMemo(() => {
+  const actions: CustomSpotlightGroups[] = useMemo(() => {
     if (!theme.colors) {
       return [];
     }
 
     return [
       {
-        group: "Inputs",
-        actions: inputNodesActions,
+        groupName: "Inputs",
+        data: inputNodesActions,
       },
-      { group: "Nodes", actions: actionsFromCapabilities },
+      {
+        groupName: "Nodes",
+        data: actionsFromCapabilities,
+      },
     ];
   }, [actionsFromCapabilities]);
 

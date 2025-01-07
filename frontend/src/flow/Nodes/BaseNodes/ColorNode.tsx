@@ -1,36 +1,35 @@
 import { memo } from "react";
 import { Node, NodeProps } from "@xyflow/react";
-import { Text, Card, Group, Stack, ColorInput } from "@mantine/core";
+import { ColorInput } from "@mantine/core";
 import { TypedHandle } from "../TypedHandle";
 import { getColorFromEnum } from "../../../utils/colorUtils";
 import { BaseType } from "../../../grpc/client_code/service";
+import { BaseNodeElement } from "./BaseNodeElement";
 
 type ColorNodeData = { color: string };
-type ColorNode = NodeProps<Node<ColorNodeData, "colorPrimitive">>;
+type ColorNode = NodeProps<Node<ColorNodeData, "Color">>;
 
 export const ColorNode = memo(({ data }: ColorNode) => {
   return (
-    <Card withBorder p="0">
-      <Stack pb="0" gap="0">
-        <Group bg="dark" p="xs">
-          <Text c="white" size="xs">
-            Color
-          </Text>
-        </Group>
-
-        <Group p="xs" pr="0">
-          <ColorInput
-            size="xs"
-            defaultValue={data.color}
-            format="hsl"
-            className="nodrag"
-            onChange={(color) => {
-              data.color = color;
-            }}
-          />
-          <TypedHandle color={getColorFromEnum(BaseType.Color)["5"]} id={"a"} />
-        </Group>
-      </Stack>
-    </Card>
+    <BaseNodeElement
+      type={"Color"}
+      handle={
+        <TypedHandle
+          color={getColorFromEnum(BaseType.Color)["5"]}
+          id={"Color"}
+        />
+      }
+      input={
+        <ColorInput
+          miw={"10rem"}
+          size="xs"
+          format="hsl"
+          className="nodrag"
+          onChange={(color) => {
+            data.color = color;
+          }}
+        />
+      }
+    />
   );
 });

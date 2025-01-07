@@ -1,35 +1,34 @@
-import { memo } from "react";
+import { TextInput } from "@mantine/core";
 import { Node, NodeProps } from "@xyflow/react";
-import { Text, Card, Group, Stack, TextInput } from "@mantine/core";
-import { TypedHandle } from "../TypedHandle";
+import { memo } from "react";
 import { BaseType } from "../../../grpc/client_code/service";
 import { getColorFromEnum } from "../../../utils/colorUtils";
+import { TypedHandle } from "../TypedHandle";
+import { BaseNodeElement } from "./BaseNodeElement";
 
 type StringNodeData = { str: string };
 type StringNode = NodeProps<Node<StringNodeData, "stringPrimitive">>;
 
 export const StringNode = memo(({ data }: StringNode) => {
   return (
-    <Card withBorder p="0">
-      <Stack pb="0" gap="0">
-        <Group bg="dark" p="xs">
-          <Text c="white" size="xs">
-            String
-          </Text>
-        </Group>
-
-        <Group p="xs" pr="0">
-          <TextInput
-            size="xs"
-            defaultValue={data.str}
-            className="nodrag"
-            onChange={(ev) => {
-              data.str = ev.target.value;
-            }}
-          />
-          <TypedHandle color={getColorFromEnum(BaseType.String)[5]} id={"a"} />
-        </Group>
-      </Stack>
-    </Card>
+    <BaseNodeElement
+      type={"Color"}
+      handle={
+        <TypedHandle
+          color={getColorFromEnum(BaseType.String)[5]}
+          id={"String"}
+        />
+      }
+      input={
+        <TextInput
+          size="xs"
+          defaultValue={data.str}
+          className="nodrag"
+          onChange={(ev) => {
+            data.str = ev.target.value;
+          }}
+        />
+      }
+    />
   );
 });

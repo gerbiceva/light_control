@@ -1,5 +1,8 @@
 import { BaseType, NodeCapability } from "../../../../grpc/client_code/service";
 
+// interface NodeCapabilityWithJSX extends NodeCapability {
+// }
+
 export const baseCapabilities: NodeCapability[] = [
   {
     name: "Int",

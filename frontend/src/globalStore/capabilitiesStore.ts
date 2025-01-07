@@ -1,10 +1,10 @@
 // store/users.ts
 import { atom, computed } from "nanostores";
-import { baseCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
 import { NodeCapability } from "../grpc/client_code/service";
 import { client } from "../grpc/grpcClient";
 import { notifSuccess, notifError } from "../utils/notifications";
-import { testCapabilitiesList } from "../flow/Nodes/ComputeNodes/test";
+import { baseCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
+// import { testCapabilitiesList } from "../flow/Nodes/ComputeNodes/test";
 
 export const $serverCapabilities = atom<NodeCapability[]>([]);
 
@@ -23,7 +23,6 @@ export function setCapabilites(capabilities: NodeCapability[]) {
 client.getCapabilities({}).then(
   (data) => {
     setCapabilites(data.response.nodes);
-    console.log(data.response)
     notifSuccess({
       title: "Capabilities initialized",
       message: "Node information loaded from server. App is ready to use",

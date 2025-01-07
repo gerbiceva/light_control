@@ -32,7 +32,7 @@ export const getConnectionProperties = (
     (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
   );
 
-  // console.log({ toCap }, { toPort });
+  // console.log({ fromPort }, { from }, { toPort });
 
   return {
     from: fromPort,

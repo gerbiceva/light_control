@@ -57,7 +57,7 @@ export const generateComputeNodeFromCapability = (
       >
         <Stack pb="0" gap="0">
           <Group bg="dark" p="xs" w="100%" justify="space-between">
-            <Text c="white" size="xs">
+            <Text c="white" size="xs" maw={"200px"}>
               {capability.name}
             </Text>
             <Tooltip label={capability.description}>
