@@ -14,7 +14,7 @@ export const BaseNodeElement = ({
   return (
     <Card withBorder p="0">
       <Stack pb="0" gap="0">
-        <Group bg="dark" p="xs">
+        <Group bg="dark" p="sm">
           <Text c="white" size="xs">
             {type}
           </Text>

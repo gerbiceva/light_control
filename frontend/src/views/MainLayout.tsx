@@ -3,6 +3,7 @@ import {
   Group,
   Loader,
   LoadingOverlay,
+  SimpleGrid,
   Stack,
   Title,
 } from "@mantine/core";
@@ -34,7 +35,7 @@ export const MainLayout = () => {
   return (
     <Stack w="100vw" h="100vh" p="sm" gap="sm">
       <Card withBorder shadow="md">
-        <Group justify="space-between" px="lg">
+        <SimpleGrid cols={3} px="lg">
           {/* title */}
           <Group>
             <img src="/icon.svg" height="30px" width="30px"></img>
@@ -43,21 +44,10 @@ export const MainLayout = () => {
           {/* spotlight for adding nodes */}
           <CustomSpotlight />
           {/*Settings and server indicator*/}
-          <Group gap="lg">
+          <Group gap="lg" justify="end">
             <LoaderIndicator />
-
-            {/* <Tooltip label="Connection to server is active.">
-              <Indicator
-                processing
-                color="green"
-                size="0.7rem"
-                position="top-end"
-              >
-                <div />
-              </Indicator>
-            </Tooltip> */}
           </Group>
-        </Group>
+        </SimpleGrid>
       </Card>
 
       <NodeView />

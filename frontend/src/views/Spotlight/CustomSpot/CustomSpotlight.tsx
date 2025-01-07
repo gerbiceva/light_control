@@ -46,34 +46,33 @@ export const CustomSpotlight = () => {
                 {item.leftSection}
                 <Stack gap="6px">
                   <Text size="md">{item.label}</Text>
+
+                  {grp.groupName != "Inputs" && (
+                    <Group wrap="nowrap" gap="md">
+                      <Group gap="xs">
+                        {item.capability.inputs.map((inp) => (
+                          <ColorSwatch
+                            key={inp.name}
+                            size="14px"
+                            color={getColorFromEnum(inp.type)[5]}
+                          />
+                        ))}
+                      </Group>
+                      <Divider orientation="vertical" />
+                      <Group gap="xs">
+                        {item.capability.outputs.map((inp) => (
+                          <ColorSwatch
+                            key={inp.name}
+                            size="14px"
+                            color={getColorFromEnum(inp.type)[5]}
+                          />
+                        ))}
+                      </Group>
+                    </Group>
+                  )}
                   <Text size="xs" c="dimmed">
                     {item.description}
                   </Text>
-                  {grp.groupName != "Inputs" && (
-                    <Stack gap="xs">
-                      <Group wrap="nowrap" gap="md">
-                        <Group gap="xs">
-                          {item.capability.inputs.map((inp) => (
-                            <ColorSwatch
-                              key={inp.name}
-                              size="14px"
-                              color={getColorFromEnum(inp.type)[5]}
-                            />
-                          ))}
-                        </Group>
-                        <Divider orientation="vertical" />
-                        <Group gap="xs">
-                          {item.capability.outputs.map((inp) => (
-                            <ColorSwatch
-                              key={inp.name}
-                              size="14px"
-                              color={getColorFromEnum(inp.type)[5]}
-                            />
-                          ))}
-                        </Group>
-                      </Group>
-                    </Stack>
-                  )}
                 </Stack>
               </Group>
             </Spotlight.Action>
