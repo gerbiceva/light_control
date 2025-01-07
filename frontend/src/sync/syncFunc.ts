@@ -9,11 +9,12 @@ export const sync = (nodes: FlowNode[], edges: FlowEdge[]) => {
         nodes: nodes.map((n) => ({
           id: n.id,
           name: n.type || "",
+          value: "",
         })),
         edges: edges.map((e) => ({
-          from: e.source,
+          fromNode: e.source,
           fromPort: e.sourceHandle || "",
-          to: e.target,
+          toNode: e.target,
           toPort: e.targetHandle || "",
         })),
       })
