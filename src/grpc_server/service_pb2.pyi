@@ -58,23 +58,26 @@ class Capabilities(_message.Message):
     def __init__(self, nodes: _Optional[_Iterable[_Union[NodeCapability, _Mapping]]] = ...) -> None: ...
 
 class EdgeMsg(_message.Message):
-    __slots__ = ("fromPort", "to", "toPort")
-    FROM_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("fromNode", "fromPort", "toNode", "toPort")
+    FROMNODE_FIELD_NUMBER: _ClassVar[int]
     FROMPORT_FIELD_NUMBER: _ClassVar[int]
-    TO_FIELD_NUMBER: _ClassVar[int]
+    TONODE_FIELD_NUMBER: _ClassVar[int]
     TOPORT_FIELD_NUMBER: _ClassVar[int]
+    fromNode: str
     fromPort: str
-    to: str
+    toNode: str
     toPort: str
-    def __init__(self, fromPort: _Optional[str] = ..., to: _Optional[str] = ..., toPort: _Optional[str] = ..., **kwargs) -> None: ...
+    def __init__(self, fromNode: _Optional[str] = ..., fromPort: _Optional[str] = ..., toNode: _Optional[str] = ..., toPort: _Optional[str] = ...) -> None: ...
 
 class NodeMsg(_message.Message):
-    __slots__ = ("id", "name")
+    __slots__ = ("id", "name", "value")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
+    VALUE_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ...) -> None: ...
+    value: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
 
 class GraphUpdated(_message.Message):
     __slots__ = ("nodes", "edges")

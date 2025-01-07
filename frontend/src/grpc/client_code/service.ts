@@ -53,30 +53,33 @@ export interface Capabilities {
      */
     nodes: NodeCapability[];
 }
-// graph state update 
-
 /**
+ * graph state update
+ * change from to something else
+ *
  * @generated from protobuf message EdgeMsg
  */
 export interface EdgeMsg {
     /**
-     * @generated from protobuf field: string from = 1;
+     * @generated from protobuf field: string fromNode = 1;
      */
-    from: string;
+    fromNode: string;
     /**
      * @generated from protobuf field: string fromPort = 2;
      */
     fromPort: string;
     /**
-     * @generated from protobuf field: string to = 3;
+     * @generated from protobuf field: string toNode = 3;
      */
-    to: string;
+    toNode: string;
     /**
      * @generated from protobuf field: string toPort = 4;
      */
     toPort: string;
 }
 /**
+ * add data to node so we can share primitives
+ *
  * @generated from protobuf message NodeMsg
  */
 export interface NodeMsg {
@@ -88,6 +91,10 @@ export interface NodeMsg {
      * @generated from protobuf field: string name = 2;
      */
     name: string;
+    /**
+     * @generated from protobuf field: string value = 3;
+     */
+    value: string;
 }
 /**
  * @generated from protobuf message GraphUpdated
@@ -199,9 +206,9 @@ export const Capabilities = new Capabilities$Type();
 class EdgeMsg$Type extends MessageType<EdgeMsg> {
     constructor() {
         super("EdgeMsg", [
-            { no: 1, name: "from", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 1, name: "fromNode", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "fromPort", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "to", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "toNode", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "toPort", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
@@ -215,7 +222,8 @@ class NodeMsg$Type extends MessageType<NodeMsg> {
     constructor() {
         super("NodeMsg", [
             { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "value", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
 }
