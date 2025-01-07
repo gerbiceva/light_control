@@ -43,17 +43,19 @@ message Capabilities {
 }
 
 // graph state update
-
+// change from to something else
 message EdgeMsg {
-    string from = 1;
+    string fromNode = 1;
     string fromPort = 2;
-    string to = 3;
+    string toNode = 3;
     string toPort = 4;
 }
 
+// add data to node so we can share primitives
 message NodeMsg {
     string id = 1;
     string name = 2;
+    string value = 3;
 }
 
 message GraphUpdated {
