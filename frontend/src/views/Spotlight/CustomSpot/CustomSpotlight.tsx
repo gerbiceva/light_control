@@ -95,12 +95,12 @@ export const CustomSpotlight = () => {
         </Group>
       </Button>
 
-      <Spotlight.Root query={query} onQueryChange={setQuery}>
+      <Spotlight.Root query={query} onQueryChange={setQuery} centered>
         <Spotlight.Search
           placeholder="Search..."
           leftSection={<IconSearch stroke={1.5} />}
         />
-        <Spotlight.ActionsList mah="700px">
+        <Spotlight.ActionsList mah="80vh">
           {items.length > 0 ? (
             items
           ) : (

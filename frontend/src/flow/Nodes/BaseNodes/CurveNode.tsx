@@ -17,16 +17,17 @@ export const CurveNode = memo(({ data }: CurveNode) => {
 
   return (
     <BaseNodeElement
-      type={"Color"}
+      type={"Curve"}
       handle={
         <TypedHandle color={getColorFromEnum(BaseType.Curve)[5]} id={"Curve"} />
       }
       input={
-        <Card p="xl" withBorder radius="0">
+        <Card p="xl" withBorder radius="0" className="nodrag">
           <BezierSplineEditor
             width={200}
             height={200}
             points={points}
+            displayRelativePoints
             anchorPointProps={{
               color: theme.colors["dark"][7],
               fill: theme.colors["dark"][4],

@@ -46,4 +46,37 @@ export const testCapabilitiesList: NodeCapability[] = [
     ],
     outputs: [],
   },
+  {
+    name: "nekaj2",
+    description: "zan le jto",
+    inputs: [
+      {
+        name: "waaw",
+        type: BaseType.Color,
+      },
+    ],
+    outputs: [],
+  },
+  {
+    name: "nekaj3",
+    description: "zan le jto",
+    inputs: [
+      {
+        name: "waaw",
+        type: BaseType.Int,
+      },
+    ],
+    outputs: [],
+  },
+  {
+    name: "nekaj4",
+    description: "zan le jto",
+    inputs: [
+      {
+        name: "waaw",
+        type: BaseType.Int,
+      },
+    ],
+    outputs: [],
+  },
 ];
