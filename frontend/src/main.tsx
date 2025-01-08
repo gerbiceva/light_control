@@ -12,12 +12,23 @@ import { MantineProvider } from "@mantine/core";
 
 import { MainLayout } from "./views/MainLayout.tsx";
 import { Notifications } from "@mantine/notifications";
+import { ReactFlowProvider } from "@xyflow/react";
+import { $mousePos } from "./globalStore/mouseStore.ts";
+
+document.addEventListener("mousemove", (ev) => {
+  $mousePos.set({
+    x: ev.clientX,
+    y: ev.clientY,
+  });
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={appTheme} forceColorScheme="light">
       <Notifications position="bottom-center" />
-      <MainLayout />
+      <ReactFlowProvider>
+        <MainLayout />
+      </ReactFlowProvider>
     </MantineProvider>
   </StrictMode>
 );

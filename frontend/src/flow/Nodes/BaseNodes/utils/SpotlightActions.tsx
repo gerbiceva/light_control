@@ -1,9 +1,14 @@
 import { Avatar } from "@mantine/core";
 import { getColorFromEnum } from "../../../../utils/colorUtils";
 import { Node } from "@xyflow/react";
-import { addNode, generateFlowId } from "../../../../globalStore/flowStore";
+import {
+  $flowInst,
+  addNode,
+  generateFlowId,
+} from "../../../../globalStore/flowStore";
 import { baseCapabilities } from "./baseCapabilities";
 import { CustomSpotData } from "../../../../views/Spotlight/CustomSpot/CustomSpotData";
+import { $mousePos } from "../../../../globalStore/mouseStore";
 
 export const inputNodesActions: CustomSpotData[] = baseCapabilities.map(
   (cap) => ({
@@ -20,14 +25,13 @@ export const inputNodesActions: CustomSpotData[] = baseCapabilities.map(
   })
 );
 
-export const generateNodeInstFromInput = (
-  type: string
-  // inst: ReactFlowInstance<FlowNode, Edge>
-): Node => {
+export const generateNodeInstFromInput = (type: string): Node => {
+  const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get());
+
   return {
     id: generateFlowId(),
     type: type,
-    position: {
+    position: pos || {
       x: 0,
       y: 0,
     },

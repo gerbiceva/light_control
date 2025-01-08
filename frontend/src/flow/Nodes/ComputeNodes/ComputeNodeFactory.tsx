@@ -4,23 +4,20 @@ import { Card, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { DynamicPort } from "./DynamicPort";
 
 import { NodeProps, Node as FlowNode } from "@xyflow/react";
-import { generateFlowId } from "../../../globalStore/flowStore";
+import { $flowInst, generateFlowId } from "../../../globalStore/flowStore";
+import { $mousePos } from "../../../globalStore/mouseStore";
 
 export const generateNodeInstFromCapability = (
   capability: NodeCapability
-  // inst: ReactFlowInstance<FlowNode, Edge>
 ): FlowNode => {
+  const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get());
   return {
     id: generateFlowId(),
     type: capability.name,
-    position: {
+    position: pos || {
       x: 0,
       y: 0,
     },
-    // position: inst.screenToFlowPosition({
-    //   x: window.clientX,
-    //   y: clientY,
-    // }),
     data: {},
   };
 };

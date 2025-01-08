@@ -1,9 +1,26 @@
-import { Edge, Connection } from "@xyflow/react";
+import { Edge, Connection, Handle, Node as FlowNode } from "@xyflow/react";
 import { $edges, $nodes } from "../../globalStore/flowStore";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { Port } from "../../grpc/client_code/service";
 
-export const getConnectedEdges = () => {};
+export const getPortFromNode = (
+  handle: Handle | null,
+  node: FlowNode | null,
+  type: "source" | "target"
+) => {
+  if (!handle || !node) {
+    return;
+  }
+  const capabilities = $capabilities.get();
+
+  const fromCap = capabilities.find((cap) => cap.name == node?.type);
+  if (type == "source") {
+    return fromCap?.inputs.find((cap) => cap.name == handle.id);
+  }
+  if (type == "target") {
+    return fromCap?.outputs.find((cap) => cap.name == handle.id);
+  }
+};
 
 interface ConnectionTypesOut {
   from?: Port;

@@ -18,15 +18,23 @@ import {
   Background,
   Controls,
   MiniMap,
+  useReactFlow,
 } from "@xyflow/react";
 import { getComputedNodes } from "../flow/Nodes/ComputeNodes/getComputedNodes";
-import { $edges, $nodes, setEdges, setNodes } from "../globalStore/flowStore";
+import {
+  $edges,
+  $flowInst,
+  $nodes,
+  setEdges,
+  setNodes,
+} from "../globalStore/flowStore";
 import { useStore } from "@nanostores/react";
 import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { useSync } from "../sync/useSync";
 import { addColoredEdge } from "../flow/Edges/addColoredEdge";
 import { isValidConnection } from "../flow/Edges/isValidCOnnection";
 import { $capabilities } from "../globalStore/capabilitiesStore";
+import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
 
 const initialNodes: Node[] = [];
 
@@ -44,6 +52,14 @@ export const NodeView = () => {
   const nodes = useStore($nodes);
   const edges = useStore($edges);
   const caps = useStore($capabilities);
+  const reactFlowInst = useReactFlow();
+
+  useEffect(() => {
+    console.log("inst change");
+
+    $flowInst.set(reactFlowInst);
+  }, [reactFlowInst]);
+
   useSync(); // sync backend
 
   const nodeTypes: NodeTypes = useMemo(
@@ -64,13 +80,9 @@ export const NodeView = () => {
     [edges]
   );
 
-  const onConnect: OnConnect = useCallback(
-    (connection) => {
-      setEdges(addColoredEdge(connection, edges));
-      // console.log({ edges });
-    },
-    [edges]
-  );
+  const onConnect: OnConnect = useCallback((connection) => {
+    setEdges(addColoredEdge(connection));
+  }, []);
 
   useEffect(() => {
     setNodes(initialNodes);
@@ -83,6 +95,7 @@ export const NodeView = () => {
         nodes={nodes}
         nodeTypes={nodeTypes}
         edges={edges}
+        onConnectEnd={addInputOnEdgeDrop}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
