@@ -55,7 +55,7 @@ message EdgeMsg {
 message NodeMsg {
     string id = 1;
     string name = 2;
-    string value = 3;
+    optional string value = 3;
 }
 
 message GraphUpdated {
