@@ -1,13 +1,13 @@
 import { NumberInput } from "@mantine/core";
-import { Node, NodeProps } from "@xyflow/react";
+import { NodeProps } from "@xyflow/react";
 import { memo } from "react";
 import { BaseType } from "../../../grpc/client_code/service";
 import { getColorFromEnum } from "../../../utils/colorUtils";
 import { TypedHandle } from "../TypedHandle";
 import { BaseNodeElement } from "./BaseNodeElement";
+import { FlowNodeWithValue } from "./utils/inputNodeType";
 
-type ColorNodeData = { float: number };
-type ColorNode = NodeProps<Node<ColorNodeData, "floatPrimitive">>;
+type ColorNode = NodeProps<FlowNodeWithValue>;
 
 export const FloatNode = memo(({ data }: ColorNode) => {
   return (
@@ -19,7 +19,7 @@ export const FloatNode = memo(({ data }: ColorNode) => {
       input={
         <NumberInput
           size="xs"
-          defaultValue={data.float}
+          defaultValue={data.value as number}
           className="nodrag"
           allowDecimal={true}
           decimalScale={2}
@@ -28,7 +28,7 @@ export const FloatNode = memo(({ data }: ColorNode) => {
             if (typeof int == "string") {
               return;
             }
-            data.float = int;
+            data.value = int;
           }}
         />
       }

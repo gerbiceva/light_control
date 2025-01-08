@@ -92,9 +92,9 @@ export interface NodeMsg {
      */
     name: string;
     /**
-     * @generated from protobuf field: string value = 3;
+     * @generated from protobuf field: optional string value = 3;
      */
-    value: string;
+    value?: string;
 }
 /**
  * @generated from protobuf message GraphUpdated
@@ -223,7 +223,7 @@ class NodeMsg$Type extends MessageType<NodeMsg> {
         super("NodeMsg", [
             { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "value", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 3, name: "value", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
         ]);
     }
 }

@@ -1,13 +1,13 @@
 import { TextInput } from "@mantine/core";
-import { Node, NodeProps } from "@xyflow/react";
+import { NodeProps } from "@xyflow/react";
 import { memo } from "react";
 import { BaseType } from "../../../grpc/client_code/service";
 import { getColorFromEnum } from "../../../utils/colorUtils";
 import { TypedHandle } from "../TypedHandle";
 import { BaseNodeElement } from "./BaseNodeElement";
+import { FlowNodeWithValue } from "./utils/inputNodeType";
 
-type StringNodeData = { str: string };
-type StringNode = NodeProps<Node<StringNodeData, "stringPrimitive">>;
+type StringNode = NodeProps<FlowNodeWithValue>;
 
 export const StringNode = memo(({ data }: StringNode) => {
   return (
@@ -22,10 +22,10 @@ export const StringNode = memo(({ data }: StringNode) => {
       input={
         <TextInput
           size="xs"
-          defaultValue={data.str}
+          defaultValue={data.value as string}
           className="nodrag"
           onChange={(ev) => {
-            data.str = ev.target.value;
+            data.value = ev.target.value;
           }}
         />
       }
