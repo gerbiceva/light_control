@@ -1,7 +1,7 @@
-from datatypes import ColorArray, Color, Array, node
+from datatypes import ColorArray, Color, Array, node, Float
 
 @node
-def set_brightness_all(hsv: ColorArray, value: float) -> ColorArray:
+def set_brightness_all(hsv: ColorArray, value: Float) -> ColorArray:
     """
     Set Brightness of ColorArray
 
@@ -23,7 +23,7 @@ def set_brightness_all(hsv: ColorArray, value: float) -> ColorArray:
 
 
 @node
-def set_saturation_all(hsv: ColorArray, value: float) -> ColorArray:
+def set_saturation_all(hsv: ColorArray, value: Float) -> ColorArray:
     """
     Set Saturation of ColorArray
 
@@ -44,7 +44,7 @@ def set_saturation_all(hsv: ColorArray, value: float) -> ColorArray:
     return hsv.at[1, :].set(value)
 
 @node
-def set_hue_all(hsv: ColorArray, value: float) -> ColorArray:
+def set_hue_all(hsv: ColorArray, value: Float) -> ColorArray:
     """
     Set Hue of ColorArray
 

@@ -20,7 +20,7 @@ def load_nodes():
     nodes = []
     for module in modules:
         for member in inspect.getmembers(module):
-            if member[1].__doc__ and member[0][0] != '_' and inspect.isfunction(member[1]) and hasattr(member[1], "__is_node__"):
-                nodes.append((member[0], FunctionDoc(member[1])))
+            if member[0][0] != '_' and inspect.isfunction(member[1]) and hasattr(member[1], "__is_node__"):
+                nodes.append((member[1], FunctionDoc(member[1])))
 
     return nodes

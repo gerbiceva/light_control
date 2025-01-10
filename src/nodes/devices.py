@@ -18,8 +18,8 @@ buttons = [
         "Up",
         "Down",
     ]
-pad = Gamepad("/dev/input/event17")
-mic = Microphone(3)
+# pad = Gamepad("/dev/input/event17")
+# mic = Microphone(3)
 
 def get_gamepad_state() -> (int, int, int, int, int, int, int, int, int, int, int, int, int, int, float, float, Vector2D, Vector2D):
     return tuple(pad.buttons[button] for button in buttons) + (

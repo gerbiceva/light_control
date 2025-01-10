@@ -1,8 +1,8 @@
-from datatypes import ColorArray, node
+from datatypes import ColorArray, node, Int
 import jax.numpy as jnp
 
 @node
-def color_array(n: int) -> ColorArray:
+def color_array(n: Int) -> ColorArray:
     """
     Create a ColorArray with Zero Values
 

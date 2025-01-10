@@ -14,19 +14,19 @@ export const useSync = () => {
   const [debouncedEdges] = useDebouncedValue(edges, updateIntervalMs);
   const [debouncedNodes] = useDebouncedValue(nodes, updateIntervalMs);
 
-  const update = useCallback(() => {
-    addSyncPromise(
-      new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(0);
-        }, 300);
-      })
-    );
-  }, []);
-
   // const update = useCallback(() => {
-  //   addSyncPromise(sync(nodes, edges));
-  // }, [edges, nodes]);
+  //   addSyncPromise(
+  //     new Promise((resolve) => {
+  //       setTimeout(() => {
+  //         resolve(0);
+  //       }, 300);
+  //     })
+  //   );
+  // }, []);
+
+  const update = useCallback(() => {
+    addSyncPromise(sync(nodes, edges));
+  }, [debouncedNodes, debouncedEdges]);
 
   useEffect(() => {
     changeHappened();

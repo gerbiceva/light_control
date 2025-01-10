@@ -1,4 +1,4 @@
-from datatypes import ColorArray, node
+from datatypes import ColorArray, node, each_tick
 import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn
@@ -10,6 +10,10 @@ sender.manual_flush = True
 for i in range(1, 8):
     sender.activate_output(i)
     sender[i].multicast = True
+
+@each_tick
+def send():
+    sender.flush()
 
 @node
 def light_strip(universe: int, hsv: ColorArray):
@@ -30,6 +34,7 @@ def light_strip(universe: int, hsv: ColorArray):
     -------
     None
     """
+    print(hsv.shape)
     sender[universe].dmx_data = jnp.pad(
         (hsv_to_rgb(hsv.T).flatten() * 255).astype(jnp.uint8),
         (0, 512 - hsv.shape[0] * hsv.shape[1]),
