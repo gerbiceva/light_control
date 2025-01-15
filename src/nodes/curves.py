@@ -1,10 +1,12 @@
-from datatypes import Curve, Array, node
-import jax
+from datatypes import Curve, Array, node, String
 import jax.numpy as jnp
 from jax import lax
+from sympy import symbols, lambdify, sympify, Piecewise
+
+x = symbols("x")
 
 @node
-def sample_curve(curve: Curve, x: float) -> float:
+def sample_curve(curve: Curve, number: float) -> float:
     """
     Sample a Curve at a Specific Point
 
@@ -14,7 +16,7 @@ def sample_curve(curve: Curve, x: float) -> float:
     ----------
     curve : Curve
         A callable curve function that takes a float as input and returns a float.
-    x : Float
+    number : Float
         The x-coordinate at which to sample the curve.
 
     Returns
@@ -22,7 +24,7 @@ def sample_curve(curve: Curve, x: float) -> float:
     curve : Float
         The value of the curve at the specified x-coordinate.
     """
-    return curve(x)
+    return lambdify(x, curve, 'jax')(number)
 
 @node
 def sample_array(curve: Curve, resolution: int) -> Array:
@@ -43,7 +45,7 @@ def sample_array(curve: Curve, resolution: int) -> Array:
     array : Array
         An array of sampled values from the curve.
     """
-    return jax.vmap(curve, in_axes=0, out_axes=0)(jnp.linspace(0, 1, resolution))
+    return lambdify(x, curve, "jax")(jnp.linspace(0, 1, resolution))
 
 @node
 def pad_curve(curve: Curve, padding: float) -> Curve:
@@ -72,7 +74,8 @@ def pad_curve(curve: Curve, padding: float) -> Curve:
             operand=None,
         )
 
-    return new_curve
+
+    return Piecewise((curve, x < padding), (0, x>=padding))
 
 @node
 def move_curve(curve: Curve, move: float) -> Curve:
@@ -93,10 +96,8 @@ def move_curve(curve: Curve, move: float) -> Curve:
     curve : Curve
         A new curve shifted by the specified amount.
     """
-    def new_curve(x: float) -> float:
-        return curve((x + move) % 1)
 
-    return new_curve
+    return curve.subs(x, x + move)
 
 @node
 def linear_curve() -> Curve:
@@ -110,29 +111,45 @@ def linear_curve() -> Curve:
     curve : Curve
         A linear curve function.
     """
-    def new_curve(x: float) -> float:
-        return x
-
-    return new_curve
+    return x
 
 @node
-def sin_curve(peaks: float) -> Curve:
+def curve(string: String):
     """
-    Create a Sine Wave Curve
+    String 2 Curve
 
-    Creates a curve that represents a sine wave with a specified number of peaks.
+    Creates a curve from an arbitrary string.
 
     Parameters
     ----------
-    peaks : Float
-        The number of sine wave peaks over the interval [0, 1].
+    string : String
+        Converts a string to a curve.
 
     Returns
     -------
     curve : Curve
-        A sine wave curve function.
+        A string representing a curve.
     """
-    def new_curve(x: float) -> float:
-        return jnp.sin(x * peaks * jnp.pi)
+    return sympify(string)
 
-    return new_curve
+# @node
+# def sin_curve(peaks: float) -> Curve:
+#     """
+#     Create a Sine Wave Curve
+
+#     Creates a curve that represents a sine wave with a specified number of peaks.
+
+#     Parameters
+#     ----------
+#     peaks : Float
+#         The number of sine wave peaks over the interval [0, 1].
+
+#     Returns
+#     -------
+#     curve : Curve
+#         A sine wave curve function.
+#     """
+#     def new_curve(x: float) -> float:
+#         return jnp.sin(x * peaks * jnp.pi)
+
+#     return new_curve
