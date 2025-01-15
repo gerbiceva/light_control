@@ -83,7 +83,7 @@ def set_color_all(hsv: ColorArray, color: Color) -> ColorArray:
     hsv : ColorArray
         The updated color array with the new color.
     """
-    return hsv.at[:, :].set(color)
+    return hsv.at[:, :].set(color[:, None])
 
 @node
 def set_hue_array(hsv: ColorArray, array: Array) -> ColorArray:
