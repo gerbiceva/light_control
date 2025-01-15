@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Card,
   Group,
   Loader,
@@ -12,6 +13,8 @@ import { useStore } from "@nanostores/react";
 import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
+import { IconRecycle, IconTrash } from "@tabler/icons-react";
+import { resetState } from "../globalStore/flowStore";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
@@ -46,6 +49,19 @@ export const MainLayout = () => {
           {/*Settings and server indicator*/}
           <Group gap="lg" justify="end">
             <LoaderIndicator />
+            <ActionIcon
+              variant="subtle"
+              onClick={() => {
+                const c = confirm(
+                  "reset nodes and edges? Operation can't be undone"
+                );
+                if (c) {
+                  resetState();
+                }
+              }}
+            >
+              <IconRecycle />
+            </ActionIcon>
           </Group>
         </SimpleGrid>
       </Card>

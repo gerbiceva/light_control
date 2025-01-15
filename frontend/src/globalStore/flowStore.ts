@@ -46,3 +46,8 @@ export const setEdges = (edges: FlowEdge[]) => {
 export const addEdge = (edge: FlowEdge) => {
   setEdges([...$edges.get(), edge]);
 };
+
+export const resetState = () => {
+  setEdges([]);
+  setNodes([]);
+};

@@ -30,7 +30,7 @@ import { useStore } from "@nanostores/react";
 import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { useSync } from "../sync/useSync";
 import { addColoredEdge } from "../flow/Edges/addColoredEdge";
-import { isValidConnection } from "../flow/Edges/isValidConnection";
+import { isValidConnection } from "../flow/Edges/isValidCOnnection";
 import { $capabilities } from "../globalStore/capabilitiesStore";
 import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
 import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
