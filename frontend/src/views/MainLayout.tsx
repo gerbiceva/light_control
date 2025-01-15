@@ -52,12 +52,13 @@ export const MainLayout = () => {
             <ActionIcon
               variant="subtle"
               onClick={() => {
-                const c = confirm(
-                  "reset nodes and edges? Operation can't be undone"
-                );
-                if (c) {
-                  resetState();
+                if (
+                  !confirm("reset nodes and edges? Operation can't be undone")
+                ) {
+                  return;
                 }
+
+                resetState();
               }}
             >
               <IconRecycle />
