@@ -12,7 +12,7 @@ type StringNode = NodeProps<FlowNodeWithValue>;
 export const StringNode = memo(({ data }: StringNode) => {
   return (
     <BaseNodeElement
-      type={"Color"}
+      type={"String"}
       handle={
         <TypedHandle
           color={getColorFromEnum(BaseType.String)[5]}
