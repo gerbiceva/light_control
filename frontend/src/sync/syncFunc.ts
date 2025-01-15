@@ -25,12 +25,16 @@ export const sync = (nodes: FlowNode[], edges: FlowEdge[]) => {
             namespace,
           };
         }),
-        edges: edges.map((e) => ({
-          fromNode: e.source,
-          fromPort: e.sourceHandle || "",
-          toNode: e.target,
-          toPort: e.targetHandle || "",
-        })),
+        edges: edges.map((e) => {
+          return {
+            fromNamespace: "",
+            toNamespace: "",
+            fromNode: e.source,
+            fromPort: e.sourceHandle || "",
+            toNode: e.target,
+            toPort: e.targetHandle || "",
+          };
+        }),
       })
       .then(
         (res) => {
