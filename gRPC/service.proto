@@ -36,6 +36,7 @@ message NodeCapability {
     string description = 2;
     repeated Port inputs = 4;
     repeated Port outputs = 5;
+    string namespace = 6;
 }
 
 message Capabilities {

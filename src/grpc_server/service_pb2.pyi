@@ -40,16 +40,18 @@ class Port(_message.Message):
     def __init__(self, name: _Optional[str] = ..., type: _Optional[_Union[BaseType, str]] = ...) -> None: ...
 
 class NodeCapability(_message.Message):
-    __slots__ = ("name", "description", "inputs", "outputs")
+    __slots__ = ("name", "description", "inputs", "outputs", "namespace")
     NAME_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     INPUTS_FIELD_NUMBER: _ClassVar[int]
     OUTPUTS_FIELD_NUMBER: _ClassVar[int]
+    NAMESPACE_FIELD_NUMBER: _ClassVar[int]
     name: str
     description: str
     inputs: _containers.RepeatedCompositeFieldContainer[Port]
     outputs: _containers.RepeatedCompositeFieldContainer[Port]
-    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., inputs: _Optional[_Iterable[_Union[Port, _Mapping]]] = ..., outputs: _Optional[_Iterable[_Union[Port, _Mapping]]] = ...) -> None: ...
+    namespace: str
+    def __init__(self, name: _Optional[str] = ..., description: _Optional[str] = ..., inputs: _Optional[_Iterable[_Union[Port, _Mapping]]] = ..., outputs: _Optional[_Iterable[_Union[Port, _Mapping]]] = ..., namespace: _Optional[str] = ...) -> None: ...
 
 class Capabilities(_message.Message):
     __slots__ = ("nodes",)

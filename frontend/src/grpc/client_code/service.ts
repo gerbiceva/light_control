@@ -43,6 +43,10 @@ export interface NodeCapability {
      * @generated from protobuf field: repeated Port outputs = 5;
      */
     outputs: Port[];
+    /**
+     * @generated from protobuf field: string namespace = 6;
+     */
+    namespace: string;
 }
 /**
  * @generated from protobuf message Capabilities
@@ -182,7 +186,8 @@ class NodeCapability$Type extends MessageType<NodeCapability> {
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "inputs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Port },
-            { no: 5, name: "outputs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Port }
+            { no: 5, name: "outputs", kind: "message", repeat: 1 /*RepeatType.PACKED*/, T: () => Port },
+            { no: 6, name: "namespace", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
 }
