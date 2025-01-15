@@ -7,8 +7,6 @@ import {
   ReactFlow,
   applyNodeChanges,
   applyEdgeChanges,
-  type Node,
-  type Edge,
   type FitViewOptions,
   type OnConnect,
   type OnNodesChange,

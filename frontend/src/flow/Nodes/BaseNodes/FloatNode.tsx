@@ -23,6 +23,7 @@ export const FloatNode = memo(({ data }: ColorNode) => {
           className="nodrag"
           allowDecimal={true}
           decimalScale={2}
+          step={0.1}
           fixedDecimalScale
           onChange={(int) => {
             if (typeof int == "string") {

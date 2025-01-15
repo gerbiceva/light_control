@@ -8,9 +8,9 @@ import { MessageType } from "@protobuf-ts/runtime";
  */
 export interface Void {
 }
-// Capabilities
-
 /**
+ * Capabilities
+ *
  * @generated from protobuf message Port
  */
 export interface Port {
@@ -99,6 +99,10 @@ export interface NodeMsg {
      * @generated from protobuf field: optional string value = 3;
      */
     value?: string;
+    /**
+     * @generated from protobuf field: string namespace = 4;
+     */
+    namespace: string;
 }
 /**
  * @generated from protobuf message GraphUpdated
@@ -228,7 +232,8 @@ class NodeMsg$Type extends MessageType<NodeMsg> {
         super("NodeMsg", [
             { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "value", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ }
+            { no: 3, name: "value", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "namespace", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
 }

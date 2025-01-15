@@ -72,14 +72,16 @@ class EdgeMsg(_message.Message):
     def __init__(self, fromNode: _Optional[str] = ..., fromPort: _Optional[str] = ..., toNode: _Optional[str] = ..., toPort: _Optional[str] = ...) -> None: ...
 
 class NodeMsg(_message.Message):
-    __slots__ = ("id", "name", "value")
+    __slots__ = ("id", "name", "value", "namespace")
     ID_FIELD_NUMBER: _ClassVar[int]
     NAME_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
+    NAMESPACE_FIELD_NUMBER: _ClassVar[int]
     id: str
     name: str
     value: str
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
+    namespace: str
+    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., value: _Optional[str] = ..., namespace: _Optional[str] = ...) -> None: ...
 
 class GraphUpdated(_message.Message):
     __slots__ = ("nodes", "edges")
