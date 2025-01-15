@@ -3,9 +3,6 @@ import { NodeProps } from "@xyflow/react";
 import { memo, useState } from "react";
 import { Point } from "react-bezier-spline-editor/core";
 import { BezierSplineEditor } from "react-bezier-spline-editor/react";
-import { BaseType } from "../../../grpc/client_code/service";
-import { getColorFromEnum } from "../../../utils/colorUtils";
-import { TypedHandle } from "../TypedHandle";
 import { BaseNodeElement } from "./BaseNodeElement";
 import { FlowNodeWithValue } from "./utils/inputNodeType";
 
@@ -19,9 +16,6 @@ export const CurveNode = memo(({ data }: CurveNode) => {
     <BaseNodeElement
       namespace="inputs"
       type={"Curve"}
-      handle={
-        <TypedHandle color={getColorFromEnum(BaseType.Curve)[5]} id={"Curve"} />
-      }
       input={
         <Card p="xl" withBorder radius="0" className="nodrag">
           <BezierSplineEditor

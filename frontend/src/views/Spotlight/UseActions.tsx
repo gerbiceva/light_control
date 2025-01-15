@@ -13,7 +13,7 @@ import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
 import { getColorFromString } from "../../utils/colorUtils";
 
 export const useActions = (): CustomSpotlightGroups[] => {
-  const capabilities = useStore($serverCapabilities);
+  const serverCapabilities = useStore($serverCapabilities);
   const nodes = useStore($nodes);
 
   const addNode = useCallback(
@@ -25,7 +25,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
 
   // SERVER CAPABILITES ONLY
   const actionsFromCapabilities: CustomSpotData[] = useMemo(() => {
-    return capabilities.map((cap) => {
+    return serverCapabilities.map((cap) => {
       return {
         id: cap.name,
         label: cap.name,
@@ -42,7 +42,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
         ),
       };
     });
-  }, [addNode, capabilities]);
+  }, [addNode, serverCapabilities]);
 
   const actions: CustomSpotlightGroups[] = useMemo(() => {
     if (!theme.colors) {
@@ -51,7 +51,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
 
     return [
       {
-        groupName: "Inputs",
+        groupName: "Primitive",
         data: inputNodesActions,
       },
       {

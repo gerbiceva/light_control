@@ -1,15 +1,18 @@
 import { Card, Stack, Group, Text, Tooltip } from "@mantine/core";
-import { getColorFromString } from "../../../utils/colorUtils";
+import {
+  getColorFromEnum,
+  getColorFromString,
+} from "../../../utils/colorUtils";
+import { BaseType } from "../../../grpc/client_code/service";
+import { TypedHandle } from "../TypedHandle";
 
 interface BaseNodeElementProps {
   type: string;
-  handle: JSX.Element;
   input: JSX.Element;
   namespace: string;
 }
 
 export const BaseNodeElement = ({
-  handle,
   input,
   type,
   namespace,
@@ -32,7 +35,11 @@ export const BaseNodeElement = ({
         <Tooltip label={type}>
           <Group p="xs" pr="0">
             {input}
-            {handle}
+            <TypedHandle
+              //@ts-expect-error type will be of type basetype
+              color={getColorFromEnum(BaseType[type])["5"]}
+              id={type}
+            />
           </Group>
         </Tooltip>
       </Stack>

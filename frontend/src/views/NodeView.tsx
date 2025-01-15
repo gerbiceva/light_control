@@ -30,9 +30,10 @@ import { useStore } from "@nanostores/react";
 import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { useSync } from "../sync/useSync";
 import { addColoredEdge } from "../flow/Edges/addColoredEdge";
-import { isValidConnection } from "../flow/Edges/isValidCOnnection";
+import { isValidConnection } from "../flow/Edges/isValidConnection";
 import { $capabilities } from "../globalStore/capabilitiesStore";
 import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
+import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
 
 const fitViewOptions: FitViewOptions = {
   padding: 3,
@@ -50,17 +51,21 @@ export const NodeView = () => {
 
   useEffect(() => {
     console.log("inst change");
-
     $flowInst.set(reactFlowInst);
   }, [reactFlowInst]);
 
   useSync(); // sync backend
 
   const nodeTypes: NodeTypes = useMemo(
-    () => ({
-      ...getComputedNodes(), // get all custom nodes, computed from capabilities
-      ...inputNodes,
-    }),
+    () => {
+      const caps = {
+        ...getComputedNodes(), // get all custom nodes, computed from capabilities
+        ...mapPrimitivesToNamespaced(inputNodes),
+      };
+      console.log({ caps });
+
+      return caps;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [caps]
   );

@@ -7,6 +7,7 @@ import { NodeProps, Node as FlowNode } from "@xyflow/react";
 import { $flowInst, generateFlowId } from "../../../globalStore/flowStore";
 import { $mousePos } from "../../../globalStore/mouseStore";
 import { getColorFromString } from "../../../utils/colorUtils";
+import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
 
 export const generateNodeInstFromCapability = (
   capability: NodeCapability
@@ -14,7 +15,7 @@ export const generateNodeInstFromCapability = (
   const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get());
   return {
     id: generateFlowId(),
-    type: capability.name,
+    type: mergeNamespaceAndType(capability.namespace, capability.name),
     position: pos || {
       x: 0,
       y: 0,
@@ -44,15 +45,7 @@ export const generateComputeNodeFromCapability = (
 
   const ComputeNode = ({ selected }: NodeProps<FlowNode>) => {
     return (
-      <Card
-        withBorder
-        p="0"
-        shadow={selected ? "lg" : undefined}
-        // style={{
-        //   borderColor: selected ? theme.colors["dark"][5] : undefined,
-        //   border: "2px solid",
-        // }}
-      >
+      <Card withBorder p="0" shadow={selected ? "lg" : undefined}>
         <Stack pb="0" gap="0">
           <Group
             bg="dark"

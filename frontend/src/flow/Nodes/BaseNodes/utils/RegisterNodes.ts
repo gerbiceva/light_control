@@ -16,7 +16,20 @@ export const inputNodes: NodeTypes = {
 
 export type InputNodeTypes = keyof typeof inputNodes;
 
-export const getNodeTypeFromType = (inp: BaseType): InputNodeTypes | null => {
+export const getNodeNamespaceAndTypeFromBaseType = (inp: BaseType) => {
+  const nodeType = getNodeTypeFromBaseType(inp);
+  if (nodeType == null) {
+    return null;
+  }
+
+  return {
+    namespaced: "primitive/" + nodeType,
+    type: nodeType,
+  };
+};
+export const getNodeTypeFromBaseType = (
+  inp: BaseType
+): InputNodeTypes | null => {
   switch (inp) {
     case BaseType.Color:
       return "Color";

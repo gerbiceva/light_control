@@ -3,13 +3,13 @@ import { atom, computed } from "nanostores";
 import { NodeCapability } from "../grpc/client_code/service";
 import { client } from "../grpc/grpcClient";
 import { notifSuccess, notifError } from "../utils/notifications";
-import { baseCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
+import { primitiveCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
 import { testCapabilitiesList } from "../flow/Nodes/ComputeNodes/test";
 
 export const $serverCapabilities = atom<NodeCapability[]>([]);
 
 export const $capabilities = computed($serverCapabilities, (cap) => {
-  const out: NodeCapability[] = [...cap, ...baseCapabilities];
+  const out: NodeCapability[] = [...cap, ...primitiveCapabilities];
   return out;
 });
 

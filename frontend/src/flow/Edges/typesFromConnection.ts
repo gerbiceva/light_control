@@ -2,6 +2,7 @@ import { Edge, Connection, Handle, Node as FlowNode } from "@xyflow/react";
 import { $edges, $nodes } from "../../globalStore/flowStore";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { Port } from "../../grpc/client_code/service";
+import { splitTypeAndNamespace } from "../../sync/namespaceUtils";
 
 export const getPortFromNode = (
   handle: Handle | null,
@@ -13,7 +14,14 @@ export const getPortFromNode = (
   }
   const capabilities = $capabilities.get();
 
-  const fromCap = capabilities.find((cap) => cap.name == node?.type);
+  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
+    node?.type || ""
+  );
+
+  const fromCap = capabilities.find(
+    (cap) => cap.name == tFrom && nsFrom == cap.namespace
+  );
+
   if (type == "source") {
     return fromCap?.inputs.find((cap) => cap.name == handle.id);
   }
@@ -35,21 +43,31 @@ export const getConnectionProperties = (
   const edges = $edges.get();
   const capabilities = $capabilities.get();
 
+  // get from node, namespace, type, capability and port
   const from = nodes.find((node) => node.id == edge.source);
-  const fromCap = capabilities.find((cap) => cap.name == from?.type);
+  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
+    from?.type || ""
+  );
+  const fromCap = capabilities.find(
+    (cap) => cap.name == tFrom && nsFrom == cap.namespace
+  );
   const fromPort = fromCap?.outputs.find(
     (cap) => cap.name == edge.sourceHandle
   );
 
+  // get to node, namespace, type, capability and port
   const to = nodes.find((node) => node.id == edge.target);
-  const toCap = capabilities.find((cap) => cap.name == to?.type);
+  const { namespace: nsTo, type: tTo } = splitTypeAndNamespace(to?.type || "");
+  const toCap = capabilities.find(
+    (cap) => cap.name == tTo && nsTo == cap.namespace
+  );
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
-
   const targetEdges = edges.filter(
     (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
   );
 
-  // console.log({ fromPort }, { from }, { toPort });
+  // console.log({ from }, { fromCap }, { toCap });
+  // console.log({ fromPort }, { toPort });
 
   return {
     from: fromPort,

@@ -1,9 +1,6 @@
 import { NumberInput } from "@mantine/core";
 import { NodeProps } from "@xyflow/react";
 import { memo } from "react";
-import { BaseType } from "../../../grpc/client_code/service";
-import { getColorFromEnum } from "../../../utils/colorUtils";
-import { TypedHandle } from "../TypedHandle";
 import { BaseNodeElement } from "./BaseNodeElement";
 import { FlowNodeWithValue } from "./utils/inputNodeType";
 
@@ -14,9 +11,6 @@ export const FloatNode = memo(({ data }: ColorNode) => {
     <BaseNodeElement
       namespace="inputs"
       type={"Float"}
-      handle={
-        <TypedHandle color={getColorFromEnum(BaseType.Float)[5]} id={"Float"} />
-      }
       input={
         <NumberInput
           size="xs"

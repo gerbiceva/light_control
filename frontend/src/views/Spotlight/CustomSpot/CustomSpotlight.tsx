@@ -5,6 +5,7 @@ import {
   Button,
   ColorSwatch,
   Divider,
+  Flex,
   Group,
   Kbd,
   Stack,
@@ -48,43 +49,61 @@ export const CustomSpotlight = () => {
             <Spotlight.Action key={item.label} onClick={item.onClick}>
               <Group wrap="nowrap" w="100%" align="center">
                 {item.leftSection}
-                <Stack gap="6px">
-                  <Group align="center">
-                    <Text size="md">{item.label}</Text>
+                <Stack gap="6px" w="100%">
+                  <Flex
+                    gap="sm"
+                    align="center"
+                    w="100%"
+                    wrap="nowrap"
+                    justify="space-between"
+                  >
+                    <Text size="md" style={{ textWrap: "nowrap" }}>
+                      {item.label}
+                    </Text>
+                    <Divider opacity={0.6} style={{ flex: 1 }} />
                     <Badge
+                      variant="light"
                       size="xs"
                       color={getColorFromString(item.capability.namespace)[5]}
                     >
                       {item.capability.namespace}
                     </Badge>
-                  </Group>
+                  </Flex>
+                  <Group
+                    align="center"
+                    w="100%"
+                    justify="space-between"
+                    wrap="nowrap"
+                    gap="xl"
+                  >
+                    <Text size="xs" c="dimmed">
+                      {item.description}
+                    </Text>
 
-                  {grp.groupName != "Inputs" && (
-                    <Group wrap="nowrap" gap="md">
-                      <Group gap="xs">
-                        {item.capability.inputs.map((inp) => (
-                          <ColorSwatch
-                            key={inp.name}
-                            size="14px"
-                            color={getColorFromEnum(inp.type)[5]}
-                          />
-                        ))}
+                    {grp.groupName != "Inputs" && (
+                      <Group wrap="nowrap" gap="md" justify="end">
+                        <Group gap="xs" wrap="nowrap">
+                          {item.capability.inputs.map((inp) => (
+                            <ColorSwatch
+                              key={inp.name}
+                              size="14px"
+                              color={getColorFromEnum(inp.type)[5]}
+                            />
+                          ))}
+                        </Group>
+                        <Divider orientation="vertical" />
+                        <Group gap="xs" wrap="nowrap">
+                          {item.capability.outputs.map((inp) => (
+                            <ColorSwatch
+                              key={inp.name}
+                              size="14px"
+                              color={getColorFromEnum(inp.type)[5]}
+                            />
+                          ))}
+                        </Group>
                       </Group>
-                      <Divider orientation="vertical" />
-                      <Group gap="xs">
-                        {item.capability.outputs.map((inp) => (
-                          <ColorSwatch
-                            key={inp.name}
-                            size="14px"
-                            color={getColorFromEnum(inp.type)[5]}
-                          />
-                        ))}
-                      </Group>
-                    </Group>
-                  )}
-                  <Text size="xs" c="dimmed">
-                    {item.description}
-                  </Text>
+                    )}
+                  </Group>
                 </Stack>
               </Group>
             </Spotlight.Action>

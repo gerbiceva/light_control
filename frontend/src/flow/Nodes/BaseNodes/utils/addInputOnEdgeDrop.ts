@@ -6,12 +6,12 @@ import {
   setEdges,
 } from "../../../../globalStore/flowStore";
 import { $mousePos } from "../../../../globalStore/mouseStore";
-import { getNodeTypeFromType } from "./RegisterNodes";
+import { getNodeNamespaceAndTypeFromBaseType } from "./RegisterNodes";
 import { getPortFromNode } from "../../../Edges/typesFromConnection";
 import { addColoredEdge } from "../../../Edges/addColoredEdge";
 
 export const addInputOnEdgeDrop = (
-  event: MouseEvent | TouchEvent,
+  _event: MouseEvent | TouchEvent,
   connectionState: FinalConnectionState
 ) => {
   // when a connection is dropped on the pane it's not valid
@@ -39,7 +39,7 @@ export const addInputOnEdgeDrop = (
       return;
     }
 
-    const nodeType = getNodeTypeFromType(port?.type);
+    const nodeType = getNodeNamespaceAndTypeFromBaseType(port?.type);
     if (!nodeType) {
       return;
     }
@@ -53,7 +53,7 @@ export const addInputOnEdgeDrop = (
     const origin: [number, number] = [1, 0.5];
     const newNode = {
       id,
-      type: nodeType,
+      type: nodeType.namespaced,
       position: pos,
       data: { value: "" },
       origin,
@@ -64,7 +64,7 @@ export const addInputOnEdgeDrop = (
     setEdges(
       addColoredEdge({
         source: id,
-        sourceHandle: nodeType,
+        sourceHandle: nodeType.type,
         target: connectionState.fromNode?.id,
         targetHandle: connectionState.fromHandle?.id,
       })
