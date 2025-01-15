@@ -3,6 +3,7 @@ import { BaseType, NodeCapability } from "../../../grpc/client_code/service";
 export const testingCapabilityNode: NodeCapability = {
   name: "Special multi mega node",
   description: "special node can do special things and is special",
+  namespace: "testing func",
   inputs: [
     {
       name: "Color for led",
@@ -37,6 +38,7 @@ export const testCapabilitiesList: NodeCapability[] = [
   testingCapabilityNode,
   {
     name: "nekaj",
+    namespace: "math",
     description: "zan le jto",
     inputs: [
       {
@@ -48,6 +50,7 @@ export const testCapabilitiesList: NodeCapability[] = [
   },
   {
     name: "nekaj2",
+    namespace: "math",
     description: "zan le jto",
     inputs: [
       {
@@ -59,6 +62,7 @@ export const testCapabilitiesList: NodeCapability[] = [
   },
   {
     name: "nekaj3",
+    namespace: "math",
     description: "zan le jto",
     inputs: [
       {
@@ -71,6 +75,7 @@ export const testCapabilitiesList: NodeCapability[] = [
   {
     name: "nekaj4",
     description: "zan le jto",
+    namespace: "things",
     inputs: [
       {
         name: "waaw",

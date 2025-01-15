@@ -10,6 +10,7 @@ import { inputNodesActions } from "../../flow/Nodes/BaseNodes/utils/SpotlightAct
 
 import { CustomSpotData } from "./CustomSpot/CustomSpotData";
 import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
+import { getColorFromString } from "../../utils/colorUtils";
 
 export const useActions = (): CustomSpotlightGroups[] => {
   const capabilities = useStore($serverCapabilities);
@@ -22,6 +23,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
     [nodes]
   );
 
+  // SERVER CAPABILITES ONLY
   const actionsFromCapabilities: CustomSpotData[] = useMemo(() => {
     return capabilities.map((cap) => {
       return {
@@ -34,7 +36,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
           addNode(generateNodeInstFromCapability(cap));
         },
         leftSection: (
-          <Avatar radius={0} color={theme.colors["gray"][5]}>
+          <Avatar radius={0} color={getColorFromString(cap.namespace)[5]}>
             {cap.name.slice(0, 2)}
           </Avatar>
         ),

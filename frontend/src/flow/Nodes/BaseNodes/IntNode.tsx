@@ -12,6 +12,7 @@ type ColorNode = NodeProps<FlowNodeWithValue>;
 export const IntNode = memo(({ data }: ColorNode) => {
   return (
     <BaseNodeElement
+      namespace="inputs"
       type={"Int"}
       handle={
         <TypedHandle color={getColorFromEnum(BaseType.Int)[5]} id={"Int"} />

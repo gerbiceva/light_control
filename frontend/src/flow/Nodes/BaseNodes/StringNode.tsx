@@ -12,6 +12,7 @@ type StringNode = NodeProps<FlowNodeWithValue>;
 export const StringNode = memo(({ data }: StringNode) => {
   return (
     <BaseNodeElement
+      namespace="inputs"
       type={"String"}
       handle={
         <TypedHandle

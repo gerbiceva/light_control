@@ -6,6 +6,7 @@ import { DynamicPort } from "./DynamicPort";
 import { NodeProps, Node as FlowNode } from "@xyflow/react";
 import { $flowInst, generateFlowId } from "../../../globalStore/flowStore";
 import { $mousePos } from "../../../globalStore/mouseStore";
+import { getColorFromString } from "../../../utils/colorUtils";
 
 export const generateNodeInstFromCapability = (
   capability: NodeCapability
@@ -53,8 +54,23 @@ export const generateComputeNodeFromCapability = (
         // }}
       >
         <Stack pb="0" gap="0">
-          <Group bg="dark" p="xs" w="100%" justify="space-between">
-            <Text c="white" size="xs" maw={"200px"}>
+          <Group
+            bg="dark"
+            p="xs"
+            w="100%"
+            justify="space-between"
+            style={{
+              borderBottom: `4px solid ${
+                getColorFromString(capability.namespace)[5]
+              }`,
+            }}
+          >
+            <Text
+              c={getColorFromString(capability.namespace)[2]}
+              size="xs"
+              fw="bold"
+              maw={"200px"}
+            >
               {capability.name}
             </Text>
             <Tooltip label={capability.description}>

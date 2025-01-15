@@ -3,6 +3,7 @@ import { BaseType, NodeCapability } from "../../../../grpc/client_code/service";
 export const baseCapabilities: NodeCapability[] = [
   {
     name: "Int",
+    namespace: "inputs",
     description: "Whole number input",
     inputs: [],
     outputs: [
@@ -21,6 +22,7 @@ export const baseCapabilities: NodeCapability[] = [
         type: BaseType.Float,
       },
     ],
+    namespace: "inputs",
     description: "Floating point / decimal number",
   },
   {
@@ -32,6 +34,7 @@ export const baseCapabilities: NodeCapability[] = [
         type: BaseType.Curve,
       },
     ],
+    namespace: "inputs",
     description: "Parametric curve input",
   },
   {
@@ -43,6 +46,7 @@ export const baseCapabilities: NodeCapability[] = [
         type: BaseType.Color,
       },
     ],
+    namespace: "inputs",
     description: "HSV color input",
   },
   {
@@ -54,6 +58,7 @@ export const baseCapabilities: NodeCapability[] = [
         type: BaseType.String,
       },
     ],
+    namespace: "inputs",
     description: "String input",
   },
 ];

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Spotlight, spotlight } from "@mantine/spotlight";
 import {
+  Badge,
   Button,
   ColorSwatch,
   Divider,
@@ -11,7 +12,10 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { CustomSpotData } from "./CustomSpotData";
-import { getColorFromEnum } from "../../../utils/colorUtils";
+import {
+  getColorFromEnum,
+  getColorFromString,
+} from "../../../utils/colorUtils";
 import { useHotkeys } from "@mantine/hooks";
 import { useActions } from "../UseActions";
 
@@ -45,7 +49,15 @@ export const CustomSpotlight = () => {
               <Group wrap="nowrap" w="100%" align="center">
                 {item.leftSection}
                 <Stack gap="6px">
-                  <Text size="md">{item.label}</Text>
+                  <Group align="center">
+                    <Text size="md">{item.label}</Text>
+                    <Badge
+                      size="xs"
+                      color={getColorFromString(item.capability.namespace)[5]}
+                    >
+                      {item.capability.namespace}
+                    </Badge>
+                  </Group>
 
                   {grp.groupName != "Inputs" && (
                     <Group wrap="nowrap" gap="md">

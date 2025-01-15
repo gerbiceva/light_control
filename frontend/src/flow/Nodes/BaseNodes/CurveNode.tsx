@@ -17,6 +17,7 @@ export const CurveNode = memo(({ data }: CurveNode) => {
 
   return (
     <BaseNodeElement
+      namespace="inputs"
       type={"Curve"}
       handle={
         <TypedHandle color={getColorFromEnum(BaseType.Curve)[5]} id={"Curve"} />
