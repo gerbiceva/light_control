@@ -36,10 +36,6 @@ import { isValidConnection } from "../flow/Edges/isValidCOnnection";
 import { $capabilities } from "../globalStore/capabilitiesStore";
 import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
 
-const initialNodes: Node[] = [];
-
-const initialEdges: Edge[] = [];
-
 const fitViewOptions: FitViewOptions = {
   padding: 3,
 };
@@ -82,11 +78,6 @@ export const NodeView = () => {
 
   const onConnect: OnConnect = useCallback((connection) => {
     setEdges(addColoredEdge(connection));
-  }, []);
-
-  useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
   }, []);
 
   return (

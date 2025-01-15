@@ -5,13 +5,14 @@ import {
   Edge as FlowEdge,
   ReactFlowInstance,
 } from "@xyflow/react";
-
-// interface FlowNodeWithOrigin extends FlowNode {
-//   origin: number[];
-// }
+import { persistentAtom } from "@nanostores/persistent";
 
 // id factory
-const $latestNodeId = atom(0);
+const $latestNodeId = persistentAtom<number>("flowIdManager", 0, {
+  encode: JSON.stringify,
+  decode: JSON.parse,
+});
+
 export const generateFlowId = () => {
   $latestNodeId.set($latestNodeId.get() + 1);
   return $latestNodeId.get().toString();
@@ -23,7 +24,10 @@ export const $flowInst = atom<
 >(undefined);
 
 // nodes
-export const $nodes = atom<FlowNode[]>([]);
+export const $nodes = persistentAtom<FlowNode[]>("nodes", [], {
+  encode: JSON.stringify,
+  decode: JSON.parse,
+});
 export const setNodes = (nodes: FlowNode[]) => {
   $nodes.set(nodes);
 };
@@ -32,7 +36,10 @@ export const addNode = (node: FlowNode) => {
 };
 
 // edges
-export const $edges = atom<FlowEdge[]>([]);
+export const $edges = persistentAtom<FlowEdge[]>("edges", [], {
+  encode: JSON.stringify,
+  decode: JSON.parse,
+});
 export const setEdges = (edges: FlowEdge[]) => {
   $edges.set(edges);
 };
