@@ -25,7 +25,6 @@ enum BaseType {
 }
 
 // Capabilities
-
 message Port {
     string name = 1;
     BaseType type = 3;
