@@ -13,7 +13,7 @@ import { useStore } from "@nanostores/react";
 import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
-import { IconRecycle, IconTrash } from "@tabler/icons-react";
+import { IconRecycle } from "@tabler/icons-react";
 import { resetState } from "../globalStore/flowStore";
 
 export const MainLayout = () => {

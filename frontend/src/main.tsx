@@ -25,7 +25,7 @@ document.addEventListener("mousemove", (ev) => {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={appTheme} forceColorScheme="light">
-      <Notifications position="bottom-center" />
+      <Notifications position="bottom-right" />
       <ReactFlowProvider>
         <MainLayout />
       </ReactFlowProvider>

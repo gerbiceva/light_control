@@ -62,7 +62,6 @@ export const NodeView = () => {
         ...getComputedNodes(), // get all custom nodes, computed from capabilities
         ...mapPrimitivesToNamespaced(inputNodes),
       };
-      console.log({ caps });
 
       return caps;
     },

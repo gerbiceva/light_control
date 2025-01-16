@@ -1,5 +1,3 @@
-import { useCallback, useMemo, useState } from "react";
-import { Spotlight, spotlight } from "@mantine/spotlight";
 import {
   Badge,
   Button,
@@ -11,14 +9,16 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { useHotkeys } from "@mantine/hooks";
+import { Spotlight, spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
-import { CustomSpotData } from "./CustomSpotData";
+import { useCallback, useMemo, useState } from "react";
 import {
   getColorFromEnum,
   getColorFromString,
 } from "../../../utils/colorUtils";
-import { useHotkeys } from "@mantine/hooks";
 import { useActions } from "../UseActions";
+import { CustomSpotData } from "./CustomSpotData";
 
 export interface CustomSpotlightGroups {
   data: CustomSpotData[];
@@ -27,11 +27,14 @@ export interface CustomSpotlightGroups {
 
 export const CustomSpotlight = () => {
   const [query, setQuery] = useState("");
+
   const data = useActions();
 
-  const isSearchFound = useCallback(
+  const isSearchFoundInclude = useCallback(
     (item: CustomSpotData) => {
-      const searchStr = (item.name + "" + item.description).toLowerCase();
+      const searchStr = (item.label + "" + item.description)
+        .toLowerCase()
+        .trim();
       return searchStr.includes(query.toLowerCase().trim());
     },
     [query]
@@ -44,7 +47,7 @@ export const CustomSpotlight = () => {
           {grp.groupName}
         </Text>
         {grp.data
-          .filter((item) => isSearchFound(item))
+          .filter((item) => isSearchFoundInclude(item))
           .map((item) => (
             <Spotlight.Action key={item.label} onClick={item.onClick}>
               <Group wrap="nowrap" w="100%" align="center">
@@ -110,7 +113,7 @@ export const CustomSpotlight = () => {
           ))}
       </Stack>
     ));
-  }, [data, isSearchFound]);
+  }, [data, isSearchFoundInclude]);
 
   useHotkeys([
     ["mod+F", spotlight.open],
@@ -127,10 +130,17 @@ export const CustomSpotlight = () => {
       </Button>
 
       <Spotlight.Root query={query} onQueryChange={setQuery} centered>
-        <Spotlight.Search
-          placeholder="Search..."
-          leftSection={<IconSearch stroke={1.5} />}
-        />
+        {/* <Card p="0px" withBorder={isRegex}> */}
+        <Group gap="md" wrap="nowrap" p="sm" px="md">
+          <IconSearch />
+          <Spotlight.Search
+            placeholder="Search..."
+            style={{
+              width: "100%",
+            }}
+          />
+        </Group>
+        {/* </Card> */}
         <Spotlight.ActionsList mah="80vh">
           {items.length > 0 ? (
             items
