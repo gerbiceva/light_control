@@ -7,7 +7,7 @@ from utils import FrameLimiter
 
 
 class Gamepad():
-    def __init__(self, input_device):
+    def __init__(self):
         self.device = None
         for device in [InputDevice(path) for path in list_devices()]:
             print(f"Device: {device.name} at {device.path}")

@@ -1,6 +1,17 @@
 import time
+from datatypes import node, Float
 
-def seconds() -> float:
+@node
+def seconds() -> Float:
+    """
+    Seconds
+
+    Gives seconds.
+
+    Returns
+    -------
+    seconds : Float
+    """
     return time.time()
 
 class SpeedMaster:

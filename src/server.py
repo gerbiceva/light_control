@@ -34,6 +34,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
 
         # List to store the imported modules
         modules = []
+        namespaces = []
 
         # Iterate over all .py files in the directory
         for filename in os.listdir(directory):
@@ -41,19 +42,20 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
                 module_name = filename[:-3]  # Remove the .py extension
                 module = importlib.import_module(f"{directory}.{module_name}")
                 modules.append(module)
+                namespaces.append(module_name)
 
         nodes = []
-        for module in modules:
+        for namespace, module in zip(namespaces, modules):
             for member in inspect.getmembers(module):
                 if member[0][0] != '_' and inspect.isfunction(member[1]) and hasattr(member[1], "__is_node__"):
-                    nodes.append((member[1], FunctionDoc(member[1])))
+                    nodes.append((member[1], FunctionDoc(member[1]), namespace))
                 if hasattr(member[1], "__each_tick__"):
                     supplementary.append(member[1])
         nodes_message = []
         for node in nodes:
             inputs = []
             # print(node[1]["Summary"][0])
-            defined_nodes[node[1]["Summary"][0]] = node[0]
+            defined_nodes[f"{node[2]}/{node[1]["Summary"][0]}"] = node[0]
             if hasattr(node[0], "__primitive__"):
                 # print(node)
                 continue
@@ -64,7 +66,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
             for ret in node[1]["Returns"]:
                 if ret.type != "None":
                     outputs.append(grpc_server.service_pb2.Port(name=ret.name, type=getattr(grpc_server.service_pb2, ret.type)))
-            nodes_message.append(grpc_server.service_pb2.NodeCapability(name=node[1]["Summary"][0], description=node[1]["Extended Summary"][0], inputs=inputs, outputs=outputs))
+            nodes_message.append(grpc_server.service_pb2.NodeCapability(name=node[1]["Summary"][0], description=node[1]["Extended Summary"][0], inputs=inputs, outputs=outputs, namespace=node[2]))
         # print(nodes_message)
         return grpc_server.service_pb2.Capabilities(nodes=nodes_message)
 
@@ -73,9 +75,11 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
         # print(request.edges)
         nodes = {}
         for requested in request.nodes:
-            f = defined_nodes[requested.name]
+            f = defined_nodes[f"{requested.namespace}/{requested.name}"]
             if hasattr(f, "__initialize__"):
-                nodes[requested.id] = f()
+                made_f = f()
+                made_f.__doc__ = f.__doc__
+                nodes[requested.id] = made_f
             elif hasattr(f, "__primitive__"):
                 if requested.name == "Int":
                     try:
@@ -116,7 +120,10 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
         edges = defaultdict(list)
         for edge in request.edges:
             edges[(edge.fromNode, edge.fromPort)] += [(edge.toNode, edge.toPort)]
-        graph.construct(nodes, edges)
+        try:
+            graph.construct(nodes, edges)
+        except Exception as e:
+            print(e)
         # print(graph.edges)
         return grpc_server.service_pb2.Void()
 
@@ -156,7 +163,11 @@ async def grpc():
 async def loop():
     limiter = FrameLimiter(30)
     while True:
-        graph.evaluate()
+        try:
+            graph.evaluate()
+        except Exception as e:
+            print(e)
+            continue
 
         for f in supplementary:
             f()
