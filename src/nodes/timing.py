@@ -1,8 +1,9 @@
 import time
-from datatypes import node, Float
+from datatypes import node, Float, initialize
 
 @node
-def seconds() -> Float:
+@initialize
+def make_seconds():
     """
     Seconds
 
@@ -12,7 +13,10 @@ def seconds() -> Float:
     -------
     seconds : Float
     """
-    return time.time()
+    now = time.time()
+    def seconds() -> Float:
+        return time.time() - now
+    return seconds
 
 class SpeedMaster:
     def __init__(self):

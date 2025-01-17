@@ -1,5 +1,6 @@
 from typing import Callable
 from jax.typing import ArrayLike
+from sympy import Expr
 
 Int = int
 Float = float
@@ -9,7 +10,7 @@ Color = ArrayLike
 Vector3D = ArrayLike
 ColorArray = ArrayLike
 Array = ArrayLike
-Curve = Callable
+Curve = Expr
 
 def node(f):
     f.__is_node__ = True

@@ -60,7 +60,7 @@ def make_gamepad():
         )
     return get_gamepad_state
 
-
+@node
 def make_mic():
     """
     Microphone Input

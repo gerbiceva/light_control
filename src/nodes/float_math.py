@@ -81,6 +81,8 @@ def divide(a: Float, b: Float) -> Float:
     -------
     result : Float
     """
+    # print(a)
+    # print(b)
     if b == 0:
         raise ValueError("Division by zero is not allowed.")
     return a / b
