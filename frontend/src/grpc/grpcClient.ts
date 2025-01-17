@@ -10,3 +10,13 @@ const transport = new GrpcWebFetchTransport({
 });
 
 export const client = new MyServiceClient(transport);
+
+// const notifs = client.streamNotifications({},{});
+// notifs.then(
+//   (notif) => {
+//     console.log(notif.);
+//   },
+//   (err) => {
+//     console.error({ err });
+//   }
+// );

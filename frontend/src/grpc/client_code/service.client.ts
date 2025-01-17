@@ -4,6 +4,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { MyService } from "./service";
+import type { Notification } from "./service";
+import type { ServerStreamingCall } from "@protobuf-ts/runtime-rpc";
 import type { GraphUpdated } from "./service";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { Capabilities } from "./service";
@@ -26,6 +28,12 @@ export interface IMyServiceClient {
      * @generated from protobuf rpc: GraphUpdate(GraphUpdated) returns (Void);
      */
     graphUpdate(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void>;
+    /**
+     * Makes a phone call and communicate states via a stream.
+     *
+     * @generated from protobuf rpc: StreamNotifications(Void) returns (stream Notification);
+     */
+    streamNotifications(input: Void, options?: RpcOptions): ServerStreamingCall<Void, Notification>;
 }
 /**
  * @generated from protobuf service MyService
@@ -53,5 +61,14 @@ export class MyServiceClient implements IMyServiceClient, ServiceInfo {
     graphUpdate(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void> {
         const method = this.methods[1], opt = this._transport.mergeOptions(options);
         return stackIntercept<GraphUpdated, Void>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * Makes a phone call and communicate states via a stream.
+     *
+     * @generated from protobuf rpc: StreamNotifications(Void) returns (stream Notification);
+     */
+    streamNotifications(input: Void, options?: RpcOptions): ServerStreamingCall<Void, Notification> {
+        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Void, Notification>("serverStreaming", this._transport, method, opt, input);
     }
 }

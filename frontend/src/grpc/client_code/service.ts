@@ -4,6 +4,23 @@
 import { ServiceType } from "@protobuf-ts/runtime-rpc";
 import { MessageType } from "@protobuf-ts/runtime";
 /**
+ * @generated from protobuf message Notification
+ */
+export interface Notification {
+    /**
+     * @generated from protobuf field: string title = 1;
+     */
+    title: string;
+    /**
+     * @generated from protobuf field: string message = 2;
+     */
+    message: string;
+    /**
+     * @generated from protobuf field: NotifType type = 3;
+     */
+    type: NotifType;
+}
+/**
  * @generated from protobuf message Void
  */
 export interface Void {
@@ -118,6 +135,25 @@ export interface GraphUpdated {
     edges: EdgeMsg[];
 }
 /**
+ * notifications system
+ *
+ * @generated from protobuf enum NotifType
+ */
+export enum NotifType {
+    /**
+     * @generated from protobuf enum value: Log = 0;
+     */
+    Log = 0,
+    /**
+     * @generated from protobuf enum value: Success = 1;
+     */
+    Success = 1,
+    /**
+     * @generated from protobuf enum value: Error = 2;
+     */
+    Error = 2
+}
+/**
  * @generated from protobuf enum BaseType
  */
 export enum BaseType {
@@ -160,6 +196,20 @@ export enum BaseType {
      */
     Vector3D = 9
 }
+// @generated message type with reflection information, may provide speed optimized methods
+class Notification$Type extends MessageType<Notification> {
+    constructor() {
+        super("Notification", [
+            { no: 1, name: "title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "message", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "type", kind: "enum", T: () => ["NotifType", NotifType] }
+        ]);
+    }
+}
+/**
+ * @generated MessageType for protobuf message Notification
+ */
+export const Notification = new Notification$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Void$Type extends MessageType<Void> {
     constructor() {
@@ -259,5 +309,6 @@ export const GraphUpdated = new GraphUpdated$Type();
  */
 export const MyService = new ServiceType("MyService", [
     { name: "GetCapabilities", options: {}, I: Void, O: Capabilities },
-    { name: "GraphUpdate", options: {}, I: GraphUpdated, O: Void }
+    { name: "GraphUpdate", options: {}, I: GraphUpdated, O: Void },
+    { name: "StreamNotifications", serverStreaming: true, options: {}, I: Void, O: Notification }
 ]);

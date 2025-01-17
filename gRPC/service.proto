@@ -5,6 +5,21 @@ service MyService {
     rpc GetCapabilities (Void) returns (Capabilities);
     // Get the new edges and nodes from the frontend
     rpc GraphUpdate (GraphUpdated) returns (Void);
+      // Opens a tunnel for streaming notifications
+    rpc StreamNotifications(Void) returns (stream Notification);
+}
+
+// notifications system
+enum NotifType {
+    Log = 0;
+    Success = 1;
+    Error = 2;
+}
+
+message Notification {
+    string title = 1;
+    string message = 2;
+    NotifType type = 3;
 }
 
 message Void {
