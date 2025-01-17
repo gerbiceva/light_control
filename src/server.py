@@ -106,7 +106,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
                         hsl[1] = hsl[1] / 100.0
                         hsl[2] = hsl[2] / 100.0
 
-                        nodes[requested.id] = f(jnp.array(colorsys.rgb_to_hsv(*colorsys.hls_to_rgb(*hsl))))
+                        nodes[requested.id] = f(jnp.array(colorsys.rgb_to_hsv(*colorsys.hls_to_rgb(hsl[0], hsl[2], hsl[1]))))
                     except ValueError:
                         nodes[requested.id] = f(jnp.array([0.0,0.0,0.0]))
                 elif requested.name == "Curve":
