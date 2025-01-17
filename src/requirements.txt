@@ -5,3 +5,4 @@ uvicorn
 starlette
 sacn
 numpy
+fastapi

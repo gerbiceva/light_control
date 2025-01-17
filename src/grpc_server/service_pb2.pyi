@@ -6,6 +6,12 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class NotifType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    Log: _ClassVar[NotifType]
+    Success: _ClassVar[NotifType]
+    Error: _ClassVar[NotifType]
+
 class BaseType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     Int: _ClassVar[BaseType]
@@ -17,6 +23,9 @@ class BaseType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     Array: _ClassVar[BaseType]
     Vector2D: _ClassVar[BaseType]
     Vector3D: _ClassVar[BaseType]
+Log: NotifType
+Success: NotifType
+Error: NotifType
 Int: BaseType
 Float: BaseType
 String: BaseType
@@ -26,6 +35,16 @@ ColorArray: BaseType
 Array: BaseType
 Vector2D: BaseType
 Vector3D: BaseType
+
+class Notification(_message.Message):
+    __slots__ = ("title", "message", "type")
+    TITLE_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    TYPE_FIELD_NUMBER: _ClassVar[int]
+    title: str
+    message: str
+    type: NotifType
+    def __init__(self, title: _Optional[str] = ..., message: _Optional[str] = ..., type: _Optional[_Union[NotifType, str]] = ...) -> None: ...
 
 class Void(_message.Message):
     __slots__ = ()
