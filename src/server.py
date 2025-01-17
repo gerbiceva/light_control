@@ -183,7 +183,7 @@ async def webUI(port: int):
     webApp = FastAPI()
     webApp.mount("/", StaticFiles(directory="dist", html=True), name="ui")
 
-    config = uvicorn.Config(webApp, port=port, log_level="info", log_config={})
+    config = uvicorn.Config(webApp, port=port, log_level="info")
     server = uvicorn.Server(config)
     await server.serve()
 

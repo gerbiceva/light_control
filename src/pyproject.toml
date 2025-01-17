@@ -1,0 +1,19 @@
+[project]
+name = "ledique"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "evdev>=1.7.1",
+    "fastapi>=0.115.6",
+    "grpcio>=1.69.0",
+    "grpcio-tools>=1.69.0",
+    "jax>=0.5.0",
+    "numpy>=2.2.1",
+    "sacn>=1.10.0",
+    "sonora>=0.2.3",
+    "starlette>=0.41.3",
+    "sympy>=1.13.3",
+    "uvicorn>=0.34.0",
+]

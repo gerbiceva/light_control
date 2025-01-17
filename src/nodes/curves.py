@@ -1,7 +1,6 @@
 from datatypes import Curve, Array, node, String
 import jax.numpy as jnp
-from jax import lax
-from sympy import symbols, lambdify, sympify, Piecewise
+from sympy import symbols, lambdify, sympify, Piecewise, sin
 
 x = symbols("x")
 
@@ -50,7 +49,7 @@ def sample_array(curve: Curve, resolution: int) -> Array:
 @node
 def pad_curve(curve: Curve, padding: float) -> Curve:
     """
-    Add Padding to a Curve
+    Pad Curve
 
     Modifies a curve by adding a padding region at the end where the curve evaluates to zero.
 
@@ -66,21 +65,12 @@ def pad_curve(curve: Curve, padding: float) -> Curve:
     curve : Curve
         A new curve with the specified padding.
     """
-    def new_curve(x: float) -> float:
-        return lax.cond(
-            x < (1 - padding),
-            lambda _: curve(x / (1 - padding)),
-            lambda _: 0.0,
-            operand=None,
-        )
-
-
     return Piecewise((curve, x < padding), (0, x>=padding))
 
 @node
-def move_curve(curve: Curve, move: float) -> Curve:
+def shift_curve(curve: Curve, move: float) -> Curve:
     """
-    Shift a Curve Horizontally
+    Shift Curve
 
     Modifies a curve by shifting it horizontally by a specified amount, wrapping around at the boundaries.
 
@@ -102,7 +92,7 @@ def move_curve(curve: Curve, move: float) -> Curve:
 @node
 def linear_curve() -> Curve:
     """
-    Create a Linear Curve
+    Linear Curve
 
     Creates a curve that represents a linear function y = x.
 
@@ -132,24 +122,16 @@ def curve(string: String):
     """
     return sympify(string)
 
-# @node
-# def sin_curve(peaks: float) -> Curve:
-#     """
-#     Create a Sine Wave Curve
+@node
+def sin_curve() -> Curve:
+    """
+    Sine Wave
 
-#     Creates a curve that represents a sine wave with a specified number of peaks.
+    Creates a curve that represents a sine wave with a specified number of peaks.
 
-#     Parameters
-#     ----------
-#     peaks : Float
-#         The number of sine wave peaks over the interval [0, 1].
-
-#     Returns
-#     -------
-#     curve : Curve
-#         A sine wave curve function.
-#     """
-#     def new_curve(x: float) -> float:
-#         return jnp.sin(x * peaks * jnp.pi)
-
-#     return new_curve
+    Returns
+    -------
+    curve : Curve
+        A sine wave curve function.
+    """
+    return sin(x)
