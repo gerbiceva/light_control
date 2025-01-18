@@ -73,6 +73,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
             if hasattr(node[0], "__primitive__"):
                 # print(node)
                 continue
+            # print(node[1]['Summary'][0])
             for param in node[1]["Parameters"]:
                 if param.type != "None":
                     inputs.append(
@@ -213,7 +214,7 @@ async def grpc(port: int):
 
 
 async def loop():
-    limiter = FrameLimiter(30)
+    limiter = FrameLimiter(60)
     while True:
         try:
             graph.evaluate()

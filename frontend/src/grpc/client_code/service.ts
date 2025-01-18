@@ -194,7 +194,15 @@ export enum BaseType {
     /**
      * @generated from protobuf enum value: Vector3D = 9;
      */
-    Vector3D = 9
+    Vector3D = 9,
+    /**
+     * @generated from protobuf enum value: Array2D = 10;
+     */
+    Array2D = 10,
+    /**
+     * @generated from protobuf enum value: Curve2D = 11;
+     */
+    Curve2D = 11
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Notification$Type extends MessageType<Notification> {

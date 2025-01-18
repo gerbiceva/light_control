@@ -1,5 +1,5 @@
 import time
-from datatypes import node, Float, initialize
+from datatypes import node, Float, initialize, Int, each_tick
 
 @node
 @initialize
@@ -25,11 +25,39 @@ class SpeedMaster:
     def increment(self):
         self.time = (self.time + 0.033333 * self.speed) % 1
     def speed_up(self):
-        self.speed *= 2.0
+        self.speed *= 1.1
     def slow_down(self):
-        self.speed *= 0.5
+        self.speed *= 0.9
 
-speed_master = SpeedMaster()
+speedmasters = []
+@each_tick
+def tick():
+    for master in speedmasters:
+        master.increment()
 
-def get_synced_time() -> float:
-    return speed_master.time
+@node
+@initialize
+def make_speedmaster():
+    """
+    Speedmaster
+
+    Gives you a MASTER of SPEEEEED(zan oberstar).
+
+    Parameters
+    ----------
+    speed_up : Float
+    speed_down : Float
+
+    Returns
+    -------
+    time : Float
+    """
+    speed_master = SpeedMaster()
+    speedmasters.append(speed_master)
+    def get_speed_master(speed_up: Int, speed_down: Int) -> Float:
+        if speed_up:
+            speed_master.speed_up()
+        if speed_down:
+            speed_master.slow_down()
+        return speed_master.time
+    return get_speed_master

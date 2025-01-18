@@ -5,7 +5,7 @@ import warnings
 
 import grpc_server.service_pb2 as service__pb2
 
-GRPC_GENERATED_VERSION = '1.68.1'
+GRPC_GENERATED_VERSION = '1.69.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -69,7 +69,7 @@ class MyServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def StreamNotifications(self, request, context):
-        """Makes a phone call and communicate states via a stream.
+        """Opens a tunnel for streaming notifications
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

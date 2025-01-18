@@ -29,7 +29,7 @@ export interface IMyServiceClient {
      */
     graphUpdate(input: GraphUpdated, options?: RpcOptions): UnaryCall<GraphUpdated, Void>;
     /**
-     * Makes a phone call and communicate states via a stream.
+     * Opens a tunnel for streaming notifications
      *
      * @generated from protobuf rpc: StreamNotifications(Void) returns (stream Notification);
      */
@@ -63,7 +63,7 @@ export class MyServiceClient implements IMyServiceClient, ServiceInfo {
         return stackIntercept<GraphUpdated, Void>("unary", this._transport, method, opt, input);
     }
     /**
-     * Makes a phone call and communicate states via a stream.
+     * Opens a tunnel for streaming notifications
      *
      * @generated from protobuf rpc: StreamNotifications(Void) returns (stream Notification);
      */

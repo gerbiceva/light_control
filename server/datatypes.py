@@ -11,6 +11,8 @@ Vector3D = ArrayLike
 ColorArray = ArrayLike
 Array = ArrayLike
 Curve = Expr
+Array2D = ArrayLike
+Curve2D = Expr
 
 def node(f):
     f.__is_node__ = True

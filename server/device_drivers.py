@@ -2,7 +2,6 @@ from evdev import InputDevice, ecodes, list_devices
 import threading
 import jax.numpy as jnp
 import numpy as np
-import pyaudio
 
 from utils import FrameLimiter
 
@@ -12,7 +11,7 @@ class Gamepad():
         self.device = None
         for device in [InputDevice(path) for path in list_devices()]:
             print(f"Device: {device.name} at {device.path}")
-            if "Controller" in device.name:
+            if "Controller" in device.name or "Wireless" in device.name:
                 self.device = InputDevice(device.path)
         self.thread = threading.Thread(target=self.loop)
         self.buttons = {
@@ -22,8 +21,8 @@ class Gamepad():
             "Y": 0,
             "L1": 0,
             "R1": 0,
-            "L2": 0,
-            "R2": 0,
+            "L2": 0.0,
+            "R2": 0.0,
             "Start": 0,
             "Select": 0,
             "L3": 0,
@@ -85,9 +84,10 @@ class Gamepad():
                         self.buttons["Up"] = 0
                         self.buttons["Down"] = 0
                 elif event.code == ecodes.ABS_Z:
-                    self.buttons["L2"] = event.value / 255
+                    # print(event)
+                    self.buttons["L2"] = float(event.value) / 255.0
                 elif event.code == ecodes.ABS_RZ:
-                    self.buttons["R2"] = event.value / 255
+                    self.buttons["R2"] = float(event.value) / 255.0
 
 class Microphone:
     def __init__(self, input_device_index, fps=30):

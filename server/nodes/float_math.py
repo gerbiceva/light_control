@@ -1,4 +1,21 @@
-from datatypes import node, Float
+from datatypes import node, Float, Int
+
+@node
+def float_to_int(a: Float) -> Int:
+    """
+    Float 2 Int
+
+    Converts float to integer.
+
+    Parameters
+    ----------
+    in : Float
+
+    Returns
+    -------
+    out : Int
+    """
+    return int(a)
 
 @node
 def add(a: Float, b: Float) -> Float:

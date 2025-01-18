@@ -39,7 +39,7 @@ def light_strip(universe: int, hsv: ColorArray):
     """
     # print(hsv[:, 1])
     sender[universe].dmx_data = jnp.pad(
-        (hsv_to_rgb(hsv.T).flatten() * 255).astype(jnp.uint8),
+        (hsv_to_rgb(jnp.clip(hsv, 0.0, 1.0).T).flatten() * 255).astype(jnp.uint8),
         (0, 512 - hsv.shape[0] * hsv.shape[1]),
         mode="constant",
         constant_values=0,

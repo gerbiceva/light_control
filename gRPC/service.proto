@@ -37,6 +37,8 @@ enum BaseType {
     Array = 7;
     Vector2D = 8;
     Vector3D = 9;
+    Array2D = 10;
+    Curve2D = 11;
 }
 
 // Capabilities

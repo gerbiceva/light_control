@@ -23,6 +23,8 @@ class BaseType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     Array: _ClassVar[BaseType]
     Vector2D: _ClassVar[BaseType]
     Vector3D: _ClassVar[BaseType]
+    Array2D: _ClassVar[BaseType]
+    Curve2D: _ClassVar[BaseType]
 Log: NotifType
 Success: NotifType
 Error: NotifType
@@ -35,6 +37,8 @@ ColorArray: BaseType
 Array: BaseType
 Vector2D: BaseType
 Vector3D: BaseType
+Array2D: BaseType
+Curve2D: BaseType
 
 class Notification(_message.Message):
     __slots__ = ("title", "message", "type")
