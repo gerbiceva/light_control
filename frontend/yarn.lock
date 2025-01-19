@@ -395,10 +395,10 @@
     react-textarea-autosize "8.5.6"
     type-fest "^4.27.0"
 
-"@mantine/dropzone@^7.15.2":
-  version "7.15.2"
-  resolved "https://registry.yarnpkg.com/@mantine/dropzone/-/dropzone-7.15.2.tgz#bedc2dcf1b193f36d59edbe339177d927e90c0a5"
-  integrity sha512-6jT1tFfUEhjWeZywohC8OMJnii0omOnqlqqGMQc0MZBpdMQmmTGJ3Z6oLkCadVH97FrROm8rtUOnMSA9CqiAGw==
+"@mantine/dropzone@^7.16.1":
+  version "7.16.1"
+  resolved "https://registry.yarnpkg.com/@mantine/dropzone/-/dropzone-7.16.1.tgz#de0fb7b56513b37a63241533cd9766ba465aab4a"
+  integrity sha512-5lQsy2JScvaWq87fOrD2QNvlVzCErQE9nzjNdADAH9u/34fLIgGE0v5MBbVdVPI+wYxrPAwW4hahEKSa5LelXA==
   dependencies:
     react-dropzone-esm "15.2.0"
 

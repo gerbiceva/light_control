@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mantine/core": "^7.15.2",
-    "@mantine/dropzone": "^7.15.2",
+    "@mantine/dropzone": "^7.16.1",
     "@mantine/hooks": "^7.15.2",
     "@mantine/notifications": "^7.15.2",
     "@mantine/spotlight": "^7.15.2",

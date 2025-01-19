@@ -51,3 +51,14 @@ export const resetState = () => {
   setEdges([]);
   setNodes([]);
 };
+
+export interface SaveFile {
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+}
+export const getSaveFile = (): SaveFile => {
+  return {
+    edges: $edges.get(),
+    nodes: $nodes.get(),
+  };
+};

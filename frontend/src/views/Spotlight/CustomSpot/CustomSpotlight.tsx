@@ -19,7 +19,7 @@ import {
 } from "../../../utils/colorUtils";
 import { useActions } from "../UseActions";
 import { CustomSpotData } from "./CustomSpotData";
-import { filterItems } from "./filter";
+import { filterItems } from "./filtering/filter";
 
 export interface CustomSpotlightGroups {
   data: CustomSpotData[];
@@ -122,17 +122,25 @@ export const CustomSpotlight = () => {
       </Button>
 
       <Spotlight.Root query={query} onQueryChange={setQuery} centered>
-        {/* <Card p="0px" withBorder={isRegex}> */}
-        <Group gap="md" wrap="nowrap" p="sm" px="md">
-          <IconSearch />
-          <Spotlight.Search
-            placeholder="Search..."
-            style={{
-              width: "100%",
-            }}
-          />
-        </Group>
-        {/* </Card> */}
+        <Stack p="xs" gap="4px" px="md">
+          <Group gap="md" wrap="nowrap">
+            <IconSearch />
+            <Spotlight.Search
+              placeholder="Search..."
+              style={{
+                width: "100%",
+              }}
+            />
+          </Group>
+          <Group align="center" w="100%">
+            <Text size="sm" c="dimmed">
+              Input types:
+            </Text>
+            <Badge variant="dot" size="lg" color={getColorFromEnum(8)[5]}>
+              String
+            </Badge>
+          </Group>
+        </Stack>
         <Spotlight.ActionsList mah="80vh">
           {items.length > 0 ? (
             items

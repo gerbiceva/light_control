@@ -1,11 +1,11 @@
 import {
-  ActionIcon,
   Card,
   Group,
   Loader,
   LoadingOverlay,
   SimpleGrid,
   Stack,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { NodeView } from "./NodeView";
@@ -13,11 +13,12 @@ import { useStore } from "@nanostores/react";
 import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
-import { IconRecycle } from "@tabler/icons-react";
-import { resetState } from "../globalStore/flowStore";
+import { SettingsModal } from "../components/settingsModal/SettingsModal";
+import { $projectName, setProjectName } from "../globalStore/projectStore";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
+  const projectName = useStore($projectName);
 
   if (caps.length == 0) {
     return (
@@ -42,27 +43,22 @@ export const MainLayout = () => {
           {/* title */}
           <Group>
             <img src="/icon.svg" height="30px" width="30px"></img>
-            <Title size="lg">LightControll</Title>
+            {/* <Title size="lg">LightControll</Title> */}
+            <TextInput
+              fw="bold"
+              variant="filled"
+              value={projectName}
+              onChange={(ev) => {
+                setProjectName(ev.target.value);
+              }}
+            />
           </Group>
           {/* spotlight for adding nodes */}
           <CustomSpotlight />
           {/*Settings and server indicator*/}
           <Group gap="lg" justify="end">
             <LoaderIndicator />
-            <ActionIcon
-              variant="subtle"
-              onClick={() => {
-                if (
-                  !confirm("reset nodes and edges? Operation can't be undone")
-                ) {
-                  return;
-                }
-
-                resetState();
-              }}
-            >
-              <IconRecycle />
-            </ActionIcon>
+            <SettingsModal />
           </Group>
         </SimpleGrid>
       </Card>
