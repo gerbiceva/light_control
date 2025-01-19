@@ -4,7 +4,6 @@ import { NodeCapability } from "../grpc/client_code/service";
 import { client } from "../grpc/grpcClient";
 import { notifSuccess, notifError } from "../utils/notifications";
 import { primitiveCapabilities } from "../flow/Nodes/BaseNodes/utils/baseCapabilities";
-import { testCapabilitiesList } from "../flow/Nodes/ComputeNodes/test";
 
 export const $serverCapabilities = atom<NodeCapability[]>([]);
 
@@ -17,7 +16,7 @@ export function setCapabilites(capabilities: NodeCapability[]) {
   $serverCapabilities.set(capabilities);
 }
 
-setCapabilites(testCapabilitiesList);
+// setCapabilites(testCapabilitiesList);
 
 // initially get capabilities
 client.getCapabilities({}).then(
