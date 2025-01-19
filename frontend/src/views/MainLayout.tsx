@@ -7,6 +7,7 @@ import {
   Stack,
   TextInput,
   Title,
+  Text,
 } from "@mantine/core";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
@@ -41,7 +42,7 @@ export const MainLayout = () => {
       <Card withBorder shadow="md">
         <SimpleGrid cols={3} px="lg">
           {/* title */}
-          <Group>
+          <Group w="100%">
             <img src="/icon.svg" height="30px" width="30px"></img>
             {/* <Title size="lg">LightControll</Title> */}
             <TextInput
