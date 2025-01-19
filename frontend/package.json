@@ -43,6 +43,7 @@
     "protoc-gen-grpc-web": "^1.5.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "vitest": "^3.0.2"
   }
 }
