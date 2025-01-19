@@ -5,21 +5,22 @@ import {
   generateFlowId,
   setEdges,
 } from "../../../../globalStore/flowStore";
-import { $mousePos } from "../../../../globalStore/mouseStore";
+import {
+  $frozenMousePos,
+  freezeMousePos,
+} from "../../../../globalStore/mouseStore";
 import { getNodeNamespaceAndTypeFromBaseType } from "./RegisterNodes";
 import { getPortFromNode } from "../../../Edges/typesFromConnection";
 import { addColoredEdge } from "../../../Edges/addColoredEdge";
+import { setSpotFilter } from "../../../../globalStore/spotlightFilterStore";
+import { spotlight } from "@mantine/spotlight";
 
 export const addInputOnEdgeDrop = (
   _event: MouseEvent | TouchEvent,
   connectionState: FinalConnectionState
 ) => {
   // when a connection is dropped on the pane it's not valid
-  if (
-    !connectionState.isValid &&
-    connectionState.fromHandle?.type == "target"
-  ) {
-    // console.log(getTargetPortFromNode(connectionState.));
+  if (!connectionState.isValid) {
     if (
       connectionState.fromHandle == null ||
       connectionState.fromNode == null ||
@@ -28,46 +29,55 @@ export const addInputOnEdgeDrop = (
     ) {
       return;
     }
-
     const port = getPortFromNode(
       connectionState.fromHandle,
       connectionState.fromNode,
-      "source"
+      connectionState.fromHandle?.type
     );
 
     if (!port) {
       return;
     }
 
+    console.log({ port });
+
     const nodeType = getNodeNamespaceAndTypeFromBaseType(port?.type);
-    if (!nodeType) {
-      return;
+    if (nodeType != undefined && connectionState.fromHandle?.type == "target") {
+      // generate a primitive node
+      const pos = $flowInst
+        .get()
+        ?.screenToFlowPosition($frozenMousePos.get()) || {
+        x: 0,
+        y: 0,
+      };
+
+      const id = generateFlowId();
+      const origin: [number, number] = [1, 0.5];
+      const newNode = {
+        id,
+        type: nodeType.namespaced,
+        position: pos,
+        data: { value: "" },
+        origin,
+      };
+
+      addNode(newNode);
+
+      setEdges(
+        addColoredEdge({
+          source: id,
+          sourceHandle: nodeType.type,
+          target: connectionState.fromNode?.id,
+          targetHandle: connectionState.fromHandle?.id,
+        })
+      );
+    } else {
+      freezeMousePos();
+      setSpotFilter({
+        type: connectionState.fromHandle?.type,
+        dataType: port.type,
+      });
+      spotlight.open();
     }
-
-    const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get()) || {
-      x: 0,
-      y: 0,
-    };
-
-    const id = generateFlowId();
-    const origin: [number, number] = [1, 0.5];
-    const newNode = {
-      id,
-      type: nodeType.namespaced,
-      position: pos,
-      data: { value: "" },
-      origin,
-    };
-
-    addNode(newNode);
-
-    setEdges(
-      addColoredEdge({
-        source: id,
-        sourceHandle: nodeType.type,
-        target: connectionState.fromNode?.id,
-        targetHandle: connectionState.fromHandle?.id,
-      })
-    );
   }
 };

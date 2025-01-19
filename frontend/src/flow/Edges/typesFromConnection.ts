@@ -21,12 +21,13 @@ export const getPortFromNode = (
   const fromCap = capabilities.find(
     (cap) => cap.name == tFrom && nsFrom == cap.namespace
   );
+  console.log({ fromCap }, { handle });
 
-  if (type == "source") {
-    return fromCap?.inputs.find((cap) => cap.name == handle.id);
-  }
   if (type == "target") {
-    return fromCap?.outputs.find((cap) => cap.name == handle.id);
+    return fromCap?.inputs.find((port) => port.name == handle.id);
+  }
+  if (type == "source") {
+    return fromCap?.outputs.find((port) => port.name == handle.id);
   }
 };
 

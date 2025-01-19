@@ -12,14 +12,21 @@ import {
 import { useHotkeys } from "@mantine/hooks";
 import { Spotlight, spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   getColorFromEnum,
   getColorFromString,
 } from "../../../utils/colorUtils";
 import { useActions } from "../UseActions";
 import { CustomSpotData } from "./CustomSpotData";
-import { filterItems } from "./filtering/filter";
+import { filterItemsByName, filterItemsByType } from "./filtering/filter";
+import { useStore } from "@nanostores/react";
+import {
+  $spotFilter,
+  resetSpotFilter,
+} from "../../../globalStore/spotlightFilterStore";
+import { BaseType } from "../../../grpc/client_code/service";
+import { freezeMousePos } from "../../../globalStore/mouseStore";
 
 export interface CustomSpotlightGroups {
   data: CustomSpotData[];
@@ -29,6 +36,26 @@ export interface CustomSpotlightGroups {
 export const CustomSpotlight = () => {
   const [query, setQuery] = useState("");
   const data = useActions();
+  const spotFilter = useStore($spotFilter);
+
+  const filter = useCallback(
+    (data: CustomSpotData[]) => {
+      // filter by query
+      const queryFiltered = filterItemsByName(
+        data,
+        (item) => item.label + "/" + item.description,
+        query
+      );
+
+      if (spotFilter) {
+        const dataTypeFiltered = filterItemsByType(data, spotFilter);
+        return dataTypeFiltered;
+      }
+
+      return queryFiltered;
+    },
+    [query, spotFilter]
+  );
 
   const items = useMemo(() => {
     return data.map((grp) => (
@@ -36,11 +63,7 @@ export const CustomSpotlight = () => {
         <Text fw="bold" c="dimmed" px="md" pt="xl">
           {grp.groupName}
         </Text>
-        {filterItems(
-          grp.data,
-          (item) => item.label + "/" + item.description,
-          query
-        ).map((item) => (
+        {filter(grp.data).map((item) => (
           <Spotlight.Action key={item.label} onClick={item.onClick}>
             <Group wrap="nowrap" w="100%" align="center">
               {item.leftSection}
@@ -105,16 +128,22 @@ export const CustomSpotlight = () => {
         ))}
       </Stack>
     ));
-  }, [data, query]);
+  }, [data, filter]);
+
+  const openSpot = useCallback(() => {
+    freezeMousePos();
+    resetSpotFilter();
+    spotlight.open();
+  }, []);
 
   useHotkeys([
-    ["mod+F", spotlight.open],
-    ["ctrl+space", spotlight.open],
+    ["mod+F", openSpot],
+    ["ctrl+space", openSpot],
   ]);
 
   return (
     <>
-      <Button onClick={spotlight.open} variant="subtle">
+      <Button onClick={openSpot} variant="subtle">
         <Group>
           <Kbd>CTRl + SPACE</Kbd>
           <Text c="dimmed"> picker</Text>
@@ -132,14 +161,21 @@ export const CustomSpotlight = () => {
               }}
             />
           </Group>
-          <Group align="center" w="100%">
-            <Text size="sm" c="dimmed">
-              Input types:
-            </Text>
-            <Badge variant="dot" size="lg" color={getColorFromEnum(8)[5]}>
-              String
-            </Badge>
-          </Group>
+          {spotFilter && (
+            <Group align="center" w="100%">
+              <Text size="sm" c="dimmed">
+                {spotFilter.type == "source" ? "Inputs:" : "Outputs:"}
+              </Text>
+
+              <Badge
+                variant="dot"
+                size="lg"
+                color={getColorFromEnum(spotFilter.dataType)[5]}
+              >
+                {BaseType[spotFilter.dataType]}
+              </Badge>
+            </Group>
+          )}
         </Stack>
         <Spotlight.ActionsList mah="80vh">
           {items.length > 0 ? (

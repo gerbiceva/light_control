@@ -3,27 +3,29 @@ import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn
 
-sender = sacn.sACNsender(bind_address="192.168.0.107")
+sender = sacn.sACNsender(bind_address="192.168.213.1")
 sender.start()
 sender.manual_flush = True
 
-for i in range(1,10):
+for i in range(1, 10):
     sender.activate_output(i)
     sender[i].multicast = True
 # i=6
 # sender.activate_output(i)
 # sender[i].multicast = True
 
+
 @each_tick
 def send():
     sender.flush()
+
 
 @node
 def light_strip(universe: int, hsv: ColorArray):
     """
     Control Light Strip with HSV Color Array
 
-    Sends HSV color data to a specified DMX universe, converting it to RGB format 
+    Sends HSV color data to a specified DMX universe, converting it to RGB format
     and padding the data to meet the DMX512 protocol requirements.
 
     Parameters

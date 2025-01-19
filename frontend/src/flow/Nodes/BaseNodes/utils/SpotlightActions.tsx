@@ -8,7 +8,7 @@ import {
 } from "../../../../globalStore/flowStore";
 import { primitiveCapabilities } from "./baseCapabilities";
 import { CustomSpotData } from "../../../../views/Spotlight/CustomSpot/CustomSpotData";
-import { $mousePos } from "../../../../globalStore/mouseStore";
+import { $frozenMousePos } from "../../../../globalStore/mouseStore";
 import { mergeNamespaceAndType } from "../../../../sync/namespaceUtils";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
@@ -30,7 +30,7 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
 );
 
 export const generateNodeInstFromInput = (type: string): Node => {
-  const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get());
+  const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
 
   return {
     id: generateFlowId(),

@@ -5,14 +5,14 @@ import { DynamicPort } from "./DynamicPort";
 
 import { NodeProps, Node as FlowNode } from "@xyflow/react";
 import { $flowInst, generateFlowId } from "../../../globalStore/flowStore";
-import { $mousePos } from "../../../globalStore/mouseStore";
+import { $frozenMousePos } from "../../../globalStore/mouseStore";
 import { getColorFromString } from "../../../utils/colorUtils";
 import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
 
 export const generateNodeInstFromCapability = (
   capability: NodeCapability
 ): FlowNode => {
-  const pos = $flowInst.get()?.screenToFlowPosition($mousePos.get());
+  const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   return {
     id: generateFlowId(),
     type: mergeNamespaceAndType(capability.namespace, capability.name),
