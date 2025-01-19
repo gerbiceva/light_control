@@ -35,7 +35,6 @@ export const changeHappened = () => {
 
 export const addSyncPromise = (promise: Promise<unknown>) => {
   changeHappened();
-  promise.finally(() => {
-    syncFinished();
-  });
+  // this needs BOTH then AND finally because grpc resolves this in a very wierd way
+  promise.then(syncFinished).finally(syncFinished);
 };

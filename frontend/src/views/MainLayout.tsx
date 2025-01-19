@@ -45,14 +45,19 @@ export const MainLayout = () => {
           <Group w="100%">
             <img src="/icon.svg" height="30px" width="30px"></img>
             {/* <Title size="lg">LightControll</Title> */}
-            <TextInput
-              fw="bold"
-              variant="filled"
-              value={projectName}
-              onChange={(ev) => {
-                setProjectName(ev.target.value);
-              }}
-            />
+            <Group gap="0">
+              <TextInput
+                fw="bold"
+                variant="filled"
+                value={projectName}
+                onChange={(ev) => {
+                  setProjectName(ev.target.value);
+                }}
+              />
+              <Text c="dimmed" size="xs" fw="bold">
+                .json
+              </Text>
+            </Group>
           </Group>
           {/* spotlight for adding nodes */}
           <CustomSpotlight />

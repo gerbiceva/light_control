@@ -117,7 +117,7 @@ export const CustomSpotlight = () => {
       <Button onClick={spotlight.open} variant="subtle">
         <Group>
           <Kbd>CTRl + SPACE</Kbd>
-          <Text c="dimmed"> open node picker</Text>
+          <Text c="dimmed"> picker</Text>
         </Group>
       </Button>
 
