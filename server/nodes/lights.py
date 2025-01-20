@@ -3,7 +3,7 @@ import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn
 
-sender = sacn.sACNsender(bind_address="192.168.123.130")
+sender = sacn.sACNsender(bind_address="0.0.0.0", source_name="Best lighting software")
 sender.start()
 sender.manual_flush = True
 
