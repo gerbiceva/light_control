@@ -43,16 +43,22 @@ export const CustomSpotlight = () => {
       // filter by query
       const queryFiltered = filterItemsByName(
         data,
-        (item) => item.label + "/" + item.description,
+        (item) =>
+          [
+            item.capability.name,
+            item.capability.description,
+            item.capability.namespace,
+          ].join("/"),
+
         query
       );
 
-      if (spotFilter) {
-        const dataTypeFiltered = filterItemsByType(data, spotFilter);
-        return dataTypeFiltered;
+      if (!spotFilter) {
+        return queryFiltered;
       }
 
-      return queryFiltered;
+      const dataTypeFiltered = filterItemsByType(queryFiltered, spotFilter);
+      return dataTypeFiltered;
     },
     [query, spotFilter]
   );
@@ -64,7 +70,10 @@ export const CustomSpotlight = () => {
           {grp.groupName}
         </Text>
         {filter(grp.data).map((item) => (
-          <Spotlight.Action key={item.label} onClick={item.onClick}>
+          <Spotlight.Action
+            key={item.label + item.capability.namespace}
+            onClick={item.onClick}
+          >
             <Group wrap="nowrap" w="100%" align="center">
               {item.leftSection}
               <Stack gap="6px" w="100%">

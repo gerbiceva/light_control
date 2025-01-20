@@ -2,9 +2,7 @@ import { SpotFilter } from "../../../../globalStore/spotlightFilterStore";
 import { CustomSpotData } from "../CustomSpotData";
 
 const filter = (candidate: string, query: string): boolean => {
-  return candidate
-    .toLocaleLowerCase()
-    .includes(query.trim().toLocaleLowerCase());
+  return candidate.toLocaleLowerCase().includes(query.toLocaleLowerCase());
 };
 
 export const filterItemsByName = <T>(

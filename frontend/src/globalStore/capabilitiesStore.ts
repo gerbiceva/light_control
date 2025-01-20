@@ -16,8 +16,6 @@ export function setCapabilites(capabilities: NodeCapability[]) {
   $serverCapabilities.set(capabilities);
 }
 
-// setCapabilites(testCapabilitiesList);
-
 // initially get capabilities
 client.getCapabilities({}).then(
   (data) => {

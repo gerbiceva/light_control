@@ -21,7 +21,6 @@ export const getPortFromNode = (
   const fromCap = capabilities.find(
     (cap) => cap.name == tFrom && nsFrom == cap.namespace
   );
-  console.log({ fromCap }, { handle });
 
   if (type == "target") {
     return fromCap?.inputs.find((port) => port.name == handle.id);
