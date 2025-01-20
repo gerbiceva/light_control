@@ -2,7 +2,10 @@ import { spotlight } from "@mantine/spotlight";
 import { FinalConnectionState } from "@xyflow/react";
 import { freezeMousePos } from "../../../../globalStore/mouseStore";
 import { setSpotFilter } from "../../../../globalStore/spotlightFilterStore";
-import { getPortFromNode } from "../../../Edges/typesFromConnection";
+import {
+  getCapFromNode,
+  getPortFromNode,
+} from "../../../Edges/typesFromConnection";
 
 export const addInputOnEdgeDrop = (
   _event: MouseEvent | TouchEvent,
@@ -11,9 +14,8 @@ export const addInputOnEdgeDrop = (
   // when a connection is dropped on the pane it's not valid
   if (!connectionState.isValid) {
     if (
-      connectionState.fromHandle == null ||
+      !connectionState.fromHandle ||
       connectionState.fromNode == null ||
-      connectionState.fromHandle == null ||
       !connectionState.fromHandle.id
     ) {
       return;
@@ -24,7 +26,9 @@ export const addInputOnEdgeDrop = (
       connectionState.fromHandle?.type
     );
 
-    if (!port) {
+    const cap = getCapFromNode(connectionState.fromNode);
+
+    if (!port || !cap) {
       return;
     }
 
@@ -67,8 +71,9 @@ export const addInputOnEdgeDrop = (
     setSpotFilter({
       type: connectionState.fromHandle?.type,
       dataType: port.type,
+      fromCap: cap,
+      fromHandle: connectionState.fromHandle,
     });
     spotlight.open();
-    // }
   }
 };

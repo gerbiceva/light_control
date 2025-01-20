@@ -4,13 +4,16 @@ import { useCallback, useMemo } from "react";
 import { $serverCapabilities } from "../../globalStore/capabilitiesStore";
 import { theme } from "../../theme";
 import { generateNodeInstFromCapability } from "../../flow/Nodes/ComputeNodes/ComputeNodeFactory";
-import { $nodes, setNodes } from "../../globalStore/flowStore";
+import { $nodes, setEdges, setNodes } from "../../globalStore/flowStore";
 import { Node } from "@xyflow/react";
 import { inputNodesActions } from "../../flow/Nodes/BaseNodes/utils/SpotlightActions";
 
 import { CustomSpotData } from "./CustomSpot/CustomSpotData";
 import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
 import { getColorFromString } from "../../utils/colorUtils";
+import { $spotFilter } from "../../globalStore/spotlightFilterStore";
+import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
+import { getCapFromNode } from "../../flow/Edges/typesFromConnection";
 
 export const useActions = (): CustomSpotlightGroups[] => {
   const serverCapabilities = useStore($serverCapabilities);
@@ -18,7 +21,31 @@ export const useActions = (): CustomSpotlightGroups[] => {
 
   const addNode = useCallback(
     (node: Node) => {
+      const spotFilter = $spotFilter.get();
+      const cap = getCapFromNode(node);
       setNodes([...nodes, node]);
+
+      if (spotFilter && cap) {
+        setEdges(
+          spotFilter.type == "target"
+            ? addColoredEdge({
+                source: node.id,
+                sourceHandle: cap.outputs.filter(
+                  (port) => port.type == spotFilter.dataType
+                )[0].name,
+                target: spotFilter.fromHandle.nodeId,
+                targetHandle: spotFilter.fromHandle.id!,
+              })
+            : addColoredEdge({
+                source: spotFilter.fromHandle.nodeId,
+                sourceHandle: spotFilter.fromHandle.id!,
+                target: node.id,
+                targetHandle: cap.inputs.filter(
+                  (port) => port.type == spotFilter.dataType
+                )[0].name,
+              })
+        );
+      }
     },
     [nodes]
   );

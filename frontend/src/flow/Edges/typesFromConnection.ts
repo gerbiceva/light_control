@@ -4,6 +4,19 @@ import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { Port } from "../../grpc/client_code/service";
 import { splitTypeAndNamespace } from "../../sync/namespaceUtils";
 
+export const getCapFromNode = (node: FlowNode | null) => {
+  const capabilities = $capabilities.get();
+
+  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
+    node?.type || ""
+  );
+  const fromCap = capabilities.find(
+    (cap) => cap.name == tFrom && nsFrom == cap.namespace
+  );
+
+  return fromCap;
+};
+
 export const getPortFromNode = (
   handle: Handle | null,
   node: FlowNode | null,
@@ -12,15 +25,7 @@ export const getPortFromNode = (
   if (!handle || !node) {
     return;
   }
-  const capabilities = $capabilities.get();
-
-  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
-    node?.type || ""
-  );
-
-  const fromCap = capabilities.find(
-    (cap) => cap.name == tFrom && nsFrom == cap.namespace
-  );
+  const fromCap = getCapFromNode(node);
 
   if (type == "target") {
     return fromCap?.inputs.find((port) => port.name == handle.id);
@@ -41,33 +46,23 @@ export const getConnectionProperties = (
 ): ConnectionTypesOut => {
   const nodes = $nodes.get();
   const edges = $edges.get();
-  const capabilities = $capabilities.get();
+  //TODO: make an override that does not loop over nodes and gets a node from input. Use with AddInputOnEdgeDrop
 
   // get from node, namespace, type, capability and port
   const from = nodes.find((node) => node.id == edge.source);
-  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
-    from?.type || ""
-  );
-  const fromCap = capabilities.find(
-    (cap) => cap.name == tFrom && nsFrom == cap.namespace
-  );
+
+  const fromCap = from ? getCapFromNode(from) : undefined;
   const fromPort = fromCap?.outputs.find(
     (cap) => cap.name == edge.sourceHandle
   );
 
   // get to node, namespace, type, capability and port
   const to = nodes.find((node) => node.id == edge.target);
-  const { namespace: nsTo, type: tTo } = splitTypeAndNamespace(to?.type || "");
-  const toCap = capabilities.find(
-    (cap) => cap.name == tTo && nsTo == cap.namespace
-  );
+  const toCap = to ? getCapFromNode(to) : undefined;
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
   const targetEdges = edges.filter(
     (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
   );
-
-  // console.log({ from }, { fromCap }, { toCap });
-  // console.log({ fromPort }, { toPort });
 
   return {
     from: fromPort,

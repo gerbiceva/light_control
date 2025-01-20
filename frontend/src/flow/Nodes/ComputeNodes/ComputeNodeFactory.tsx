@@ -43,7 +43,7 @@ export const generateComputeNodeFromCapability = (
     </Stack>
   );
 
-  const ComputeNode = ({ selected }: NodeProps<FlowNode>) => {
+  const ComputeNode = ({ selected, id }: NodeProps<FlowNode>) => {
     return (
       <Card withBorder p="0" shadow={selected ? "lg" : undefined}>
         <Stack pb="0" gap="0">
@@ -66,7 +66,8 @@ export const generateComputeNodeFromCapability = (
             >
               {capability.name}
             </Text>
-            <Tooltip label={capability.description}>
+            {/* TODO: remove node ids */}
+            <Tooltip label={capability.description + " : " + id}>
               <Text c="white" fw="bold">
                 ?
               </Text>

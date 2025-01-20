@@ -3,16 +3,14 @@ import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn
 
-sender = sacn.sACNsender(bind_address="192.168.123.130")
+
+sender = sacn.sACNsender(bind_address="127.0.0.1")
 sender.start()
 sender.manual_flush = True
 
 for i in range(1, 10):
     sender.activate_output(i)
     sender[i].multicast = True
-# i=6
-# sender.activate_output(i)
-# sender[i].multicast = True
 
 
 @each_tick
