@@ -29,3 +29,7 @@ def primitive(f):
 def each_tick(f):
     f.__each_tick__ = True
     return f
+
+def thread(f):
+    f.__thread__ = True
+    return f

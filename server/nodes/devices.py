@@ -1,5 +1,5 @@
-from device_drivers import Gamepad, Microphone
-from datatypes import Vector2D, node, initialize
+from gamepad import Gamepad
+from datatypes import Vector2D, node, initialize, Float
 import jax.numpy as jnp
 
 buttons = [
@@ -59,19 +59,3 @@ def make_gamepad():
             jnp.array(pad.sticks["Right"]),
         )
     return get_gamepad_state
-
-@node
-def make_mic():
-    """
-    Microphone Input
-
-    Returns gain from mic.
-
-    Returns
-    -------
-    gain : Float
-    """
-    mic = Microphone(3)
-    def get_gain() -> float:
-        return mic.gain
-    return mic

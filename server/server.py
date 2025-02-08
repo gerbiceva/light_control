@@ -25,10 +25,11 @@ from utils import FrameLimiter
 from typing import Callable
 from collections import defaultdict
 
-
 defined_nodes: dict[str:Callable] = {}
-supplementary: list[Callable] = []
-graph = Graph()
+each_tick: list[Callable] = []
+threads: list[Callable] = []
+running_threads: list[Callable] = []
+graph = Graph({}, {})
 
 
 # class for handling actual communication with the client
@@ -59,12 +60,15 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
             for member in inspect.getmembers(module):
                 if (
                     member[0][0] != "_"
-                    and inspect.isfunction(member[1])
+                    # and inspect.isfunction(member[1])
                     and hasattr(member[1], "__is_node__")
                 ):
                     nodes.append((member[1], FunctionDoc(member[1]), namespace))
                 if hasattr(member[1], "__each_tick__"):
-                    supplementary.append(member[1])
+                    each_tick.append(member[1])
+                if hasattr(member[1], "__thread__"):
+                    threads.append(member[1])
+
         nodes_message = []
         for node in nodes:
             inputs = []
@@ -160,10 +164,14 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
         for edge in request.edges:
             edges[(edge.fromNode, edge.fromPort)] += [(edge.toNode, edge.toPort)]
         try:
-            graph.construct(nodes, edges)
+            for thread in running_threads:
+                thread.stop()
+            global graph
+            graph = Graph(nodes, edges)
+            for f in threads:
+                running_threads.append(f())
         except Exception as e:
             print(e)
-        # print(graph.edges)
         return grpc_server.service_pb2.Void()
 
 
@@ -222,7 +230,7 @@ async def loop():
             print(e)
             continue
 
-        for f in supplementary:
+        for f in each_tick:
             f()
         await limiter.tick()
 
