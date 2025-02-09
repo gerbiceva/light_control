@@ -13,6 +13,7 @@ dependencies = [
     "matplotlib>=3.10.0",
     "numpy>=2.2.1",
     "numpydoc>=1.8.0",
+    "pygobject>=3.50.0",
     "sacn>=1.10.0",
     "sonora>=0.2.3",
     "starlette>=0.41.3",

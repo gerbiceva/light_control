@@ -1,10 +1,6 @@
 from evdev import InputDevice, ecodes, list_devices
-import threading
 import jax.numpy as jnp
-import numpy as np
-
-from utils import FrameLimiter
-
+import threading
 
 class Gamepad():
     def __init__(self):
@@ -88,80 +84,3 @@ class Gamepad():
                     self.buttons["L2"] = float(event.value) / 255.0
                 elif event.code == ecodes.ABS_RZ:
                     self.buttons["R2"] = float(event.value) / 255.0
-
-class Microphone:
-    def __init__(self, input_device_index, fps=30):
-        self.input_device_index = input_device_index
-        self.fps = fps
-        self.gain = 0.0
-        self.running = True
-        self.thread = threading.Thread(target=self.loop)
-
-        # PyAudio setup
-        self.audio = pyaudio.PyAudio()
-        self.stream = None
-
-        # Configure the audio stream
-        self._setup_stream()
-
-        # Start the processing thread
-        self.thread.start()
-
-    def _setup_stream(self):
-        """Initialize the audio stream."""
-        device_info = self.audio.get_device_info_by_index(self.input_device_index)
-        max_input_channels = device_info["maxInputChannels"]
-
-        if max_input_channels == 0:
-            raise ValueError(f"Device {self.input_device_index} does not support input.")
-
-        self.stream = self.audio.open(
-            format=pyaudio.paInt16,  # 16-bit audio format
-            channels=1,             # Mono audio
-            rate=44100,             # Sample rate
-            input=True,             # Capture audio from microphone
-            frames_per_buffer=1470, # Adjust buffer size for 30 FPS
-            input_device_index=self.input_device_index
-        )
-
-    def calculate_gain(self, data):
-        """Calculate RMS gain using JAX, with handling for NaN or Inf values."""
-        audio_array = jnp.array(np.frombuffer(data, dtype=np.int16))
-        audio_array = jnp.nan_to_num(audio_array, nan=0.0, posinf=0.0, neginf=0.0)
-        rms = jnp.sqrt(jnp.mean(audio_array**2))
-        return float(rms) if not (jnp.isnan(rms) or jnp.isinf(rms)) else 0.0
-
-    def loop(self):
-        """Continuously read audio and calculate gain."""
-        frame_limiter = FrameLimiter(self.fps)
-
-        while self.running:
-            try:
-                # Read audio data
-                data = self.stream.read(1470, exception_on_overflow=False)
-                self.gain = self.calculate_gain(data)
-
-                # Limit processing to the specified FPS
-                frame_limiter.tick()
-            except Exception as e:
-                print(f"Error in audio loop: {e}")
-                self.running = False
-
-    def stop(self):
-        """Stop the microphone processing."""
-        self.running = False
-        self.thread.join()
-
-        # Clean up audio resources
-        if self.stream:
-            self.stream.stop_stream()
-            self.stream.close()
-        self.audio.terminate()
-
-    def __del__(self):
-        """Ensure resources are cleaned up on object deletion."""
-        self.stop()
-
-
-if __name__=="__main__":
-    pad = Gamepad()
