@@ -13,10 +13,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 # OTHER SHIT
-import inspect
-import importlib
-import os
-from numpydoc.docscrape import FunctionDoc
 from graph import Graph
 import re
 import colorsys
@@ -24,6 +20,8 @@ import jax.numpy as jnp
 from utils import FrameLimiter
 from typing import Callable
 from collections import defaultdict
+from node_loading import load_nodes
+from numpydoc.docscrape import FunctionDoc
 
 defined_nodes: dict[str:Callable] = {}
 each_tick: list[Callable] = []
@@ -31,54 +29,21 @@ threads: list[Callable] = []
 running_threads: list[Callable] = []
 graph = Graph({}, {})
 
-
 # class for handling actual communication with the client
 class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
     async def GetCapabilities(self, request, context):
-        global defined_nodes
-        # Path to the directory containing the files
-        directory = "nodes"
-
-        # List to store the imported modules
-        modules = []
-        namespaces = []
-
-        # Iterate over all .py files in the directory
-        for filename in os.listdir(directory):
-            if (
-                filename.endswith(".py")
-                and filename != "__init__.py"
-                and not filename.startswith("_")
-            ):
-                module_name = filename[:-3]  # Remove the .py extension
-                module = importlib.import_module(f"{directory}.{module_name}")
-                modules.append(module)
-                namespaces.append(module_name)
-
-        nodes = []
-        for namespace, module in zip(namespaces, modules):
-            for member in inspect.getmembers(module):
-                if (
-                    member[0][0] != "_"
-                    # and inspect.isfunction(member[1])
-                    and hasattr(member[1], "__is_node__")
-                ):
-                    nodes.append((member[1], FunctionDoc(member[1]), namespace))
-                if hasattr(member[1], "__each_tick__"):
-                    each_tick.append(member[1])
-                if hasattr(member[1], "__thread__"):
-                    threads.append(member[1])
+        # nodes, threads, each_tick = load_nodes('nodes')
 
         nodes_message = []
-        for node in nodes:
+        for key, node in defined_nodes.items():
+            node_definition = FunctionDoc(node)
+            namespace = key.split(sep='/')[0]
             inputs = []
-            # print(node[1]["Summary"][0])
-            defined_nodes[f"{node[2]}/{node[1]['Summary'][0]}"] = node[0]
-            if hasattr(node[0], "__primitive__"):
+            if hasattr(node, "__primitive__"):
                 # print(node)
                 continue
             # print(node[1]['Summary'][0])
-            for param in node[1]["Parameters"]:
+            for param in node_definition["Parameters"]:
                 if param.type != "None":
                     inputs.append(
                         grpc_server.service_pb2.Port(
@@ -87,7 +52,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
                         )
                     )
             outputs = []
-            for ret in node[1]["Returns"]:
+            for ret in node_definition["Returns"]:
                 if ret.type != "None":
                     outputs.append(
                         grpc_server.service_pb2.Port(
@@ -97,11 +62,11 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
                     )
             nodes_message.append(
                 grpc_server.service_pb2.NodeCapability(
-                    name=node[1]["Summary"][0],
-                    description=node[1]["Extended Summary"][0],
+                    name=node_definition["Summary"][0],
+                    description=node_definition["Extended Summary"][0],
                     inputs=inputs,
                     outputs=outputs,
-                    namespace=node[2],
+                    namespace=namespace,
                 )
             )
         # print(nodes_message)
@@ -236,6 +201,8 @@ async def loop():
 
 
 async def start_server():
+    global defined_nodes, threads, each_tick
+    defined_nodes, threads, each_tick = load_nodes('nodes')
     loop_task = asyncio.create_task(loop())
     grpc_task = asyncio.create_task(grpc(50051))
     web_task = asyncio.create_task(webUI(8080))

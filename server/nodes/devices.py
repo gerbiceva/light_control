@@ -1,5 +1,5 @@
 from gamepad import Gamepad
-from datatypes import Vector2D, node, initialize, Float
+from datatypes import Vector2D, node, initialize, Float, Int
 import jax.numpy as jnp
 
 buttons = [
@@ -51,7 +51,7 @@ def make_gamepad():
     RightStick : Vector2D
     """
     pad = Gamepad()
-    def get_gamepad_state() -> (int, int, int, int, int, int, int, int, int, int, int, int, int, int, float, float, Vector2D, Vector2D):
+    def get_gamepad_state() -> (Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Float, Float, Vector2D, Vector2D):
         return tuple(pad.buttons[button] for button in buttons) + (
             jnp.array(pad.buttons["R2"]),
             jnp.array(pad.buttons["L2"]),
