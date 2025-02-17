@@ -7,6 +7,18 @@ service MyService {
     rpc GraphUpdate (GraphUpdated) returns (Void);
       // Opens a tunnel for streaming notifications
     rpc StreamNotifications(Void) returns (stream Notification);
+
+    rpc AddInputDevice(InputCapabilities) returns (Void);
+}
+
+message Input {
+    string name = 1;
+    BaseType type = 2;
+}
+
+message InputCapabilities {
+    string name = 1;
+    repeated Input inputs = 2;
 }
 
 // notifications system
