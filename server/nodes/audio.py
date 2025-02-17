@@ -5,7 +5,7 @@ import weakref
 import jax.numpy as jnp
 
 gi.require_version("Gst", "1.0")
-from gi.repository import Gst, GLib
+from gi.repository import Gst, GLib  # noqa: E402
 
 Gst.init(None)
 

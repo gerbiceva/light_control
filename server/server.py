@@ -40,9 +40,7 @@ class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
             namespace = key.split(sep='/')[0]
             inputs = []
             if hasattr(node, "__primitive__"):
-                # print(node)
                 continue
-            # print(node[1]['Summary'][0])
             for param in node_definition["Parameters"]:
                 if param.type != "None":
                     inputs.append(
@@ -186,7 +184,7 @@ async def grpc(port: int):
     await server.serve()
 
 
-async def loop():
+def loop():
     limiter = FrameLimiter(60)
     while True:
         try:
@@ -197,16 +195,22 @@ async def loop():
 
         for f in each_tick:
             f()
-        await limiter.tick()
+        limiter.tick()
 
+def generating(generator):
+    global defined_nodes
+    for node in generator():
+        defined_nodes = defined_nodes | {f"dynamic/{FunctionDoc(node)['Summary'][0]}": node}
 
 async def start_server():
     global defined_nodes, threads, each_tick
-    defined_nodes, threads, each_tick = load_nodes('nodes')
-    loop_task = asyncio.create_task(loop())
+    defined_nodes, threads, each_tick, generators = load_nodes('nodes')
+    generator_threads = [asyncio.to_thread(generating, generator) for generator in generators]
+
+    loop_thread = asyncio.to_thread(loop)
     grpc_task = asyncio.create_task(grpc(50051))
     web_task = asyncio.create_task(webUI(8080))
-    await asyncio.gather(grpc_task, loop_task, web_task)
+    await asyncio.gather(grpc_task, loop_thread, web_task, *generator_threads)
     # await grpc_task
 
 
