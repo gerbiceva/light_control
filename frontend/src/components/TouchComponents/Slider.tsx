@@ -65,8 +65,8 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
           y: (touchFound.clientY - touchStartPos.y) / 5.0,
         };
         // set a slight S curve to the delta
-        const fact = Math.pow(delta.y / 25, 5);
-        const currentDelta = delta.y / 1.5 + fact / 2;
+        const fact = Math.pow(delta.y / 15, 3);
+        const currentDelta = delta.y / 1.5 + fact / 3;
 
         setCurrentDelta(currentDelta);
         if (onChange) {
