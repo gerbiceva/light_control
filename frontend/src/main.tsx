@@ -15,6 +15,9 @@ import { MainLayout } from "./views/MainLayout.tsx";
 import { Notifications } from "@mantine/notifications";
 import { ReactFlowProvider } from "@xyflow/react";
 import { $mousePos } from "./globalStore/mouseStore.ts";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { TouchUI } from "./views/TouchUI.tsx";
+import { touchFix } from "./components/TouchComponents/utils.ts";
 
 document.addEventListener("mousemove", (ev) => {
   $mousePos.set({
@@ -23,13 +26,20 @@ document.addEventListener("mousemove", (ev) => {
   });
 });
 
+touchFix();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MantineProvider theme={appTheme} forceColorScheme="light">
       <Notifications position="bottom-right" />
       <ReactFlowProvider>
-        <MainLayout />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MainLayout />} />
+            <Route path="/touch" element={<TouchUI />} />
+          </Routes>
+        </BrowserRouter>
       </ReactFlowProvider>
     </MantineProvider>
-  </StrictMode>
+  </StrictMode>,
 );
