@@ -117,8 +117,12 @@ export const NodeView = () => {
             leftSection={<IconSettings size={14} />}
             onClick={() => {
               const rect = reactFlowInst.getNodesBounds(pos.nodes);
+              // reactFlowInst.
               console.log(pos.nodes[0].width, "helo");
               const id = generateFlowId();
+              const nodesNew = nodes.filter(
+                (node) => !pos.nodes.map((n) => n.id).includes(node.id),
+              );
               const groupNode: Node = {
                 id,
                 type: "group",
@@ -132,14 +136,23 @@ export const NodeView = () => {
                   borderColor: theme.colors.cyan[3],
                   backgroundColor: alpha(theme.colors.cyan[1], 0.2),
                 },
-                // data: {},
+                data: {},
               };
-              addNode(groupNode);
 
-              pos.nodes.forEach((n) => {
-                n.extent = "parent";
-                n.parentId = id;
+              const updatedNodes = pos.nodes.map((n) => {
+                return {
+                  ...n,
+                  extent: "parent",
+                  parentId: id,
+                  position: {
+                    x: n.position.x - rect.x, // Translate to parent's X
+                    y: n.position.y - rect.y, // Translate to parent's Y
+                  },
+                };
               });
+
+              //@ts-expect-error different node types
+              setNodes([...nodesNew, groupNode, ...updatedNodes]);
             }}
           >
             Group selection <kbd>shift + G</kbd>

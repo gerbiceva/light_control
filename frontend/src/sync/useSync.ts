@@ -18,16 +18,6 @@ export const useSync = () => {
   const [debouncedEdges] = useDebouncedValue(edges, updateIntervalMs);
   const [debouncedNodes] = useDebouncedValue(nodes, updateIntervalMs);
 
-  // const update = useCallback(() => {
-  //   addSyncPromise(
-  //     new Promise((resolve) => {
-  //       setTimeout(() => {
-  //         resolve(0);
-  //       }, 300);
-  //     })
-  //   );
-  // }, []);
-
   const update = useCallback(() => {
     if (autoUpdate) {
       addSyncPromise(sync(nodes, edges));
@@ -35,8 +25,10 @@ export const useSync = () => {
   }, [debouncedNodes, debouncedEdges, autoUpdate]);
 
   useEffect(() => {
-    changeHappened();
-  }, [edges, nodes]);
+    if (autoUpdate) {
+      changeHappened();
+    }
+  }, [autoUpdate, edges, nodes]);
 
   useEffect(() => {
     update();
