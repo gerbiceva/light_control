@@ -8,9 +8,6 @@ import {
   TextInput,
   Title,
   Text,
-  Switch,
-  Overlay,
-  Tooltip,
 } from "@mantine/core";
 import { NodeView } from "./NodeView";
 import { useStore } from "@nanostores/react";
@@ -19,7 +16,6 @@ import { LoaderIndicator } from "../components/LoaderIndicator";
 import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
 import { SettingsModal } from "../components/settingsModal/SettingsModal";
 import { $projectName, setProjectName } from "../globalStore/projectStore";
-import { IconEye, IconEyeOff, IconRefresh } from "@tabler/icons-react";
 import { BlindSwitch } from "../components/BlindSwitch";
 
 export const MainLayout = () => {
