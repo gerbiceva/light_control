@@ -32,7 +32,7 @@ export const setNodes = (nodes: FlowNode[]) => {
   $nodes.set(nodes);
 };
 export const addNode = (node: FlowNode) => {
-  setNodes([...$nodes.get(), node]);
+  setNodes([node, ...$nodes.get()]);
 };
 
 // edges

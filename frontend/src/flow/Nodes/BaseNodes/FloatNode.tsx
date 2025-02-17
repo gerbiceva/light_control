@@ -6,9 +6,10 @@ import { FlowNodeWithValue } from "./utils/inputNodeType";
 
 type ColorNode = NodeProps<FlowNodeWithValue>;
 
-export const FloatNode = memo(({ data }: ColorNode) => {
+export const FloatNode = memo(({ data, selected }: ColorNode) => {
   return (
     <BaseNodeElement
+      selected={selected}
       namespace="inputs"
       type={"Float"}
       input={

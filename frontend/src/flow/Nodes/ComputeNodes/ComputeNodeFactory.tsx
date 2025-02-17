@@ -10,7 +10,7 @@ import { getColorFromString } from "../../../utils/colorUtils";
 import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
 
 export const generateNodeInstFromCapability = (
-  capability: NodeCapability
+  capability: NodeCapability,
 ): FlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   return {
@@ -20,12 +20,11 @@ export const generateNodeInstFromCapability = (
       x: 0,
       y: 0,
     },
-    data: {},
   };
 };
 
 export const generateComputeNodeFromCapability = (
-  capability: NodeCapability
+  capability: NodeCapability,
 ) => {
   const inputStack = (
     <Stack gap="xs">
@@ -45,10 +44,10 @@ export const generateComputeNodeFromCapability = (
 
   const ComputeNode = ({ selected, id }: NodeProps<FlowNode>) => {
     return (
-      <Card withBorder p="0" shadow={selected ? "lg" : undefined}>
+      <Card withBorder shadow={selected ? "lg" : undefined} p="0">
         <Stack pb="0" gap="0">
           <Group
-            bg="dark"
+            bg={selected ? getColorFromString(capability.namespace)[4] : "dark"}
             p="xs"
             w="100%"
             justify="space-between"
@@ -59,7 +58,9 @@ export const generateComputeNodeFromCapability = (
             }}
           >
             <Text
-              c={getColorFromString(capability.namespace)[2]}
+              c={
+                selected ? "dark" : getColorFromString(capability.namespace)[2]
+              }
               size="xs"
               fw="bold"
               maw={"200px"}

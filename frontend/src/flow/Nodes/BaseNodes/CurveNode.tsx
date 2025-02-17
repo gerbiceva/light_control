@@ -8,12 +8,13 @@ import { FlowNodeWithValue } from "./utils/inputNodeType";
 
 type CurveNode = NodeProps<FlowNodeWithValue>;
 
-export const CurveNode = memo(({ data }: CurveNode) => {
+export const CurveNode = memo(({ data, selected }: CurveNode) => {
   const theme = useMantineTheme();
   const [points, setPoints] = useState<Point[]>();
 
   return (
     <BaseNodeElement
+      selected={selected}
       namespace="inputs"
       type={"Curve"}
       input={

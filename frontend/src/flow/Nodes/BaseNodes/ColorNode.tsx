@@ -1,14 +1,15 @@
 import { memo } from "react";
-import { NodeProps } from "@xyflow/react";
 import { ColorInput } from "@mantine/core";
 import { BaseNodeElement } from "./BaseNodeElement";
 import { FlowNodeWithValue } from "./utils/inputNodeType";
+import { NodeProps } from "@xyflow/react";
 
-type ColorNode = NodeProps<FlowNodeWithValue>;
+type ColorNode = FlowNodeWithValue;
 
-export const ColorNode = memo(({ data }: ColorNode) => {
+export const ColorNode = memo(({ selected }: ColorNode) => {
   return (
     <BaseNodeElement
+      selected={selected?.data.value}
       namespace="inputs"
       type={"Color"}
       input={
@@ -18,7 +19,7 @@ export const ColorNode = memo(({ data }: ColorNode) => {
           format="hsl"
           className="nodrag"
           onChange={(color) => {
-            data.value = color;
+            selected.data.value = color;
           }}
         />
       }

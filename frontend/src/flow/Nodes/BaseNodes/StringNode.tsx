@@ -6,9 +6,10 @@ import { FlowNodeWithValue } from "./utils/inputNodeType";
 
 type StringNode = NodeProps<FlowNodeWithValue>;
 
-export const StringNode = memo(({ data }: StringNode) => {
+export const StringNode = memo(({ data, selected }: StringNode) => {
   return (
     <BaseNodeElement
+      selected={selected}
       namespace="inputs"
       type={"String"}
       input={
