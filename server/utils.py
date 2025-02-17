@@ -1,5 +1,4 @@
 import time
-import asyncio
 from matplotlib.colors import hsv_to_rgb
 
 class FrameLimiter:
@@ -10,11 +9,11 @@ class FrameLimiter:
     def set_fps(self, fps):
         self.interval = 1.0 / fps
 
-    async def tick(self):
+    def tick(self):
         current_time = time.time()
         elapsed = current_time - self.last_time
         sleep_time = max(0, self.interval - elapsed)
-        await asyncio.sleep(sleep_time)
+        time.sleep(sleep_time)
         self.last_time = time.time()  # Reset for the next frame
 
 def print_strip(strip):

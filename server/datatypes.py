@@ -1,4 +1,3 @@
-from typing import Callable
 from jax.typing import ArrayLike
 from sympy import Expr
 
@@ -32,4 +31,8 @@ def each_tick(f):
 
 def thread(f):
     f.__thread__ = True
+    return f
+
+def generator(f):
+    f.__generator__ = True
     return f
