@@ -61,3 +61,28 @@ def make_speedmaster():
             speed_master.slow_down()
         return speed_master.time
     return get_speed_master
+
+@node
+@initialize
+def manual_speed():
+    """
+    Manual Speedmaster
+
+    Gives you a MASTER of SPEEEEED(zan oberstar).
+
+    Parameters
+    ----------
+    delta : Float
+
+    Returns
+    -------
+    time : Float
+    """
+    now = 0.0
+    def speed_master(delta):
+        nonlocal now
+        now += delta
+        return now
+    
+    return speed_master
+    

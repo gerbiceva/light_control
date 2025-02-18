@@ -32,6 +32,7 @@ graph = Graph({}, {})
 # class for handling actual communication with the client
 class MyService(grpc_server.service_pb2_grpc.MyServiceServicer):
     async def GetCapabilities(self, request, context):
+        load_everything()
         # nodes, threads, each_tick = load_nodes('nodes')
 
         nodes_message = []
@@ -196,21 +197,19 @@ def loop():
         for f in each_tick:
             f()
         limiter.tick()
-
-def generating(generator):
-    global defined_nodes
-    for node in generator():
-        defined_nodes = defined_nodes | {f"dynamic/{FunctionDoc(node)['Summary'][0]}": node}
-
-async def start_server():
+    
+def load_everything():
     global defined_nodes, threads, each_tick
     defined_nodes, threads, each_tick, generators = load_nodes('nodes')
-    generator_threads = [asyncio.to_thread(generating, generator) for generator in generators]
+    defined_nodes = defined_nodes 
+    for generator in generators:
+        defined_nodes = defined_nodes | {f"dynamic/{FunctionDoc(node)['Summary'][0]}": node for node in generator()}
 
+async def start_server():
     loop_thread = asyncio.to_thread(loop)
     grpc_task = asyncio.create_task(grpc(50051))
     web_task = asyncio.create_task(webUI(8080))
-    await asyncio.gather(grpc_task, loop_thread, web_task, *generator_threads)
+    await asyncio.gather(grpc_task, loop_thread, web_task)
     # await grpc_task
 
 

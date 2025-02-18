@@ -80,7 +80,7 @@ class MicFourier:
         pipeline_description = pipeline_description = (
             "autoaudiosrc ! "
             "audioconvert ! "
-            f"spectrum bands=128 interval={int((1 / self.fps) * 10**9)} ! "
+            f"spectrum bands=128 interval={int((1 / self.fps) * 10**9)} message-magnitude=true ! "
             "fakesink"
         )
         self.pipeline = Gst.parse_launch(pipeline_description)
