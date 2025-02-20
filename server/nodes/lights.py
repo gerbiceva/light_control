@@ -2,34 +2,35 @@ from datatypes import ColorArray, node, each_tick, initialize, generator
 import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn
-import psutil
-import socket
-
-# def get_all_ips():
-#     ips = []
-#     try:
-#         # Get all network interfaces
-#         interfaces = netifaces.interfaces()
-#         for interface in interfaces:
-#             # Get all addresses for the interface
-#             addresses = netifaces.ifaddresses(interface)
-#             # Get IPv4 addresses
-#             if netifaces.AF_INET in addresses:
-#                 for link in addresses[netifaces.AF_INET]:
-#                     ips.append(link['addr'])
-#     except Exception as e:
-#         return f"Error getting all IPs: {e}"
-#     return ips
+import netifaces
 
 
 senders = {}
-for interface, addrs in psutil.net_if_addrs().items():
-    for addr in addrs:
-        if addr.family == socket.AF_INET:
-            senders[addr.address] = sacn.sACNsender(bind_address=addr.address, source_name="Best lighting software")
+
+def get_ipv4_gateway_ips():
+    gateway_ips = {}
+
+    # Get all gateways
+    gateways = netifaces.gateways()
+
+    # Extract only IPv4 gateways
+    ipv4_gateways = gateways.get(netifaces.AF_INET, [])
+
+    for gateway in ipv4_gateways:
+        interface = gateway[1]  # Interface name
+        gateway_ip = gateway[0]  # Gateway IP address
+        gateway_ips[interface] = gateway_ip
+
+    # return gateway_ips
+    return {'buu': '0.0.0.0'}
 
 @generator
-def make_lights():
+def make_lights():    
+    for addr in get_ipv4_gateway_ips().values():
+        senders[addr] = sacn.sACNsender(bind_address=addr, source_name="Best lighting software")
+        senders[addr].start()
+        senders[addr].manual_flush = True
+    lights = []
     for ip, sender in senders.items():
         @node
         @initialize
@@ -51,11 +52,9 @@ def make_lights():
             -------
             None
             """
-
             def __init__(self):
                 self.sender: sacn.sACNsender = sender
-                self.sender.start()
-                self.sender.manual_flush = True
+                self.sender.is_ready = True
 
             def __call__(self, universe, hsv: ColorArray):
                 if universe not in self.sender.get_active_outputs():
@@ -71,9 +70,12 @@ def make_lights():
             def __del__(self):
                 for uni in self.sender.get_active_outputs():
                     self.sender.deactivate_output(uni)
-        yield Light
+        lights.append(Light)
+    return lights
 
 @each_tick
 def send():
     for sender in senders.values():
-        sender.flush()
+        if hasattr(sender, 'is_ready'):
+            # print(sender.get_active_outputs())
+            sender.flush()
