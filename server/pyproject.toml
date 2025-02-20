@@ -19,5 +19,5 @@ dependencies = [
     "sonora>=0.2.3",
     "starlette>=0.41.3",
     "sympy>=1.13.3",
-    "uvicorn>=0.34.0",
+    "uvicorn[standard]>=0.34.0",
 ]

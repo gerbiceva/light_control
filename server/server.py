@@ -1,4 +1,5 @@
 # GRPC
+import threading
 import asyncio
 import uvicorn
 import grpc_server.service_pb2_grpc
@@ -11,6 +12,7 @@ from starlette.types import ASGIApp
 # WEB
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi import WebSocket
 
 # OTHER SHIT
 from graph import Graph
@@ -150,9 +152,34 @@ class GRPCWebMiddleware(BaseHTTPMiddleware):
         del response.raw_headers[0]
         return response
 
-
+input_values = {}
+input_lock = asyncio.Lock()
+# Modify the webUI function to include WebSocket handling
 async def webUI(port: int):
     webApp = FastAPI()
+
+    @webApp.websocket("/ws")
+    async def websocket_endpoint(websocket: WebSocket):
+        await websocket.accept()
+        try:
+            while True:
+                data = await websocket.receive_bytes()
+                if len(data) != 2:
+                    continue
+
+                input_index = data[0]
+                value = max(0, min(data[1], 100))
+
+                async with input_lock:  # Using async lock
+                    input_values[input_index] = value
+                    # print(f"Received input {input_index}: {value}")
+
+        except Exception as e:
+            print(f"WebSocket error: {e}")
+        finally:
+            await websocket.close()
+            print("WebSocket connection closed")
+
     webApp.mount("/", StaticFiles(directory="dist", html=True), name="ui")
 
     config = uvicorn.Config(webApp, port=port, log_level="info")
