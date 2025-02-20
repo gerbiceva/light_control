@@ -3,7 +3,7 @@ import { filterTouches, Vector2 } from "./utils";
 import { useMantineTheme } from "@mantine/core";
 
 export interface ISliderProps {
-  baseWidth?: number;
+  baseWidth?: number | string;
   onChange?: (pos: number) => void;
   onStop?: () => void;
 }
@@ -104,7 +104,8 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
         borderRadius: theme.radius["md"],
         backgroundColor: theme.colors[theme.primaryColor][5],
         width: baseWidth,
-        height: "400px",
+        height: "100%",
+        position: "relative",
       }}
     >
       <div
@@ -116,7 +117,23 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
           height: `${computeClampedPercentage}%`,
         }}
       >
-        {touch && touch.identifier}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {touch &&
+            touch.identifier +
+              "\n" +
+              (100.0 - computeClampedPercentage).toFixed(2)}
+        </div>
       </div>
     </div>
   );

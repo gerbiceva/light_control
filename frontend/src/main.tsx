@@ -18,6 +18,7 @@ import { $mousePos } from "./globalStore/mouseStore.ts";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TouchUI } from "./views/TouchUI.tsx";
 import { touchFix } from "./components/TouchComponents/utils.ts";
+import "./main.css";
 
 document.addEventListener("mousemove", (ev) => {
   $mousePos.set({
