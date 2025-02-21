@@ -2,6 +2,7 @@ import inspect
 import importlib
 import os
 from numpydoc.docscrape import FunctionDoc
+import sys
 
 def load_nodes(directory: str) -> (list, list, list, list):
     # List to store the imported modules
@@ -15,10 +16,13 @@ def load_nodes(directory: str) -> (list, list, list, list):
                 and filename != "__init__.py"
                 and not filename.startswith("_")
             ):
-                module_name = filename[:-3]  # Remove the .py extension
-                module = importlib.import_module(f"{directory}.{module_name}")
+                module_name = f"{directory}.{filename[:-3]}"
+                if module_name in sys.modules:
+                    module = importlib.reload(sys.modules[module_name])
+                else:
+                    module = importlib.import_module(module_name)
                 modules.append(module)
-                namespaces.append(module_name)
+                namespaces.append(module_name.split('.')[1])
 
         nodes = []
         threads = []
