@@ -1,10 +1,11 @@
 import { client } from "../grpc/grpcClient";
-import { Node as FlowNode, Edge as FlowEdge } from "@xyflow/react";
+import { Edge as FlowEdge } from "@xyflow/react";
 import { notifError } from "../utils/notifications";
 import { isFlowNodeWithValue } from "../flow/Nodes/BaseNodes/utils/inputNodeType";
 import { splitTypeAndNamespace } from "./namespaceUtils";
+import { CustomFlowNode } from "../flow/Nodes/CustomNodeType";
 
-export const sync = (nodes: FlowNode[], edges: FlowEdge[]) => {
+export const sync = (nodes: CustomFlowNode[], edges: FlowEdge[]) => {
   return new Promise<void>((resolve, reject) => {
     resolve();
     client
@@ -49,7 +50,7 @@ export const sync = (nodes: FlowNode[], edges: FlowEdge[]) => {
             message: JSON.stringify(status, null, 1),
           });
           console.error(status);
-        }
+        },
       );
   });
 };

@@ -25,18 +25,18 @@ export const primitiveCapabilities: NodeCapability[] = [
     namespace: "primitive",
     description: "Floating point / decimal number",
   },
-  {
-    name: "Curve",
-    inputs: [],
-    outputs: [
-      {
-        name: "Curve",
-        type: BaseType.Curve,
-      },
-    ],
-    namespace: "primitive",
-    description: "Parametric curve input",
-  },
+  // {
+  //   name: "Curve",
+  //   inputs: [],
+  //   outputs: [
+  //     {
+  //       name: "Curve",
+  //       type: BaseType.Curve,
+  //     },
+  //   ],
+  //   namespace: "primitive",
+  //   description: "Parametric curve input",
+  // },
   {
     name: "Color",
     inputs: [],
@@ -62,3 +62,9 @@ export const primitiveCapabilities: NodeCapability[] = [
     description: "String input",
   },
 ];
+
+export const getBaseCapabilityFromType = (
+  type: string,
+): NodeCapability | undefined => {
+  return primitiveCapabilities.find((capability) => capability.name === type);
+};

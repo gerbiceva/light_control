@@ -1,11 +1,8 @@
 // store/users.ts
 import { atom } from "nanostores";
-import {
-  Node as FlowNode,
-  Edge as FlowEdge,
-  ReactFlowInstance,
-} from "@xyflow/react";
+import { Edge as FlowEdge, ReactFlowInstance } from "@xyflow/react";
 import { persistentAtom } from "@nanostores/persistent";
+import { CustomFlowNode } from "../flow/Nodes/CustomNodeType";
 
 // id factory
 const $latestNodeId = persistentAtom<number>("flowIdManager", 0, {
@@ -20,18 +17,18 @@ export const generateFlowId = () => {
 
 // flow ref
 export const $flowInst = atom<
-  ReactFlowInstance<FlowNode, FlowEdge> | undefined
+  ReactFlowInstance<CustomFlowNode, FlowEdge> | undefined
 >(undefined);
 
 // nodes
-export const $nodes = persistentAtom<FlowNode[]>("nodes", [], {
+export const $nodes = persistentAtom<CustomFlowNode[]>("nodes", [], {
   encode: JSON.stringify,
   decode: JSON.parse,
 });
-export const setNodes = (nodes: FlowNode[]) => {
+export const setNodes = (nodes: CustomFlowNode[]) => {
   $nodes.set(nodes);
 };
-export const addNode = (node: FlowNode) => {
+export const addNode = (node: CustomFlowNode) => {
   setNodes([node, ...$nodes.get()]);
 };
 
@@ -53,7 +50,7 @@ export const resetState = () => {
 };
 
 export interface SaveFile {
-  nodes: FlowNode[];
+  nodes: CustomFlowNode[];
   edges: FlowEdge[];
 }
 export const getSaveFile = (): SaveFile => {

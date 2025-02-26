@@ -3,15 +3,16 @@ import { NodeCapability } from "../../../grpc/client_code/service";
 import { Card, Group, SimpleGrid, Stack, Text, Tooltip } from "@mantine/core";
 import { DynamicPort } from "./DynamicPort";
 
-import { NodeProps, Node as FlowNode } from "@xyflow/react";
+import { NodeProps } from "@xyflow/react";
 import { $flowInst, generateFlowId } from "../../../globalStore/flowStore";
 import { $frozenMousePos } from "../../../globalStore/mouseStore";
 import { getColorFromString } from "../../../utils/colorUtils";
 import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
+import { CustomFlowNode } from "../CustomNodeType";
 
 export const generateNodeInstFromCapability = (
-  capability: NodeCapability
-): FlowNode => {
+  capability: NodeCapability,
+): CustomFlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   return {
     id: generateFlowId(),
@@ -20,12 +21,14 @@ export const generateNodeInstFromCapability = (
       x: 0,
       y: 0,
     },
-    data: {},
+    data: {
+      capability,
+    },
   };
 };
 
 export const generateComputeNodeFromCapability = (
-  capability: NodeCapability
+  capability: NodeCapability,
 ) => {
   const inputStack = (
     <Stack gap="xs">
@@ -43,7 +46,7 @@ export const generateComputeNodeFromCapability = (
     </Stack>
   );
 
-  const ComputeNode = ({ selected, id }: NodeProps<FlowNode>) => {
+  const ComputeNode = ({ selected, id }: NodeProps<CustomFlowNode>) => {
     return (
       <Card withBorder shadow={selected ? "lg" : undefined} p="0">
         <Stack pb="0" gap="0">

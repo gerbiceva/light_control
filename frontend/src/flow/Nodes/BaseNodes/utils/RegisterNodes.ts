@@ -28,7 +28,7 @@ export const getNodeNamespaceAndTypeFromBaseType = (inp: BaseType) => {
   };
 };
 export const getNodeTypeFromBaseType = (
-  inp: BaseType
+  inp: BaseType,
 ): InputNodeTypes | null => {
   switch (inp) {
     case BaseType.Color:
@@ -43,8 +43,8 @@ export const getNodeTypeFromBaseType = (
     case BaseType.String:
       return "String";
 
-    case BaseType.Curve:
-      return "Curve";
+    // case BaseType.Curve:
+    //   return "Curve";
 
     default:
       return null;

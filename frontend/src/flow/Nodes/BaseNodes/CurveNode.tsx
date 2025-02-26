@@ -8,6 +8,9 @@ import { FlowNodeWithValue } from "./utils/inputNodeType";
 
 type CurveNode = NodeProps<FlowNodeWithValue>;
 
+/**
+ * @deprecated, curves area created from string
+ */
 export const CurveNode = memo(({ data, selected }: CurveNode) => {
   const theme = useMantineTheme();
   const [points, setPoints] = useState<Point[]>();

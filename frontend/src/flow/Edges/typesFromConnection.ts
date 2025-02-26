@@ -1,17 +1,18 @@
-import { Edge, Connection, Handle, Node as FlowNode } from "@xyflow/react";
+import { Edge, Connection, Handle } from "@xyflow/react";
 import { $edges, $nodes } from "../../globalStore/flowStore";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { Port } from "../../grpc/client_code/service";
 import { splitTypeAndNamespace } from "../../sync/namespaceUtils";
+import { CustomFlowNode } from "../Nodes/CustomNodeType";
 
-export const getCapFromNode = (node: FlowNode | null) => {
+export const getCapFromNode = (node: CustomFlowNode | null) => {
   const capabilities = $capabilities.get();
 
   const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
-    node?.type || ""
+    node?.type || "",
   );
   const fromCap = capabilities.find(
-    (cap) => cap.name == tFrom && nsFrom == cap.namespace
+    (cap) => cap.name == tFrom && nsFrom == cap.namespace,
   );
 
   return fromCap;
@@ -19,8 +20,8 @@ export const getCapFromNode = (node: FlowNode | null) => {
 
 export const getPortFromNode = (
   handle: Handle | null,
-  node: FlowNode | null,
-  type: "source" | "target"
+  node: CustomFlowNode | null,
+  type: "source" | "target",
 ) => {
   if (!handle || !node) {
     return;
@@ -42,7 +43,7 @@ interface ConnectionTypesOut {
   targetLen: number;
 }
 export const getConnectionProperties = (
-  edge: Edge | Connection
+  edge: Edge | Connection,
 ): ConnectionTypesOut => {
   const nodes = $nodes.get();
   const edges = $edges.get();
@@ -53,7 +54,7 @@ export const getConnectionProperties = (
 
   const fromCap = from ? getCapFromNode(from) : undefined;
   const fromPort = fromCap?.outputs.find(
-    (cap) => cap.name == edge.sourceHandle
+    (cap) => cap.name == edge.sourceHandle,
   );
 
   // get to node, namespace, type, capability and port
@@ -61,7 +62,7 @@ export const getConnectionProperties = (
   const toCap = to ? getCapFromNode(to) : undefined;
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
   const targetEdges = edges.filter(
-    (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
+    (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name,
   );
 
   return {

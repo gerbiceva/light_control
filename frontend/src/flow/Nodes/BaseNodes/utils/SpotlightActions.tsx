@@ -1,15 +1,18 @@
 import { Avatar } from "@mantine/core";
 import { getColorFromEnum } from "../../../../utils/colorUtils";
-import { Node } from "@xyflow/react";
 import {
   $flowInst,
   addNode,
   generateFlowId,
 } from "../../../../globalStore/flowStore";
-import { primitiveCapabilities } from "./baseCapabilities";
+import {
+  getBaseCapabilityFromType,
+  primitiveCapabilities,
+} from "./baseCapabilities";
 import { CustomSpotData } from "../../../../views/Spotlight/CustomSpot/CustomSpotData";
 import { $frozenMousePos } from "../../../../globalStore/mouseStore";
 import { mergeNamespaceAndType } from "../../../../sync/namespaceUtils";
+import { CustomFlowNode } from "../../CustomNodeType";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
   (cap) => ({
@@ -18,7 +21,7 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
     description: cap.description,
     onClick: () =>
       addNode(
-        generateNodeInstFromInput(mergeNamespaceAndType("primitive", cap.name))
+        generateNodeInstFromInput(mergeNamespaceAndType("primitive", cap.name)),
       ),
     capability: cap,
     leftSection: (
@@ -26,11 +29,15 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
         {cap.name.slice(0, 3)}
       </Avatar>
     ),
-  })
+  }),
 );
 
-export const generateNodeInstFromInput = (type: string): Node => {
+export const generateNodeInstFromInput = (type: string): CustomFlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
+  const capability = getBaseCapabilityFromType(type);
+  if (!capability) {
+    throw new Error(`Capability not found for type ${type}`);
+  }
 
   return {
     id: generateFlowId(),
@@ -39,6 +46,8 @@ export const generateNodeInstFromInput = (type: string): Node => {
       x: 0,
       y: 0,
     },
-    data: {},
+    data: {
+      capability: capability,
+    },
   };
 };
