@@ -2,9 +2,11 @@ import { Paper, Menu, alpha } from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
 import { $nodes, generateFlowId, setNodes } from "../globalStore/flowStore";
 import { theme } from "../theme";
-import { ReactFlowInstance } from "@xyflow/react";
 import { useStore } from "@nanostores/react";
-import { CustomFlowNode } from "../flow/Nodes/CustomNodeType";
+import {
+  CustomFlowNode,
+  CustomGraphInstance,
+} from "../flow/Nodes/CustomNodeType";
 
 export interface GroupContextMenuProps {
   opened: boolean;
@@ -12,7 +14,7 @@ export interface GroupContextMenuProps {
     point: { x: number; y: number };
     nodes: CustomFlowNode[];
   };
-  reactFlowInst: ReactFlowInstance;
+  reactFlowInst: CustomGraphInstance;
 }
 
 export const GroupContextMenu = ({
@@ -39,8 +41,6 @@ export const GroupContextMenu = ({
           leftSection={<IconSettings size={14} />}
           onClick={() => {
             const rect = reactFlowInst.getNodesBounds(pos.nodes);
-            // reactFlowInst.
-            // console.log(pos.nodes[0].width, "helo");
             const id = generateFlowId();
             const nodesNew = nodes.filter(
               (node) => !pos.nodes.map((n) => n.id).includes(node.id),
@@ -58,7 +58,15 @@ export const GroupContextMenu = ({
                 borderColor: theme.colors.cyan[3],
                 backgroundColor: alpha(theme.colors.cyan[1], 0.2),
               },
-              data: {},
+              data: {
+                capability: {
+                  outputs: [],
+                  inputs: [],
+                  description: "Node for grouping nodes",
+                  name: "Group",
+                  namespace: "system",
+                },
+              },
             };
 
             const updatedNodes = pos.nodes.map((n) => {

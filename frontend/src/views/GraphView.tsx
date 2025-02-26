@@ -7,8 +7,9 @@ import { useStore } from "@nanostores/react";
 import {
   Background,
   Controls,
+  Edge,
   MiniMap,
-  Node,
+  NodeChange,
   ReactFlow,
   applyEdgeChanges,
   applyNodeChanges,
@@ -38,6 +39,7 @@ import {
 } from "../globalStore/flowStore";
 import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
 import { useSync } from "../sync/useSync";
+import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
 
 const fitViewOptions: FitViewOptions = {
   padding: 3,
@@ -51,9 +53,9 @@ export const NodeView = () => {
   const nodes = useStore($nodes);
   const edges = useStore($edges);
   const caps = useStore($capabilities);
-  const reactFlowInst = useReactFlow();
+  const reactFlowInst = useReactFlow<CustomFlowNode, Edge>();
   const [opened, handlers] = useDisclosure(false);
-  const [pos, setPos] = useState<{ point: Point; nodes: Node[] }>({
+  const [pos, setPos] = useState<{ point: Point; nodes: CustomFlowNode[] }>({
     point: { x: 0, y: 0 },
     nodes: [],
   });
@@ -78,8 +80,9 @@ export const NodeView = () => {
     [caps],
   );
 
-  const onNodesChange: OnNodesChange = useCallback(
-    (changes) => setNodes(applyNodeChanges(changes, nodes)),
+  const onNodesChange: OnNodesChange<CustomFlowNode> = useCallback(
+    (changes: NodeChange<CustomFlowNode>[]) =>
+      setNodes(applyNodeChanges<CustomFlowNode>(changes, nodes)),
     [nodes],
   );
   const onEdgesChange: OnEdgesChange = useCallback(
@@ -98,7 +101,7 @@ export const NodeView = () => {
         pos={pos}
         reactFlowInst={reactFlowInst}
       />
-      <ReactFlow
+      <ReactFlow<CustomFlowNode, CustomFlowEdge>
         nodes={nodes}
         nodeTypes={nodeTypes}
         edges={edges}
@@ -112,9 +115,6 @@ export const NodeView = () => {
         isValidConnection={isValidConnection}
         deleteKeyCode={"Delete"}
         onClick={handlers.close}
-        // onNodeContextMenu={() => {
-        //   console.log("PANEL");
-        // }}
         onSelectionContextMenu={(ev, nodes) => {
           ev.preventDefault();
           setPos({

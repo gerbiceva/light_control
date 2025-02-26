@@ -5,16 +5,12 @@ import {
   LoadingOverlay,
   SimpleGrid,
   Stack,
-  TextInput,
   Title,
   Text,
-  Box,
-  Divider,
-  ActionIcon,
   Drawer,
   Button,
 } from "@mantine/core";
-import { NodeView } from "./NodeView";
+import { NodeView } from "./GraphView";
 import { useStore } from "@nanostores/react";
 import { $serverCapabilities } from "../globalStore/capabilitiesStore";
 import { LoaderIndicator } from "../components/LoaderIndicator";
@@ -24,6 +20,7 @@ import { $projectName } from "../globalStore/projectStore";
 import { BlindSwitch } from "../components/BlindSwitch";
 import { SubgraphTab } from "../components/Subgraph/Tabs/SubgraphTab";
 import { IconSettings2 } from "@tabler/icons-react";
+import { ReactFlowProvider } from "@xyflow/react";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
@@ -96,16 +93,13 @@ export const MainLayout = () => {
             {Array(4)
               .fill(null)
               .map((_, i) => (
-                <>
-                  <SubgraphTab
-                    key={i}
-                    name={`Subgraph ${i + 1}  `}
-                    onClose={function (): void {
-                      throw new Error("Function not implemented.");
-                    }}
-                  />
-                  {/* <Divider orientation="vertical" /> */}
-                </>
+                <SubgraphTab
+                  key={i}
+                  name={`Subgraph ${i + 1}  `}
+                  onClose={function (): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               ))}
           </Group>
         </Card>
@@ -114,8 +108,9 @@ export const MainLayout = () => {
           Ime grafa
         </Text>
       </Group>
-
-      <NodeView />
+      <ReactFlowProvider>
+        <NodeView />
+      </ReactFlowProvider>
     </Stack>
   );
 };

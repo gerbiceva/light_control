@@ -1,14 +1,4 @@
-import {
-  ActionIcon,
-  alpha,
-  Box,
-  Button,
-  Card,
-  Group,
-  Text,
-  UnstyledButton,
-  useMantineTheme,
-} from "@mantine/core";
+import { ActionIcon, Button, Group, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 
 interface SubgraphTabProps {
@@ -18,7 +8,7 @@ interface SubgraphTabProps {
 
 export const SubgraphTab = ({ name, onClose }: SubgraphTabProps) => {
   // a tab with name, onclick handler and a close icon with x
-  const theme = useMantineTheme();
+  // const theme = useMantineTheme();
 
   return (
     <>

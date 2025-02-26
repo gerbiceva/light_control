@@ -6,11 +6,18 @@ import {
   getCapFromNode,
   getPortFromNode,
 } from "../../../Edges/typesFromConnection";
+import { isCustomFlowNode } from "../../CustomNodeType";
 
 export const addInputOnEdgeDrop = (
   _event: MouseEvent | TouchEvent,
-  connectionState: FinalConnectionState
+  connectionState: FinalConnectionState,
 ) => {
+  if (
+    !connectionState.fromNode ||
+    !isCustomFlowNode(connectionState.fromNode)
+  ) {
+    return;
+  }
   // when a connection is dropped on the pane it's not valid
   if (!connectionState.isValid) {
     if (
@@ -23,7 +30,7 @@ export const addInputOnEdgeDrop = (
     const port = getPortFromNode(
       connectionState.fromHandle,
       connectionState.fromNode,
-      connectionState.fromHandle?.type
+      connectionState.fromHandle?.type,
     );
 
     const cap = getCapFromNode(connectionState.fromNode);
@@ -32,41 +39,6 @@ export const addInputOnEdgeDrop = (
       return;
     }
 
-    // const nodeType = getNodeNamespaceAndTypeFromBaseType(port?.type);
-    // if (
-    //   nodeType != undefined &&
-    //   connectionState.fromHandle?.type == "target" &&
-    //   false
-    // ) {
-    //   // generate a primitive node
-    //   const pos = $flowInst
-    //     .get()
-    //     ?.screenToFlowPosition($frozenMousePos.get()) || {
-    //     x: 0,
-    //     y: 0,
-    //   };
-
-    //   const id = generateFlowId();
-    //   const origin: [number, number] = [1, 0.5];
-    //   const newNode = {
-    //     id,
-    //     type: nodeType.namespaced,
-    //     position: pos,
-    //     data: { value: "" },
-    //     origin,
-    //   };
-
-    //   addNode(newNode);
-
-    //   setEdges(
-    //     addColoredEdge({
-    //       source: id,
-    //       sourceHandle: nodeType.type,
-    //       target: connectionState.fromNode?.id,
-    //       targetHandle: connectionState.fromHandle?.id,
-    //     })
-    //   );
-    // } else {
     freezeMousePos();
     setSpotFilter({
       type: connectionState.fromHandle?.type,
