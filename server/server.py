@@ -173,7 +173,7 @@ async def webUI(port: int):
 
                 async with input_lock:  # Using async lock
                     input_values[input_index] = value
-                    # print(f"Received input {input_index}: {value}")
+                    print(f"Received input {input_index}: {value}")
 
         except Exception as e:
             print(f"WebSocket error: {e}")
@@ -224,11 +224,11 @@ def loop():
         for f in each_tick:
             f()
         limiter.tick()
-    
+
 def load_everything():
     global defined_nodes, threads, each_tick
     defined_nodes, threads, each_tick, generators = load_nodes('nodes')
-    defined_nodes = defined_nodes 
+    defined_nodes = defined_nodes
     for generator in generators:
         defined_nodes = defined_nodes | {f"dynamic/{FunctionDoc(node)['Summary'][0]}": node for node in generator()}
 
