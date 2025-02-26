@@ -1,6 +1,6 @@
-import { createRef, useCallback, useEffect, useMemo, useState } from "react";
+import { createRef, useCallback, useEffect, useRef } from "react";
 import { filterTouches, Vector2 } from "./utils";
-import { useMantineTheme } from "@mantine/core";
+import { alpha, useMantineTheme } from "@mantine/core";
 
 export interface ISliderProps {
   baseWidth?: number | string;
@@ -11,89 +11,104 @@ export interface ISliderProps {
 export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
   const baseRef = createRef<HTMLDivElement>();
   const thumbRef = createRef<HTMLDivElement>();
-  const [touch, setTouch] = useState<Touch>();
-  const [sliderPercent, setSliderPercent] = useState<number>(50.0);
-  const [currentDelta, setCurrentDelta] = useState<number>(0.0);
-  const [touchStartPos, setTouchStartPos] = useState<Vector2>({ x: 0, y: 0 });
+  const touch = useRef<Touch | null>(null);
+  const touchStartPos = useRef<Vector2>({ x: 0, y: 0 });
+  const sliderPercent = useRef(50);
+  const currentDelta = useRef(0);
   const theme = useMantineTheme();
+  const animationFrameId = useRef<number | null>(null);
 
-  const computeClampedPercentage = useMemo(() => {
-    return Math.max(0, Math.min(100, sliderPercent + currentDelta));
-  }, [currentDelta, sliderPercent]);
+  const updateThumbPosition = useCallback(() => {
+    if (!thumbRef.current) return;
 
-  const touchStart = useCallback(
-    (event: TouchEvent) => {
-      // dont start tracking another finger if we are already tracking one
-      event.preventDefault();
-      if (touch) {
-        return;
-      }
-      // if it is a new touch, start tracking it
-      setTouchStartPos({
-        x: event.touches[0].clientX,
-        y: event.touches[0].clientY,
-      });
-      setTouch(event.touches[0]);
-    },
-    [touch],
-  );
+    const clampedPercentage = Math.max(
+      0,
+      Math.min(100, sliderPercent.current + currentDelta.current),
+    );
+
+    thumbRef.current.style.height = `${clampedPercentage}%`;
+  }, [thumbRef]);
+
+  const touchStart = useCallback((event: TouchEvent) => {
+    event.preventDefault();
+    if (touch.current) return;
+
+    touchStartPos.current = {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+    touch.current = event.touches[0];
+  }, []);
 
   const touchEnd = useCallback(() => {
-    if (touch == undefined) {
-      return;
-    }
-    setTouch(undefined);
-    setSliderPercent(computeClampedPercentage);
-    setCurrentDelta(0);
-    // if (onChange) {
-    //   onChange(getJoyPosition({ x: 0, y: 0 }));
-    // }
-    if (onStop) {
-      onStop();
-    }
-  }, [computeClampedPercentage, onStop, touch]);
+    if (!touch.current) return;
+
+    touch.current = null;
+    const newPercent = Math.max(
+      0,
+      Math.min(100, sliderPercent.current + currentDelta.current),
+    );
+    sliderPercent.current = newPercent;
+    currentDelta.current = 0;
+    updateThumbPosition();
+    onStop?.();
+  }, [onStop, updateThumbPosition]);
 
   const touchMove = useCallback(
     (event: TouchEvent) => {
-      if (!touch || !baseRef.current) {
-        return;
-      }
-      const touchFound = filterTouches(touch, event.changedTouches);
+      if (!touch.current || !baseRef.current) return;
+      const touchFound = filterTouches(touch.current, event.changedTouches);
       if (touchFound) {
         const delta = {
-          x: (touchFound.clientX - touchStartPos.x) / 5.0,
-          y: (touchFound.clientY - touchStartPos.y) / 5.0,
+          x: (touchFound.clientX - touchStartPos.current.x) / 5,
+          y: (touchFound.clientY - touchStartPos.current.y) / 5,
         };
-        // set a slight S curve to the delta
-        const fact = Math.pow(delta.y / 15, 3);
-        const currentDelta = delta.y / 1.5 + fact / 3;
 
-        setCurrentDelta(currentDelta);
-        if (onChange) {
-          onChange(currentDelta);
+        const fact = Math.pow(delta.y / 8, 3);
+        currentDelta.current = (delta.y / 1.8 + fact / 3) * -1;
+        const newPercentage = Math.max(
+          0,
+          Math.min(100, sliderPercent.current + currentDelta.current),
+        );
+
+        if (animationFrameId.current) {
+          cancelAnimationFrame(animationFrameId.current);
         }
+
+        animationFrameId.current = requestAnimationFrame(() => {
+          onChange?.(newPercentage);
+          updateThumbPosition();
+        });
       }
     },
-    [touch, baseRef, touchStartPos.x, touchStartPos.y, onChange],
+    [baseRef, onChange, updateThumbPosition],
   );
 
   useEffect(() => {
     const ref = baseRef.current;
-    if (!ref) {
-      return;
-    }
+    if (!ref) return;
 
-    ref.addEventListener("touchstart", touchStart);
-    ref.addEventListener("touchend", touchEnd);
-    ref.addEventListener("touchmove", touchMove);
-    ref.addEventListener("touchcancel", touchEnd);
+    const options = { passive: false };
+    // touch input handler
+    ref.addEventListener("touchstart", touchStart, options);
+    ref.addEventListener("touchend", touchEnd, options);
+    ref.addEventListener("touchmove", touchMove, options);
+    ref.addEventListener("touchcancel", touchEnd, options);
+    // // mouse input handler
+    // ref.addEventListener("mousedown", touchStart, options);
+    // ref.addEventListener("mouseup", touchEnd, options);
+    // ref.addEventListener("mousemove", touchMove, options);
+    // ref.addEventListener("mouseleave", touchEnd, options);
 
     return () => {
-      // remove event handlers
       ref.removeEventListener("touchstart", touchStart);
       ref.removeEventListener("touchend", touchEnd);
       ref.removeEventListener("touchmove", touchMove);
       ref.removeEventListener("touchcancel", touchEnd);
+
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
     };
   }, [baseRef, touchEnd, touchMove, touchStart]);
 
@@ -101,40 +116,26 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
     <div
       ref={baseRef}
       style={{
-        borderRadius: theme.radius["md"],
-        backgroundColor: theme.colors[theme.primaryColor][5],
+        borderRadius: theme.radius.md,
+        backgroundColor: alpha(theme.colors["cyan"][4], 0.2),
         width: baseWidth,
         height: "100%",
         position: "relative",
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexDirection: "column",
       }}
     >
       <div
         ref={thumbRef}
         style={{
-          backgroundColor: theme.colors[theme.primaryColor][1],
+          backgroundColor: theme.colors["cyan"][7],
           marginTop: "auto",
           width: "100%",
-          height: `${computeClampedPercentage}%`,
+          height: `${sliderPercent.current}%`,
         }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {touch &&
-            touch.identifier +
-              "\n" +
-              (100.0 - computeClampedPercentage).toFixed(2)}
-        </div>
-      </div>
+      />
     </div>
   );
 };

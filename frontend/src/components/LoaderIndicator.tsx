@@ -1,12 +1,6 @@
 import { Group, Loader, Tooltip } from "@mantine/core";
 import { useStore } from "@nanostores/react";
-import {
-  IconCircle,
-  IconCircleCheck,
-  IconPlayerPause,
-  IconRefreshDot,
-  IconRefreshOff,
-} from "@tabler/icons-react";
+import { IconCircle, IconCircleCheck } from "@tabler/icons-react";
 import { $isSyncing, $sync } from "../globalStore/loadingStore";
 import { useLastSync } from "../utils/useLastSync";
 

@@ -1,25 +1,34 @@
-import { Box, useMantineTheme } from "@mantine/core";
+import { Box } from "@mantine/core";
 
 import "@xyflow/react/dist/style.css";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { useStore } from "@nanostores/react";
 import {
-  ReactFlow,
-  applyNodeChanges,
-  applyEdgeChanges,
-  type FitViewOptions,
-  type OnConnect,
-  type OnNodesChange,
-  type OnEdgesChange,
-  type NodeTypes,
-  type DefaultEdgeOptions,
   Background,
   Controls,
   MiniMap,
-  useReactFlow,
   Node,
+  ReactFlow,
+  applyEdgeChanges,
+  applyNodeChanges,
+  useReactFlow,
+  type DefaultEdgeOptions,
+  type FitViewOptions,
+  type NodeTypes,
+  type OnConnect,
+  type OnEdgesChange,
+  type OnNodesChange,
 } from "@xyflow/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Point } from "react-bezier-spline-editor/core";
+import { GroupContextMenu } from "../components/GroupContextMenu";
+import { addColoredEdge } from "../flow/Edges/addColoredEdge";
+import { isValidConnection } from "../flow/Edges/isValidCOnnection";
+import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
+import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { getComputedNodes } from "../flow/Nodes/ComputeNodes/getComputedNodes";
+import { $capabilities } from "../globalStore/capabilitiesStore";
 import {
   $edges,
   $flowInst,
@@ -27,17 +36,8 @@ import {
   setEdges,
   setNodes,
 } from "../globalStore/flowStore";
-import { useStore } from "@nanostores/react";
-import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
-import { useSync } from "../sync/useSync";
-import { addColoredEdge } from "../flow/Edges/addColoredEdge";
-import { isValidConnection } from "../flow/Edges/isValidCOnnection";
-import { $capabilities } from "../globalStore/capabilitiesStore";
-import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
 import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
-import { useDisclosure } from "@mantine/hooks";
-import { Point } from "react-bezier-spline-editor/core";
-import { GroupContextMenu } from "../components/GroupContextMenu";
+import { useSync } from "../sync/useSync";
 
 const fitViewOptions: FitViewOptions = {
   padding: 3,
@@ -53,7 +53,6 @@ export const NodeView = () => {
   const caps = useStore($capabilities);
   const reactFlowInst = useReactFlow();
   const [opened, handlers] = useDisclosure(false);
-  const theme = useMantineTheme();
   const [pos, setPos] = useState<{ point: Point; nodes: Node[] }>({
     point: { x: 0, y: 0 },
     nodes: [],
@@ -76,16 +75,16 @@ export const NodeView = () => {
       return caps;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [caps],
+    [caps]
   );
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes(applyNodeChanges(changes, nodes)),
-    [nodes],
+    [nodes]
   );
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges(applyEdgeChanges(changes, edges)),
-    [edges],
+    [edges]
   );
 
   const onConnect: OnConnect = useCallback((connection) => {

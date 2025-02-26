@@ -3,13 +3,12 @@ import { notifError } from "../utils/notifications";
 
 export const useWebsocket = (
   url: string,
-  onMessage: (data: unknown) => void
+  onMessage: (data: unknown) => void,
 ) => {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [isConnected, setConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isError, setError] = useState(false);
-  const [duration, setDuration] = useState(0);
 
   const start = useCallback(() => {
     if (!url) {
@@ -25,6 +24,7 @@ export const useWebsocket = (
     if (!ws) return;
 
     ws.close();
+    setIsConnecting(false);
   }, [ws]);
 
   useEffect(() => {
@@ -32,15 +32,11 @@ export const useWebsocket = (
       return;
     }
     setIsConnecting(false);
-
-    const interval = setInterval(() => {
-      setDuration((prev) => prev + 1000);
-    }, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
   }, [isConnected]);
+
+  useEffect(() => {
+    start();
+  }, [start]);
 
   // set handlers when websocket connection changes
   useEffect(() => {
@@ -69,6 +65,7 @@ export const useWebsocket = (
 
     ws.onmessage = ({ data }) => {
       console.log(data);
+      onMessage(data);
     };
   }, [ws, onMessage, stop]);
 
@@ -77,7 +74,7 @@ export const useWebsocket = (
       if (ws == null || ws.readyState != ws.OPEN || !isConnected) return;
       ws.send(data);
     },
-    [ws, isConnected]
+    [ws, isConnected],
   );
 
   const connected = isConnected && !!ws;
@@ -87,7 +84,6 @@ export const useWebsocket = (
     stop,
     start,
     connected,
-    duration,
     isConnecting,
     isError,
   };

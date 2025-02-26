@@ -10,7 +10,7 @@ import { getColorFromString } from "../../../utils/colorUtils";
 import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
 
 export const generateNodeInstFromCapability = (
-  capability: NodeCapability,
+  capability: NodeCapability
 ): FlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   return {
@@ -20,11 +20,12 @@ export const generateNodeInstFromCapability = (
       x: 0,
       y: 0,
     },
+    data: {},
   };
 };
 
 export const generateComputeNodeFromCapability = (
-  capability: NodeCapability,
+  capability: NodeCapability
 ) => {
   const inputStack = (
     <Stack gap="xs">

@@ -1,4 +1,4 @@
-import { Node as FlowNode, NodeProps } from "@xyflow/react";
+import { Node as FlowNode } from "@xyflow/react";
 
 type NodeData = {
   value: unknown;
@@ -6,7 +6,7 @@ type NodeData = {
 export type FlowNodeWithValue = FlowNode<NodeData, "dataNode">;
 
 export const isFlowNodeWithValue = (
-  node: NodeProps<FlowNode>,
-): node is NodeProps<FlowNodeWithValue> => {
-  return (node as NodeProps<FlowNodeWithValue>).data != undefined;
+  node: FlowNode
+): node is FlowNodeWithValue => {
+  return (node as FlowNodeWithValue).data.value != undefined;
 };

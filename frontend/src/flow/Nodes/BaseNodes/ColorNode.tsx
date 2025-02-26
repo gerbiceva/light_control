@@ -2,8 +2,9 @@ import { memo } from "react";
 import { ColorInput } from "@mantine/core";
 import { BaseNodeElement } from "./BaseNodeElement";
 import { FlowNodeWithValue } from "./utils/inputNodeType";
+import { NodeProps } from "@xyflow/react";
 
-type ColorNode = FlowNodeWithValue;
+type ColorNode = NodeProps<FlowNodeWithValue>;
 
 export const ColorNode = memo(({ selected, data }: ColorNode) => {
   return (
