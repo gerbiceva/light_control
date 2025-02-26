@@ -75,16 +75,16 @@ export const NodeView = () => {
       return caps;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [caps]
+    [caps],
   );
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes(applyNodeChanges(changes, nodes)),
-    [nodes]
+    [nodes],
   );
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges(applyEdgeChanges(changes, edges)),
-    [edges]
+    [edges],
   );
 
   const onConnect: OnConnect = useCallback((connection) => {

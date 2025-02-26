@@ -2,10 +2,12 @@ import {
   ActionIcon,
   Button,
   Divider,
+  Group,
   Modal,
   SimpleGrid,
   Stack,
   Text,
+  TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDownload, IconRecycle, IconSettings } from "@tabler/icons-react";
@@ -13,14 +15,29 @@ import { $nodes, resetState } from "../../globalStore/flowStore";
 import { SettingsDrop } from "./SettingsDrop";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { downloadSettings } from "./fileUtils";
+import { useStore } from "@nanostores/react";
+import { $projectName, setProjectName } from "../../globalStore/projectStore";
 
 export const SettingsModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
+  const projectName = useStore($projectName);
 
   return (
     <>
       <Modal opened={opened} onClose={close} title="Settings" centered>
         <Stack>
+          <Divider label="Project settings" labelPosition="left" />
+
+          <TextInput
+            description="Project Name"
+            fw="bold"
+            variant="filled"
+            value={projectName}
+            onChange={(ev) => {
+              setProjectName(ev.target.value);
+            }}
+          />
+
           <Divider label="Graph settings" labelPosition="left" />
           <Button
             variant="light"

@@ -50,7 +50,7 @@ export const CustomSpotlight = () => {
             item.capability.namespace,
           ].join("/"),
 
-        query
+        query,
       );
 
       if (!spotFilter) {
@@ -60,7 +60,7 @@ export const CustomSpotlight = () => {
       const dataTypeFiltered = filterItemsByType(queryFiltered, spotFilter);
       return dataTypeFiltered;
     },
-    [query, spotFilter]
+    [query, spotFilter],
   );
 
   const items = useMemo(() => {
@@ -152,10 +152,10 @@ export const CustomSpotlight = () => {
 
   return (
     <>
-      <Button onClick={openSpot} variant="subtle">
+      <Button onClick={openSpot} variant="light">
         <Group>
-          <Kbd>CTRl + SPACE</Kbd>
-          <Text c="dimmed"> picker</Text>
+          {/* <Kbd>CTRl + SPACE</Kbd> */}
+          <Text> Node picker</Text>
         </Group>
       </Button>
 
