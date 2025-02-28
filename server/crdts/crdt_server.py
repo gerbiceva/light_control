@@ -1,5 +1,3 @@
-from contextlib import suppress
-from fastapi import WebSocketDisconnect, WebSocketException
 from httpx_ws import aconnect_ws
 from pycrdt import Doc, Array, Map, TransactionEvent
 from pycrdt_websocket import ASGIServer, WebsocketProvider, WebsocketServer

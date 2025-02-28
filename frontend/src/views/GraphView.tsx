@@ -80,17 +80,19 @@ export const NodeView = () => {
       return caps;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [caps],
+    [caps]
   );
 
   const onNodesChange: OnNodesChange<CustomFlowNode> = useCallback(
-    (changes: NodeChange<CustomFlowNode>[]) =>
-      setNodes(applyNodeChanges<CustomFlowNode>(changes, nodes)),
-    [nodes],
+    (changes: NodeChange<CustomFlowNode>[]) => {
+      console.log(changes);
+      setNodes(applyNodeChanges<CustomFlowNode>(changes, nodes));
+    },
+    [nodes]
   );
   const onEdgesChange: OnEdgesChange = useCallback(
     (changes) => setEdges(applyEdgeChanges(changes, edges)),
-    [edges],
+    [edges]
   );
 
   const onConnect: OnConnect = useCallback((connection) => {
