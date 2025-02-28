@@ -9,6 +9,9 @@ import {
   Text,
   Drawer,
   Button,
+  ActionIcon,
+  Divider,
+  Badge,
 } from "@mantine/core";
 import { NodeView } from "./GraphView";
 import { useStore } from "@nanostores/react";
@@ -19,12 +22,16 @@ import { SettingsModal } from "../components/settingsModal/SettingsModal";
 import { $projectName } from "../globalStore/projectStore";
 import { BlindSwitch } from "../components/BlindSwitch";
 import { SubgraphTab } from "../components/Subgraph/Tabs/SubgraphTab";
-import { IconSettings2 } from "@tabler/icons-react";
+import { IconPlus, IconSettings2 } from "@tabler/icons-react";
 import { ReactFlowProvider } from "@xyflow/react";
+import { $appState } from "../globalStore/flowStore";
+import { useTask } from "../crdt/repo";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
   const projectName = useStore($projectName);
+  const appState = useStore($appState);
+  const { num, p } = useTask();
 
   if (caps.length == 0) {
     return (
@@ -86,31 +93,39 @@ export const MainLayout = () => {
             zIndex: 2,
           }}
         >
-          <Group gap="0" w="100%">
-            <Button leftSection={<IconSettings2 />} size="xs">
-              Subgraphs
+          <Group gap="sm" w="100%">
+            <Button leftSection={<IconSettings2 />} size="xs" variant="light">
+              Manage
             </Button>
-            {Array(4)
-              .fill(null)
-              .map((_, i) => (
-                <SubgraphTab
-                  key={i}
-                  name={`Subgraph ${i + 1}  `}
-                  onClose={function (): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                />
-              ))}
+            <ActionIcon variant="light">
+              <IconPlus />
+            </ActionIcon>
+            <Divider orientation="vertical" size="sm" mx="md" />
+            {appState.subgraphs.map((graph) => (
+              <SubgraphTab
+                active={graph.id === appState.currentSubgraphId}
+                key={graph.id}
+                subgraph={graph}
+                onClose={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
+            ))}
           </Group>
         </Card>
-
-        <Text px="md" size="md" fw="bold">
-          Ime grafa
-        </Text>
       </Group>
+
       <ReactFlowProvider>
         <NodeView />
       </ReactFlowProvider>
+      <Badge>{num}</Badge>
+      <Button
+        onClick={() => {
+          p(1);
+        }}
+      >
+        change
+      </Button>
     </Stack>
   );
 };

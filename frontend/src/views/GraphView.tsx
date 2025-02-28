@@ -1,4 +1,4 @@
-import { Box } from "@mantine/core";
+import { Box, ColorSwatch, Stack } from "@mantine/core";
 
 import "@xyflow/react/dist/style.css";
 
@@ -31,6 +31,7 @@ import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
 import { getComputedNodes } from "../flow/Nodes/ComputeNodes/getComputedNodes";
 import { $capabilities } from "../globalStore/capabilitiesStore";
 import {
+  $appState,
   $edges,
   $flowInst,
   $nodes,
@@ -40,6 +41,7 @@ import {
 import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
 import { useSync } from "../sync/useSync";
 import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
+import { getColorFromEnum } from "../utils/colorUtils";
 
 const fitViewOptions: FitViewOptions = {
   padding: 3,
@@ -55,6 +57,7 @@ export const NodeView = () => {
   const caps = useStore($capabilities);
   const reactFlowInst = useReactFlow<CustomFlowNode, Edge>();
   const [opened, handlers] = useDisclosure(false);
+  const appState = useStore($appState);
   const [pos, setPos] = useState<{ point: Point; nodes: CustomFlowNode[] }>({
     point: { x: 0, y: 0 },
     nodes: [],
@@ -101,6 +104,41 @@ export const NodeView = () => {
         pos={pos}
         reactFlowInst={reactFlowInst}
       />
+      <Stack
+        h="100%"
+        pos="absolute"
+        justify="center"
+        p="lg"
+        opacity={appState.currentSubgraphId == 0 ? 0 : 1}
+      >
+        {Array(4)
+          .fill(null)
+          .map((_, index) => (
+            <ColorSwatch
+              key={index}
+              size="24px"
+              color={getColorFromEnum(index)[5]}
+            />
+          ))}
+      </Stack>
+      <Stack
+        h="100%"
+        pos="absolute"
+        justify="center"
+        right="0"
+        p="lg"
+        opacity={appState.currentSubgraphId == 0 ? 0 : 1}
+      >
+        {Array(3)
+          .fill(null)
+          .map((_, index) => (
+            <ColorSwatch
+              key={index}
+              size="24px"
+              color={getColorFromEnum(index)[5]}
+            />
+          ))}
+      </Stack>
       <ReactFlow<CustomFlowNode, CustomFlowEdge>
         nodes={nodes}
         nodeTypes={nodeTypes}

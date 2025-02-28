@@ -9,7 +9,7 @@ export type CustomFlowEdge = Edge;
 
 export type InputNodeData = {
   value: unknown;
-  capability: NodeCapability;
+  readonly capability: NodeCapability;
 };
 
 export type CustomGraphInstance = ReactFlowInstance<

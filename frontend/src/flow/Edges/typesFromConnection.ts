@@ -1,22 +1,7 @@
 import { Edge, Connection, Handle } from "@xyflow/react";
 import { $edges, $nodes } from "../../globalStore/flowStore";
-import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { Port } from "../../grpc/client_code/service";
-import { splitTypeAndNamespace } from "../../sync/namespaceUtils";
 import { CustomFlowNode } from "../Nodes/CustomNodeType";
-
-export const getCapFromNode = (node: CustomFlowNode | null) => {
-  const capabilities = $capabilities.get();
-
-  const { namespace: nsFrom, type: tFrom } = splitTypeAndNamespace(
-    node?.type || "",
-  );
-  const fromCap = capabilities.find(
-    (cap) => cap.name == tFrom && nsFrom == cap.namespace,
-  );
-
-  return fromCap;
-};
 
 export const getPortFromNode = (
   handle: Handle | null,
@@ -26,7 +11,7 @@ export const getPortFromNode = (
   if (!handle || !node) {
     return;
   }
-  const fromCap = getCapFromNode(node);
+  const fromCap = node.data.capability;
 
   if (type == "target") {
     return fromCap?.inputs.find((port) => port.name == handle.id);
@@ -52,14 +37,14 @@ export const getConnectionProperties = (
   // get from node, namespace, type, capability and port
   const from = nodes.find((node) => node.id == edge.source);
 
-  const fromCap = from ? getCapFromNode(from) : undefined;
+  const fromCap = from ? from.data.capability : undefined;
   const fromPort = fromCap?.outputs.find(
     (cap) => cap.name == edge.sourceHandle,
   );
 
   // get to node, namespace, type, capability and port
   const to = nodes.find((node) => node.id == edge.target);
-  const toCap = to ? getCapFromNode(to) : undefined;
+  const toCap = to ? to.data.capability : undefined;
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
   const targetEdges = edges.filter(
     (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name,

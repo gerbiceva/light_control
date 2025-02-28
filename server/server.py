@@ -6,9 +6,12 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi import WebSocket
 from node_graph import main_loop, grpc
+from crdts.crdt_server import client, crdt_server
 
 input_values = {}
 input_lock = asyncio.Lock()
+
+room_name = "app-state"
 
 
 # Modify the webUI function to include WebSocket handling
@@ -48,8 +51,15 @@ async def start_server():
     loop_thread = asyncio.to_thread(main_loop)
     grpc_task = asyncio.create_task(grpc(50051))
     web_task = asyncio.create_task(webUI(8080))
-    await asyncio.gather(grpc_task, loop_thread, web_task)
-    # await grpc_task
+    crdt_task = asyncio.create_task(crdt_server(42069))
+    crdt_client_task = asyncio.create_task(client(42069, room_name=room_name))
+    await asyncio.gather(
+        grpc_task,
+        loop_thread,
+        web_task,
+        crdt_task,
+        crdt_client_task,
+    )
 
 
 if __name__ == "__main__":

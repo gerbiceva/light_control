@@ -39,7 +39,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/touch" element={<TouchUI />} />
         </Routes>
       </BrowserRouter>
-      {/* </ReactFlowProvider> */}
     </MantineProvider>
-  </StrictMode>,
+  </StrictMode>
 );

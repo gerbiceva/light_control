@@ -12,7 +12,6 @@ import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
 import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
 import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
-import { getCapFromNode } from "../../flow/Edges/typesFromConnection";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
 
 export const useActions = (): CustomSpotlightGroups[] => {
@@ -22,7 +21,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
   const addNode = useCallback(
     (node: CustomFlowNode) => {
       const spotFilter = $spotFilter.get();
-      const cap = getCapFromNode(node);
+      const cap = node.data.capability;
       setNodes([...nodes, node]);
 
       if (spotFilter && cap) {

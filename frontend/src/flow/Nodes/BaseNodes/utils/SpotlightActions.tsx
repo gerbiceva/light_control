@@ -11,7 +11,10 @@ import {
 } from "./baseCapabilities";
 import { CustomSpotData } from "../../../../views/Spotlight/CustomSpot/CustomSpotData";
 import { $frozenMousePos } from "../../../../globalStore/mouseStore";
-import { mergeNamespaceAndType } from "../../../../sync/namespaceUtils";
+import {
+  mergeNamespaceAndType,
+  splitTypeAndNamespace,
+} from "../../../../sync/namespaceUtils";
 import { CustomFlowNode } from "../../CustomNodeType";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
@@ -34,7 +37,8 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
 
 export const generateNodeInstFromInput = (type: string): CustomFlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
-  const capability = getBaseCapabilityFromType(type);
+  const { type: strippedType } = splitTypeAndNamespace(type);
+  const capability = getBaseCapabilityFromType(strippedType);
   if (!capability) {
     throw new Error(`Capability not found for type ${type}`);
   }
