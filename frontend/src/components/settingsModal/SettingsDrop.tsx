@@ -1,30 +1,29 @@
 import { Stack, Text } from "@mantine/core";
 import { IconUpload, IconX, IconJson } from "@tabler/icons-react";
 import { Dropzone, DropzoneProps } from "@mantine/dropzone";
-import { readFile } from "./fileUtils";
-import { $edges, $nodes, SaveFile } from "../../globalStore/flowStore";
-import { notifError, notifSuccess } from "../../utils/notifications";
+// import { readFile } from "./fileUtils";
+// import { $edges, $nodes } from "../../globalStore/flowStore";
+// import { notifError, notifSuccess } from "../../utils/notifications";
 
 export const SettingsDrop = (props: Partial<DropzoneProps>) => {
   return (
     <Dropzone
-      onDrop={(files) => {
-        readFile<SaveFile>(files[0])
-          .then((f) => {
-            $edges.set(f.edges);
-            $nodes.set(f.nodes);
-
-            notifSuccess({
-              title: "Graph loaded",
-              message: "all settings have been restored",
-            });
-          })
-          .catch((reason) => {
-            notifError({
-              title: "Cant load settings",
-              message: reason,
-            });
-          });
+      onDrop={() => {
+        // readFile<>(files[0])
+        //   .then((f) => {
+        //     $edges.set(f.edges);
+        //     $nodes.set(f.nodes);
+        //     notifSuccess({
+        //       title: "Graph loaded",
+        //       message: "all settings have been restored",
+        //     });
+        //   })
+        //   .catch((reason) => {
+        //     notifError({
+        //       title: "Cant load settings",
+        //       message: reason,
+        //     });
+        //   });
       }}
       onReject={(files) => console.log("rejected files", files)}
       accept={["application/json"]}

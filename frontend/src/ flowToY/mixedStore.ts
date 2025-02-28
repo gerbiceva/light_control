@@ -26,7 +26,7 @@ interface SyncGraph {
   edges: SyncEdge[];
 }
 
-interface SyncedStore {
+export interface SyncedStore {
   mainGraph: SyncGraph;
   subGraphs: SyncGraph[];
 }
