@@ -1,12 +1,13 @@
 import { Paper, Menu, alpha } from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
-import { $nodes, generateFlowId, setNodes } from "../globalStore/flowStore";
 import { theme } from "../theme";
-import { useStore } from "@nanostores/react";
 import {
   CustomFlowNode,
   CustomGraphInstance,
 } from "../flow/Nodes/CustomNodeType";
+import { $syncedAppState } from "../crdt/repo";
+import { generateFlowId } from "../globalStore/flowStore";
+import { useStore } from "@nanostores/react";
 
 export interface GroupContextMenuProps {
   opened: boolean;
@@ -22,7 +23,9 @@ export const GroupContextMenu = ({
   pos,
   reactFlowInst,
 }: GroupContextMenuProps) => {
-  const nodes = useStore($nodes);
+  const appState = useStore($syncedAppState);
+
+  const nodes = appState.main.nodes;
   return (
     <Paper
       display={opened ? "block" : "none"}
@@ -43,7 +46,7 @@ export const GroupContextMenu = ({
             const rect = reactFlowInst.getNodesBounds(pos.nodes);
             const id = generateFlowId();
             const nodesNew = nodes.filter(
-              (node) => !pos.nodes.map((n) => n.id).includes(node.id),
+              (node) => !pos.nodes.map((n) => n.id).includes(node.id)
             );
             const groupNode: CustomFlowNode = {
               id,

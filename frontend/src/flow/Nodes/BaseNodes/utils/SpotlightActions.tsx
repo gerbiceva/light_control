@@ -1,10 +1,6 @@
 import { Avatar } from "@mantine/core";
 import { getColorFromEnum } from "../../../../utils/colorUtils";
-import {
-  $flowInst,
-  addNode,
-  generateFlowId,
-} from "../../../../globalStore/flowStore";
+import { $flowInst, generateFlowId } from "../../../../globalStore/flowStore";
 import {
   getBaseCapabilityFromType,
   primitiveCapabilities,
@@ -16,6 +12,7 @@ import {
   splitTypeAndNamespace,
 } from "../../../../sync/namespaceUtils";
 import { CustomFlowNode } from "../../CustomNodeType";
+import { addNode } from "../../../../crdt/repo";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
   (cap) => ({
@@ -24,7 +21,7 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
     description: cap.description,
     onClick: () =>
       addNode(
-        generateNodeInstFromInput(mergeNamespaceAndType("primitive", cap.name)),
+        generateNodeInstFromInput(mergeNamespaceAndType("primitive", cap.name))
       ),
     capability: cap,
     leftSection: (
@@ -32,7 +29,7 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
         {cap.name.slice(0, 3)}
       </Avatar>
     ),
-  }),
+  })
 );
 
 export const generateNodeInstFromInput = (type: string): CustomFlowNode => {

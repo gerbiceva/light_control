@@ -1,12 +1,12 @@
 import { Edge, Connection, Handle } from "@xyflow/react";
-import { $edges, $nodes } from "../../globalStore/flowStore";
 import { Port } from "../../grpc/client_code/service";
 import { CustomFlowNode } from "../Nodes/CustomNodeType";
+import { getYState } from "../../crdt/repo";
 
 export const getPortFromNode = (
   handle: Handle | null,
   node: CustomFlowNode | null,
-  type: "source" | "target",
+  type: "source" | "target"
 ) => {
   if (!handle || !node) {
     return;
@@ -28,10 +28,11 @@ interface ConnectionTypesOut {
   targetLen: number;
 }
 export const getConnectionProperties = (
-  edge: Edge | Connection,
+  edge: Edge | Connection
 ): ConnectionTypesOut => {
-  const nodes = $nodes.get();
-  const edges = $edges.get();
+  const { main } = getYState();
+  const nodes = main.nodes;
+  const edges = main.edges;
   //TODO: make an override that does not loop over nodes and gets a node from input. Use with AddInputOnEdgeDrop
 
   // get from node, namespace, type, capability and port
@@ -39,7 +40,7 @@ export const getConnectionProperties = (
 
   const fromCap = from ? from.data.capability : undefined;
   const fromPort = fromCap?.outputs.find(
-    (cap) => cap.name == edge.sourceHandle,
+    (cap) => cap.name == edge.sourceHandle
   );
 
   // get to node, namespace, type, capability and port
@@ -47,7 +48,7 @@ export const getConnectionProperties = (
   const toCap = to ? to.data.capability : undefined;
   const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
   const targetEdges = edges.filter(
-    (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name,
+    (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
   );
 
   return {

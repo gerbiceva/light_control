@@ -6,7 +6,7 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
-import { setActiveSubgraph } from "../../../globalStore/flowStore";
+// import { setActiveSubgraph } from "../../../globalStore/flowStore";
 import { SubGraph } from "../../../subgraph/Subgraph";
 
 interface SubgraphTabProps {
@@ -36,7 +36,7 @@ export const SubgraphTab = ({
         variant={active ? "filled" : "subtle"}
         size="xs"
         onClick={() => {
-          setActiveSubgraph(subgraph.id);
+          // setActiveSubgraph(subgraph.id);
         }}
       >
         <Text size="xs">{subgraph.name}</Text>

@@ -3,6 +3,7 @@ import { Edge, Node, ReactFlowInstance } from "@xyflow/react";
 
 export type CustomNodeData = {
   capability: NodeCapability;
+  value?: string;
 };
 export type CustomFlowNode = Node<CustomNodeData>;
 export type CustomFlowEdge = Edge;

@@ -11,7 +11,6 @@ import {
   Button,
   ActionIcon,
   Divider,
-  Badge,
 } from "@mantine/core";
 import { NodeView } from "./GraphView";
 import { useStore } from "@nanostores/react";
@@ -24,14 +23,13 @@ import { BlindSwitch } from "../components/BlindSwitch";
 import { SubgraphTab } from "../components/Subgraph/Tabs/SubgraphTab";
 import { IconPlus, IconSettings2 } from "@tabler/icons-react";
 import { ReactFlowProvider } from "@xyflow/react";
-import { $appState } from "../globalStore/flowStore";
-import { useTask } from "../crdt/repo";
+import { $syncedAppState } from "../crdt/repo";
 
 export const MainLayout = () => {
   const caps = useStore($serverCapabilities);
   const projectName = useStore($projectName);
-  const appState = useStore($appState);
-  const { num, p } = useTask();
+  // const appState = useStore($appState);
+  const appState = useStore($syncedAppState);
 
   if (caps.length == 0) {
     return (
@@ -103,7 +101,7 @@ export const MainLayout = () => {
             <Divider orientation="vertical" size="sm" mx="md" />
             {appState.subgraphs.map((graph) => (
               <SubgraphTab
-                active={graph.id === appState.currentSubgraphId}
+                active={false}
                 key={graph.id}
                 subgraph={graph}
                 onClose={function (): void {
@@ -118,14 +116,14 @@ export const MainLayout = () => {
       <ReactFlowProvider>
         <NodeView />
       </ReactFlowProvider>
-      <Badge>{num}</Badge>
+      {/* <Badge>{num}</Badge>
       <Button
         onClick={() => {
           p(1);
         }}
       >
         change
-      </Button>
+      </Button> */}
     </Stack>
   );
 };

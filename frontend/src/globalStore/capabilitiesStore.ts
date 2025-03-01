@@ -33,3 +33,12 @@ client.getCapabilities({}).then(
     console.error(status);
   }
 );
+
+export const getCapabilityFromNameNamespace = (
+  name: string,
+  namespace: string
+): NodeCapability | undefined => {
+  return $serverCapabilities
+    .get()
+    .find((cap) => cap.name == name && cap.namespace == namespace);
+};

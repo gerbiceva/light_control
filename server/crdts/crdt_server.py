@@ -18,12 +18,13 @@ async def crdt_server(port: int):
 
 
 ydoc = Doc()  # dont ever at all under any circumstance observe this fucker.
-yarray = ydoc.get("count", type=Array)
+syncedAppState = ydoc.get("syncedAppState", type=Map)  # dont change the name
 
 
 def cb(event: TransactionEvent):
     try:
-        print(yarray.to_py())
+        # print(syncedAppState.to_py())
+        print(event)
         pass
 
     except Exception as e:
@@ -44,5 +45,18 @@ async def client(port: int, room_name: str):
         # Changes to remote ydoc are applied to local ydoc.
         # Changes to local ydoc are sent over the WebSocket and
         # broadcast to all clients.
-        yarray.observe(cb)
+        syncedAppState["state"] = map0 = Map(
+            {
+                "subgraphs": [],
+                "main": {
+                    "id": 0,
+                    "name": "main",
+                    "description": "This main flow gets executed always",
+                    "nodes": [],
+                    "edges": [],
+                },
+            }
+        )
+        print("initialized empty state", map0.to_py())
+        syncedAppState.observe(cb)
         await asyncio.Future()

@@ -1,9 +1,8 @@
 import { FileWithPath } from "@mantine/dropzone";
-import { getSaveFile } from "../../globalStore/flowStore";
 import { $projectName } from "../../globalStore/projectStore";
 
 export const downloadSettings = () => {
-  const settings = JSON.stringify(getSaveFile());
+  const settings = JSON.stringify("getSaveFile()");
   const blob = new Blob([settings], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const projectName = $projectName.get();

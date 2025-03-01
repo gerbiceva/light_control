@@ -1,44 +1,82 @@
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
-import { useCallback, useEffect, useState } from "react";
+import { AppState } from "../globalStore/flowStore";
+import {
+  applyEdgeChanges,
+  applyNodeChanges,
+  EdgeChange,
+  NodeChange,
+} from "@xyflow/react";
+import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
+import { atom } from "nanostores";
 
-const yAppState = new Y.Doc();
-const yarray = yAppState.getArray("count");
+export const yAppState = new Y.Doc();
+// const yarray = yAppState.getArray("count");
 const roomName = "app-state";
 const port = 42069;
+const YSyncStore = yAppState.getMap("syncedAppState"); // dont change the name
 
-export const useTask = () => {
-  const [num, setNum] = useState<number>(0);
+const websocketProvider = new WebsocketProvider(
+  `ws:localhost:${port}`,
+  roomName,
+  yAppState
+);
 
-  useEffect(() => {
-    // array of numbers which produce a sum
-    const observer = () => {
-      // print updates when the data changes
-      // console.log("new sum: " + yarray.toArray().reduce((a, b) => a + b));
-      setNum((yarray.toArray() as number[]).reduce((a, b) => a + b));
-    };
-    // observe changes of the sum
-    // Sync clients with the y-websocket provider
-    const websocketProvider = new WebsocketProvider(
-      `ws:localhost:${port}`,
-      roomName,
-      yAppState
-    );
+websocketProvider.on("status", (ev) => {
+  console.log({ ev });
+});
 
-    yarray.observe(observer);
+export const updateState = () => {
+  setYState(getYState());
+};
 
-    return () => {
-      yarray.unobserve(observer);
-      websocketProvider.disconnect();
-    };
-  }, []);
+export const getYState = () => {
+  return YSyncStore.toJSON().state as AppState;
+};
 
-  const p = useCallback((num: number) => {
-    yarray.push([num]); // => "new sum: 1"
-  }, []);
+export const setYState = (state: AppState) => {
+  YSyncStore.set("state", { ...state });
+};
+export const addNode = (node: CustomFlowNode) => {
+  const curr = getYState();
+  curr.main.nodes.push(node);
+  setYState(curr);
+};
 
-  return {
-    num,
-    p,
-  };
+export const setEdges = (edges: CustomFlowEdge[]) => {
+  getYState().main.edges = edges;
+  updateState();
+};
+
+export const setNodes = (nodes: CustomFlowNode[]) => {
+  getYState().main.nodes = nodes;
+  updateState();
+};
+
+// setYState({
+//   main: {
+//     edges: [],
+//     nodes: [],
+//     name: "main",
+//     id: 99,
+//   },
+//   subgraphs: [],
+// });
+
+export const $syncedAppState = atom<AppState>(getYState());
+YSyncStore.observe(() => {
+  console.log(getYState());
+  $syncedAppState.set(getYState());
+});
+
+export const onNodesChange = (change: NodeChange<CustomFlowNode>[]) => {
+  getYState().main.nodes = applyNodeChanges<CustomFlowNode>(
+    change,
+    getYState().main.nodes
+  );
+  updateState();
+};
+export const onEdgesChange = (changes: EdgeChange<CustomFlowEdge>[]) => {
+  getYState().main.edges = applyEdgeChanges(changes, getYState().main.edges);
+  updateState();
 };

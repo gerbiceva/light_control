@@ -4,7 +4,6 @@ import { useCallback, useMemo } from "react";
 import { $serverCapabilities } from "../../globalStore/capabilitiesStore";
 import { theme } from "../../theme";
 import { generateNodeInstFromCapability } from "../../flow/Nodes/ComputeNodes/ComputeNodeFactory";
-import { $nodes, setEdges, setNodes } from "../../globalStore/flowStore";
 import { inputNodesActions } from "../../flow/Nodes/BaseNodes/utils/SpotlightActions";
 
 import { CustomSpotData } from "./CustomSpot/CustomSpotData";
@@ -13,10 +12,12 @@ import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
 import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
+import { getYState, setEdges, setNodes } from "../../crdt/repo";
 
 export const useActions = (): CustomSpotlightGroups[] => {
   const serverCapabilities = useStore($serverCapabilities);
-  const nodes = useStore($nodes);
+  const { main } = getYState();
+  const nodes = main.nodes;
 
   const addNode = useCallback(
     (node: CustomFlowNode) => {
@@ -30,7 +31,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
             ? addColoredEdge({
                 source: node.id,
                 sourceHandle: cap.outputs.filter(
-                  (port) => port.type == spotFilter.dataType,
+                  (port) => port.type == spotFilter.dataType
                 )[0].name,
                 target: spotFilter.fromHandle.nodeId,
                 targetHandle: spotFilter.fromHandle.id!,
@@ -40,13 +41,13 @@ export const useActions = (): CustomSpotlightGroups[] => {
                 sourceHandle: spotFilter.fromHandle.id!,
                 target: node.id,
                 targetHandle: cap.inputs.filter(
-                  (port) => port.type == spotFilter.dataType,
+                  (port) => port.type == spotFilter.dataType
                 )[0].name,
-              }),
+              })
         );
       }
     },
-    [nodes],
+    [nodes]
   );
 
   // SERVER CAPABILITES ONLY

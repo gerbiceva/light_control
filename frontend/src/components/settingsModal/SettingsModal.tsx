@@ -10,16 +10,18 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconDownload, IconRecycle, IconSettings } from "@tabler/icons-react";
-import { $nodes, resetState } from "../../globalStore/flowStore";
+// import { resetState } from "../../globalStore/flowStore";
 import { SettingsDrop } from "./SettingsDrop";
 import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { downloadSettings } from "./fileUtils";
 import { useStore } from "@nanostores/react";
 import { $projectName, setProjectName } from "../../globalStore/projectStore";
+import { $syncedAppState } from "../../crdt/repo";
 
 export const SettingsModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const projectName = useStore($projectName);
+  const appState = useStore($syncedAppState);
 
   return (
     <>
@@ -56,7 +58,7 @@ export const SettingsModal = () => {
                 return;
               }
 
-              resetState();
+              // resetState();
             }}
             leftSection={<IconRecycle />}
           >
@@ -71,7 +73,7 @@ export const SettingsModal = () => {
             <Text c="dimmed">Capabilities loaded</Text>
             <Text>{$capabilities.get().length}</Text>
             <Text c="dimmed">Node count</Text>
-            <Text>{$nodes.get().length}</Text>
+            <Text>{appState.main.nodes.length}</Text>
           </SimpleGrid>
         </Stack>
       </Modal>
