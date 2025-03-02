@@ -1,4 +1,7 @@
-import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
+import {
+  CustomFlowEdge,
+  CustomFlowNode,
+} from "../../flow/Nodes/CustomNodeType";
 
 export interface SubGraph {
   id: number;

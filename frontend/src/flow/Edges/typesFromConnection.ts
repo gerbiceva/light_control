@@ -1,7 +1,7 @@
 import { Edge, Connection, Handle } from "@xyflow/react";
 import { Port } from "../../grpc/client_code/service";
 import { CustomFlowNode } from "../Nodes/CustomNodeType";
-import { getYState } from "../../crdt/repo";
+import { getActiveYgraph } from "../../crdt/repo";
 
 export const getPortFromNode = (
   handle: Handle | null,
@@ -30,9 +30,9 @@ interface ConnectionTypesOut {
 export const getConnectionProperties = (
   edge: Edge | Connection
 ): ConnectionTypesOut => {
-  const { main } = getYState();
-  const nodes = main.nodes;
-  const edges = main.edges;
+  const g = getActiveYgraph();
+  const nodes = g.nodes;
+  const edges = g.edges;
   //TODO: make an override that does not loop over nodes and gets a node from input. Use with AddInputOnEdgeDrop
 
   // get from node, namespace, type, capability and port

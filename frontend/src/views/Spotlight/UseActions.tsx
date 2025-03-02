@@ -12,12 +12,12 @@ import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
 import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
-import { getYState, setEdges, setNodes } from "../../crdt/repo";
+import { getActiveYgraph, setEdges, setNodes } from "../../crdt/repo";
 
 export const useActions = (): CustomSpotlightGroups[] => {
   const serverCapabilities = useStore($serverCapabilities);
-  const { main } = getYState();
-  const nodes = main.nodes;
+  const g = getActiveYgraph();
+  const nodes = g.nodes;
 
   const addNode = useCallback(
     (node: CustomFlowNode) => {

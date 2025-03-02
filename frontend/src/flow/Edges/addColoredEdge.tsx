@@ -1,12 +1,12 @@
 import { addEdge, Connection } from "@xyflow/react";
 import { getConnectionProperties } from "./typesFromConnection";
 import { getColorFromEnum } from "../../utils/colorUtils";
-import { getYState } from "../../crdt/repo";
+import { getActiveYgraph } from "../../crdt/repo";
 
 export const addColoredEdge = (edgeParams: Connection) => {
   const t = getConnectionProperties(edgeParams);
-  const { main } = getYState();
-  const edges = main.edges;
+  const g = getActiveYgraph();
+  const edges = g.edges;
 
   return addEdge(edgeParams, edges).map((edge) => {
     return {

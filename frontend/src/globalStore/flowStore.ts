@@ -3,7 +3,7 @@ import { persistentAtom } from "@nanostores/persistent";
 import { ReactFlowInstance } from "@xyflow/react";
 import { atom } from "nanostores";
 import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
-import { SubGraph } from "../subgraph/Subgraph";
+import { SubGraph } from "../components/Subgraph/Subgraph";
 
 // function for storing and reading serialized data
 const parser = {
@@ -17,6 +17,11 @@ const $latestNodeId = persistentAtom<number>("flowIdManager", 0, parser);
 export const generateFlowId = () => {
   $latestNodeId.set($latestNodeId.get() + 1);
   return $latestNodeId.get().toString();
+};
+
+export const generateGraphId = () => {
+  $latestNodeId.set($latestNodeId.get() + 1);
+  return $latestNodeId.get();
 };
 
 export interface AppState {

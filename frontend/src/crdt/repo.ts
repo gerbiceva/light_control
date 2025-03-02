@@ -9,6 +9,8 @@ import {
 } from "@xyflow/react";
 import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
 import { atom } from "nanostores";
+import { SubGraph } from "../components/Subgraph/Subgraph";
+import { $subgraphPages } from "../globalStore/subgraphStore";
 
 export const yAppState = new Y.Doc();
 // const yarray = yAppState.getArray("count");
@@ -22,61 +24,72 @@ const websocketProvider = new WebsocketProvider(
   yAppState
 );
 
-websocketProvider.on("status", (ev) => {
-  console.log({ ev });
+websocketProvider.on("status", (wsStatusEv) => {
+  console.log({ ev: wsStatusEv });
+});
+websocketProvider.on("sync", (wsSyncEv) => {
+  console.log({ ev: wsSyncEv });
 });
 
 export const updateState = () => {
   setYState(getYState());
 };
 
+// type safety for this thing is non existent...just ...trust me
 export const getYState = () => {
   return YSyncStore.toJSON().state as AppState;
 };
 
+// type safety for this thing is non existent...just ...trust me
 export const setYState = (state: AppState) => {
   YSyncStore.set("state", { ...state });
 };
+
+export const getActiveYgraph = () => {
+  const activeGraphId = $subgraphPages.get().activeGraph;
+  if (activeGraphId == "main") {
+    return getYState().main;
+  }
+  const g = getYState().subgraphs.find((graph) => graph.id == activeGraphId)!;
+  return g;
+};
+
 export const addNode = (node: CustomFlowNode) => {
-  const curr = getYState();
-  curr.main.nodes.push(node);
-  setYState(curr);
+  const g = getActiveYgraph();
+  g.nodes.push(node);
+  updateState();
 };
 
 export const setEdges = (edges: CustomFlowEdge[]) => {
-  getYState().main.edges = edges;
+  const g = getActiveYgraph();
+  g.edges = edges;
   updateState();
 };
 
 export const setNodes = (nodes: CustomFlowNode[]) => {
-  getYState().main.nodes = nodes;
+  const g = getActiveYgraph();
+  g.nodes = nodes;
   updateState();
 };
-
-// setYState({
-//   main: {
-//     edges: [],
-//     nodes: [],
-//     name: "main",
-//     id: 99,
-//   },
-//   subgraphs: [],
-// });
 
 export const $syncedAppState = atom<AppState>(getYState());
 YSyncStore.observe(() => {
-  console.log(getYState());
   $syncedAppState.set(getYState());
 });
 
-export const onNodesChange = (change: NodeChange<CustomFlowNode>[]) => {
-  getYState().main.nodes = applyNodeChanges<CustomFlowNode>(
-    change,
-    getYState().main.nodes
-  );
+export const setSubgraphs = (subgraphs: SubGraph[]) => {
+  getYState().subgraphs = subgraphs;
   updateState();
 };
+
+export const onNodesChange = (change: NodeChange<CustomFlowNode>[]) => {
+  const g = getActiveYgraph();
+  g.nodes = applyNodeChanges<CustomFlowNode>(change, g.nodes);
+  updateState();
+};
+
 export const onEdgesChange = (changes: EdgeChange<CustomFlowEdge>[]) => {
-  getYState().main.edges = applyEdgeChanges(changes, getYState().main.edges);
+  const g = getActiveYgraph();
+  g.edges = applyEdgeChanges<CustomFlowEdge>(changes, g.edges);
   updateState();
 };
