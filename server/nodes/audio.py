@@ -95,7 +95,8 @@ class MicFourier:
             if message.type == Gst.MessageType.ELEMENT and weak_self is not None:
                 structure = message.get_structure()
                 if structure and structure.get_name() == "spectrum":
-                    weak_self.magnitude = (structure.get_value("magnitude"))
+                    _, values = structure.get_list("magnitude")
+                    weak_self.magnitude = [values.get_nth(i) for i in range(values.n_values)]
 
             # Return True to keep the bus watcher running
             return True

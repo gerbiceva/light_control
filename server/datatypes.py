@@ -36,3 +36,9 @@ def thread(f):
 def generator(f):
     f.__generator__ = True
     return f
+
+def required(num):
+    def wrap(f):
+        f.__required__ = num
+        return f
+    return wrap

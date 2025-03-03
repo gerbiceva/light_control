@@ -85,3 +85,20 @@ def print_color_array(color_arr: ColorArray):
     None
     """
     print_strip(color_arr)
+
+@node
+def print_array_shape(arr: Array):
+    """
+    Print Array Shape
+
+    Prints an array shape.
+
+    Parameters
+    ----------
+    arr : Array
+
+    Returns
+    -------
+    None
+    """
+    print(arr.shape)

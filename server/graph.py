@@ -5,15 +5,17 @@ class ParametersQueue:
     def __init__(self, func: Callable):
         self._parameters = {}
         self._returns = []
-
         for par in FunctionDoc(func)["Parameters"]:
             if par.name != "None":
                 self._parameters[par.name] = None
         for ret in FunctionDoc(func)["Returns"]:
             if ret.name != "":
                 self._returns.append(ret.name)
-        # print(self._parameters, self._returns)
-        self.missing = len(self._parameters)
+        self._required = func.__required__ if hasattr(func, '__required__') else None
+        if self._required:
+            self.missing = self._required
+        else:
+            self.missing = len(self._parameters)
         self.used = False
 
     def get_parameters(self):
@@ -30,7 +32,10 @@ class ParametersQueue:
     def clear(self):
         for key in self._parameters.keys():
             self._parameters[key] = None
-        self.missing = len(self._parameters)
+        if self._required:
+            self.missing = self._required
+        else:
+            self.missing = len(self._parameters)
         self.used = False
 
 class Graph:
@@ -54,6 +59,8 @@ class Graph:
                         results = (results,)
                     for j, result in zip(param.get_returns(), results):
                         for edge in self.edges[(i, j)]:
+                            if result is None:
+                                continue
                             self.params[edge[0]].set_parameter(edge[1], result)
             if stuck:
                 break

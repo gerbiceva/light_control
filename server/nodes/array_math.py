@@ -1,4 +1,4 @@
-from datatypes import node, Array, Float
+from datatypes import node, Array, Float, Int
 import jax.numpy as jnp
 
 @node
@@ -211,3 +211,39 @@ def clamp_scalar(value: Array, min_value: Float, max_value: Float) -> Array:
     """
     return jnp.maximum(min_value, jnp.minimum(value, max_value))
 
+@node
+def interpolate(array: Array, size: Int):
+    """
+    Interpolate
+    
+    Interpolates array from one size to another.
+
+    Parameters
+    ----------
+    value : Array
+        The value to clamp.
+    size : Int
+
+    Returns
+    -------
+    result : Array
+    """
+    return jnp.interp(jnp.linspace(0, array.size-1, size), jnp.arange(array.size), array)
+
+@node
+def average(array: Array):
+    """
+    Average
+    
+    Interpolates array from one size to another.
+
+    Parameters
+    ----------
+    value : Array
+        The value to clamp.
+
+    Returns
+    -------
+    result : Float
+    """
+    return jnp.average(array)
