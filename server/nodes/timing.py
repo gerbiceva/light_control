@@ -86,3 +86,31 @@ def manual_speed():
     
     return speed_master
     
+@node
+@initialize
+def make_hold():
+    """
+    Hold
+
+    Hold 1 for n seconds.
+
+    Parameters
+    ----------
+    input : Int
+    n : Float
+
+    Returns
+    -------
+    output : Int
+    """
+    time = 0.0
+    def hold(inputt, n):
+        nonlocal time
+        if inputt == 1:
+            time = 1.0
+        else:
+            time = max(0.0, (time - (60 * n)**(-1)))
+        return 1 if time > 0 else 0
+    
+    return hold
+    
