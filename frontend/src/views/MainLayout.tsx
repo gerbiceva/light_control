@@ -1,4 +1,18 @@
-import { Card, Divider, Group, SimpleGrid, Stack } from "@mantine/core";
+import {
+  Card,
+  Divider,
+  Group,
+  Loader,
+  LoadingOverlay,
+  SimpleGrid,
+  Stack,
+  Title,
+  Text,
+  Badge,
+  Box,
+  Button,
+  Drawer,
+} from "@mantine/core";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 import { SettingsModal } from "../components/settingsModal/SettingsModal";
 import { NodeView } from "./GraphView";
@@ -7,35 +21,37 @@ import { CustomSpotlight } from "./Spotlight/CustomSpot/CustomSpotlight";
 import { ReactFlowProvider } from "@xyflow/react";
 import { BlindSwitch } from "../components/BlindSwitch";
 // import { $syncedAppState } from "../crdt/repo";
-import { useYjsState } from "../crdt/globalSync";
+import { $syncedAppState, useYjsState } from "../crdt/globalSync";
+import { useDisclosure } from "@mantine/hooks";
+import { useStore } from "@nanostores/react";
+import { $serverCapabilities } from "../globalStore/capabilitiesStore";
+import { addVisibleSubgraph, useSubgraphs } from "../globalStore/subgraphStore";
+import { IconEdit, IconSettings2 } from "@tabler/icons-react";
+import { AddSubgraphModal } from "../components/Subgraph/AddSubgraphModal";
+import { SubgraphTab } from "../components/Subgraph/Tabs/SubgraphTab";
 
 export const MainLayout = () => {
-  // const caps = useStore($serverCapabilities);
-  // const appState = useStore($appState);
-  // const appState = useStore($syncedAppState);
-  // const { activeGraph, visibleGraphs, setActiveGraph } = useSubgraphs();
+  const caps = useStore($serverCapabilities);
+  const appState = useStore($syncedAppState);
+  const { activeGraph, visibleGraphs, setActiveGraph } = useSubgraphs();
   const { isLoading } = useYjsState();
 
-  if (isLoading) {
-    return <div>Loading application state...</div>;
+  const [opened, { close, toggle }] = useDisclosure(false);
+  if (caps.length == 0 || appState == undefined || isLoading) {
+    return (
+      <LoadingOverlay
+        visible
+        loaderProps={{
+          children: (
+            <Stack align="center" gap="xl">
+              <Loader />
+              <Title size="sm">Loading node capabilities, and app state</Title>
+            </Stack>
+          ),
+        }}
+      />
+    );
   }
-
-  // const [opened, { close, toggle }] = useDisclosure(false);
-  // if (caps.length == 0 || appState == undefined) {
-  //   return (
-  //     <LoadingOverlay
-  //       visible
-  //       loaderProps={{
-  //         children: (
-  //           <Stack align="center" gap="xl">
-  //             <Loader />
-  //             <Title size="sm">Loading node capabilities from the server</Title>
-  //           </Stack>
-  //         ),
-  //       }}
-  //     />
-  //   );
-  // }
 
   return (
     <Stack w="100vw" h="100vh" p="sm" gap="sm" pos="relative">
@@ -46,7 +62,7 @@ export const MainLayout = () => {
             <img src="/icon.svg" height="30px" width="30px"></img>
             {/* <Title size="lg">LightControll</Title> */}
 
-            {/* <Text>{activeGraph?.name}</Text> */}
+            <Text>{activeGraph?.name}</Text>
           </Group>
           {/* spotlight for adding nodes */}
           <CustomSpotlight />
@@ -59,7 +75,7 @@ export const MainLayout = () => {
         </SimpleGrid>
       </Card>
 
-      {/* <Drawer opened={opened} title="Subgraphs" onClose={close}>
+      <Drawer opened={opened} title="Subgraphs" onClose={close}>
         <Stack>
           {[appState.main]
             .concat(Object.values(appState.subgraphs))
@@ -104,7 +120,7 @@ export const MainLayout = () => {
             ))}
           <AddSubgraphModal />
         </Stack>
-      </Drawer> */}
+      </Drawer>
 
       <Group pos="absolute" top="4.5rem" w="100%" m="0" p="0">
         <Card
@@ -119,16 +135,16 @@ export const MainLayout = () => {
           }}
         >
           <Group gap="sm" w="100%">
-            {/* <Button
+            <Button
               leftSection={<IconSettings2 />}
               size="xs"
               variant="light"
               onClick={toggle}
             >
               Manage
-            </Button> */}
+            </Button>
             <Divider orientation="vertical" size="sm" mx="sm" />
-            {/* {visibleGraphs.concat([appState.main]).map((graph) => {
+            {visibleGraphs.concat([appState.main]).map((graph) => {
               return (
                 <SubgraphTab
                   onClick={() => {
@@ -146,7 +162,7 @@ export const MainLayout = () => {
                   }}
                 />
               );
-            })} */}
+            })}
           </Group>
         </Card>
       </Group>

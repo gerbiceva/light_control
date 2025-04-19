@@ -1,4 +1,11 @@
-import { Box, ColorSwatch, LoadingOverlay, Stack } from "@mantine/core";
+import {
+  Box,
+  ColorSwatch,
+  Loader,
+  LoadingOverlay,
+  Stack,
+  Title,
+} from "@mantine/core";
 
 import "@xyflow/react/dist/style.css";
 
@@ -31,6 +38,7 @@ import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
 import { getColorFromEnum } from "../utils/colorUtils";
 import { addEdge, onEdgesChange, onNodesChange } from "../crdt/repo";
 import { useYjsState } from "../crdt/globalSync";
+import { useSubgraphs } from "../globalStore/subgraphStore";
 
 const fitViewOptions: FitViewOptions = {
   padding: 300,
@@ -44,16 +52,16 @@ export const NodeView = () => {
   const caps = useStore($capabilities);
   const reactFlowInst = useReactFlow<CustomFlowNode, Edge>();
   const [opened, handlers] = useDisclosure(false);
-  // const { activeGraph } = useSubgraphs();
+  const { activeGraph } = useSubgraphs();
   const [pos, setPos] = useState<{ point: Point; nodes: CustomFlowNode[] }>({
     point: { x: 0, y: 0 },
     nodes: [],
   });
   const { nodes, edges, isReady } = useYjsState();
 
-  // useEffect(() => {
-  //   reactFlowInst.fitView();
-  // }, [activeGraph, reactFlowInst]);
+  useEffect(() => {
+    reactFlowInst.fitView();
+  }, [reactFlowInst]);
 
   useEffect(() => {
     $flowInst.set(reactFlowInst);
@@ -76,23 +84,21 @@ export const NodeView = () => {
     addEdge(addColoredEdge(connection));
   }, []);
 
-  // if (!activeGraph) {
-  //   return (
-  //     <LoadingOverlay
-  //       visible={true}
-  //       loaderProps={{
-  //         children: (
-  //           <Stack align="center" gap="xl">
-  //             <Loader />
-  //             <Title size="sm">Syncing active graph</Title>
-  //           </Stack>
-  //         ),
-  //       }}
-  //     />
-  //   );
-  // }
-
-  if (!isReady) return <LoadingOverlay visible />;
+  if (!activeGraph || !isReady) {
+    return (
+      <LoadingOverlay
+        visible={true}
+        loaderProps={{
+          children: (
+            <Stack align="center" gap="xl">
+              <Loader />
+              <Title size="sm">Syncing</Title>
+            </Stack>
+          ),
+        }}
+      />
+    );
+  }
 
   return (
     <Box w="100%" h="100%" pos="relative">
@@ -127,14 +133,14 @@ export const NodeView = () => {
         nodes={nodes}
         nodeTypes={nodeTypes}
         edges={edges}
-        onConnectEnd={addInputOnEdgeDrop} // works on multi
-        onNodesChange={onNodesChange} //
+        onConnectEnd={addInputOnEdgeDrop}
+        onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect} // works on multi
+        onConnect={onConnect}
         fitView
         fitViewOptions={fitViewOptions}
         defaultEdgeOptions={defaultEdgeOptions}
-        isValidConnection={isValidConnection} // wokrs on multi
+        isValidConnection={isValidConnection}
         deleteKeyCode={"Delete"}
         onClick={handlers.close}
         snapToGrid

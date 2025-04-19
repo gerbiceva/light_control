@@ -74,9 +74,9 @@ export const getYState2 = () => {
   return st;
 };
 
-const getYState = () => {
-  return getYState2().toJSON() as AppState;
-};
+// const getYState = () => {
+//   return getYState2().toJSON() as AppState;
+// };
 
 export const getActiveYgraph2 = (): Y.Map<SubGraph> | undefined => {
   const st = getYState2();
@@ -110,11 +110,53 @@ export const getActiveYgraph2 = (): Y.Map<SubGraph> | undefined => {
 };
 
 export const getActiveYgraph = () => {
-  return (getActiveYgraph2()?.toJSON() as SubGraph) || undefined;
+  const g = getActiveYgraph2();
+  if (!g) {
+    return;
+  }
+  console.log({ g });
+
+  return (g.toJSON() as SubGraph) || undefined;
 };
 
 export const addSubgraph = (subgraph: SubGraph) => {
-  getYState().subgraphs[subgraph.id] = subgraph;
+  clientTransaction(() => {
+    const st = getYState2();
+    if (!st) {
+      console.error("Yjs state not initialized");
+      return;
+    }
+
+    const subgraphs = st.get("subgraphs") as Y.Map<Y.Map<SubGraph>> | undefined;
+    if (!subgraphs) {
+      throw new Error("No subgraph structure found");
+
+      // subgraphs = new Y.Map();
+      // st.set("subgraphs", subgraphs);
+    }
+
+    const subgraphMap = new Y.Map();
+    subgraphMap.set("id", subgraph.id);
+    subgraphMap.set("name", subgraph.name);
+    subgraphMap.set("description", subgraph.description);
+
+    const nodes = new Y.Array();
+    const edges = new Y.Array();
+
+    // Only push items if they exist
+    if (subgraph.nodes) {
+      nodes.push(subgraph.nodes);
+    }
+    if (subgraph.edges) {
+      edges.push(subgraph.edges);
+    }
+
+    subgraphMap.set("nodes", nodes);
+    subgraphMap.set("edges", edges);
+
+    subgraphs.set(subgraph.id.toString(), subgraphMap as Y.Map<SubGraph>);
+    console.log("Subgraph added:", subgraph.id);
+  });
 };
 
 export const addEdge = (edge: CustomFlowEdge) => {

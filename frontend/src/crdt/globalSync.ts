@@ -1,7 +1,7 @@
 // Enhanced GlobalSync.ts
 import { atom } from "nanostores";
 import { AppState } from "../globalStore/flowStore";
-import { getYState2, initializeYState } from "./repo";
+import { getActiveYgraph, getYState2, initializeYState } from "./repo";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 
@@ -68,8 +68,8 @@ export function useYjsState() {
     isLoading,
     isReady,
     appState,
-    nodes: appState?.main?.nodes || [],
-    edges: appState?.main?.edges || [],
+    nodes: getActiveYgraph()?.nodes || [],
+    edges: getActiveYgraph()?.edges || [],
     subgraphs: appState?.subgraphs || {},
   };
 }

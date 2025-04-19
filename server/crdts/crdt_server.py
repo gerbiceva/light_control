@@ -41,7 +41,7 @@ async def client(port: int, room_name: str):
         with ydoc.transaction():
             syncedAppState["state"] = map0 = Map(
                 {
-                    "subgraphs": Array(),
+                    "subgraphs": Map(),
                     "main": Map(
                         {
                             "id": 0,

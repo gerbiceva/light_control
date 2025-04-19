@@ -1,4 +1,4 @@
-import { Paper, Menu, alpha } from "@mantine/core";
+import { Paper, Menu, alpha, Loader } from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
 import { theme } from "../theme";
 import {
@@ -6,6 +6,8 @@ import {
   CustomGraphInstance,
 } from "../flow/Nodes/CustomNodeType";
 import { generateFlowId } from "../globalStore/flowStore";
+import { useStore } from "@nanostores/react";
+import { $syncedAppState } from "../crdt/globalSync";
 // import { useStore } from "@nanostores/react";
 
 export interface GroupContextMenuProps {
@@ -22,8 +24,11 @@ export const GroupContextMenu = ({
   pos,
   reactFlowInst,
 }: GroupContextMenuProps) => {
-  return "helo";
-  // const appState = useStore($syncedAppState);
+  const appState = useStore($syncedAppState);
+
+  if (!appState) {
+    return <Loader />;
+  }
 
   const nodes = appState.main.nodes;
   return (

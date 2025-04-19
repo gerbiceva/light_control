@@ -45,10 +45,7 @@ export const useSubgraphs = () => {
   const syncedStore = useStore($syncedAppState);
 
   const activeGraphObj = useMemo(() => {
-    console.log("memo fired");
-
     if (!syncedStore) return undefined;
-    console.log("memo defined", activeGraph);
 
     return activeGraph === "main"
       ? syncedStore.main

@@ -16,14 +16,11 @@ import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { downloadSettings } from "./fileUtils";
 import { useStore } from "@nanostores/react";
 import { $projectName, setProjectName } from "../../globalStore/projectStore";
-// import { $syncedAppState } from "../../crdt/repo";
 
 export const SettingsModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const projectName = useStore($projectName);
   // const appState = useStore($syncedAppState);
-
-  return "nedela";
 
   return (
     <>
@@ -50,7 +47,7 @@ export const SettingsModal = () => {
             Save file
           </Button>
           {/* clear */}
-          <Button
+          {/* <Button
             variant="light"
             color="red"
             onClick={() => {
@@ -65,7 +62,7 @@ export const SettingsModal = () => {
             leftSection={<IconRecycle />}
           >
             Reset graph to defaults
-          </Button>
+          </Button> */}
           <SettingsDrop />
 
           <Divider label="Stats" labelPosition="left" />
@@ -74,8 +71,8 @@ export const SettingsModal = () => {
             <Text>{window.location.hostname}:50051</Text>
             <Text c="dimmed">Capabilities loaded</Text>
             <Text>{$capabilities.get().length}</Text>
-            <Text c="dimmed">Node count</Text>
-            <Text>{appState.main.nodes.length}</Text>
+            {/* <Text c="dimmed">Node count</Text>
+            <Text>{appState.main.nodes.length}</Text> */}
           </SimpleGrid>
         </Stack>
       </Modal>
