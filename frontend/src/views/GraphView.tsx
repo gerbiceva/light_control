@@ -1,11 +1,4 @@
-import {
-  Box,
-  ColorSwatch,
-  Loader,
-  LoadingOverlay,
-  Stack,
-  Title,
-} from "@mantine/core";
+import { Box, ColorSwatch, LoadingOverlay, Stack } from "@mantine/core";
 
 import "@xyflow/react/dist/style.css";
 
@@ -36,8 +29,8 @@ import { $capabilities } from "../globalStore/capabilitiesStore";
 import { $flowInst } from "../globalStore/flowStore";
 import { mapPrimitivesToNamespaced } from "../sync/namespaceUtils";
 import { getColorFromEnum } from "../utils/colorUtils";
-import { onEdgesChange, onNodesChange, setEdges } from "../crdt/repo";
-import { useSubgraphs } from "../globalStore/subgraphStore";
+import { addEdge, onEdgesChange, onNodesChange } from "../crdt/repo";
+import { useYjsState } from "../crdt/globalSync";
 
 const fitViewOptions: FitViewOptions = {
   padding: 300,
@@ -51,15 +44,16 @@ export const NodeView = () => {
   const caps = useStore($capabilities);
   const reactFlowInst = useReactFlow<CustomFlowNode, Edge>();
   const [opened, handlers] = useDisclosure(false);
-  const { activeGraph } = useSubgraphs();
+  // const { activeGraph } = useSubgraphs();
   const [pos, setPos] = useState<{ point: Point; nodes: CustomFlowNode[] }>({
     point: { x: 0, y: 0 },
     nodes: [],
   });
+  const { nodes, edges, isReady } = useYjsState();
 
-  useEffect(() => {
-    reactFlowInst.fitView();
-  }, [activeGraph, reactFlowInst]);
+  // useEffect(() => {
+  //   reactFlowInst.fitView();
+  // }, [activeGraph, reactFlowInst]);
 
   useEffect(() => {
     $flowInst.set(reactFlowInst);
@@ -79,24 +73,26 @@ export const NodeView = () => {
   );
 
   const onConnect: OnConnect = useCallback((connection) => {
-    setEdges(addColoredEdge(connection));
+    addEdge(addColoredEdge(connection));
   }, []);
 
-  if (!activeGraph) {
-    return (
-      <LoadingOverlay
-        visible={true}
-        loaderProps={{
-          children: (
-            <Stack align="center" gap="xl">
-              <Loader />
-              <Title size="sm">Syncing active graph</Title>
-            </Stack>
-          ),
-        }}
-      />
-    );
-  }
+  // if (!activeGraph) {
+  //   return (
+  //     <LoadingOverlay
+  //       visible={true}
+  //       loaderProps={{
+  //         children: (
+  //           <Stack align="center" gap="xl">
+  //             <Loader />
+  //             <Title size="sm">Syncing active graph</Title>
+  //           </Stack>
+  //         ),
+  //       }}
+  //     />
+  //   );
+  // }
+
+  if (!isReady) return <LoadingOverlay visible />;
 
   return (
     <Box w="100%" h="100%" pos="relative">
@@ -128,9 +124,9 @@ export const NodeView = () => {
           ))}
       </Stack>
       <ReactFlow<CustomFlowNode, CustomFlowEdge>
-        nodes={activeGraph.nodes}
+        nodes={nodes}
         nodeTypes={nodeTypes}
-        edges={activeGraph.edges}
+        edges={edges}
         onConnectEnd={addInputOnEdgeDrop} // works on multi
         onNodesChange={onNodesChange} //
         onEdgesChange={onEdgesChange}
@@ -141,6 +137,8 @@ export const NodeView = () => {
         isValidConnection={isValidConnection} // wokrs on multi
         deleteKeyCode={"Delete"}
         onClick={handlers.close}
+        snapToGrid
+        snapGrid={[50, 50]}
         onSelectionContextMenu={(ev, nodes) => {
           ev.preventDefault();
           setPos({
@@ -154,8 +152,13 @@ export const NodeView = () => {
         }}
       >
         <Controls />
+        <Background
+          gap={50}
+          size={3}
+          offset={[100, 100]}
+          style={{ opacity: 0.8 }}
+        />
         <MiniMap />
-        <Background gap={12} size={1} />
       </ReactFlow>
     </Box>
   );

@@ -5,9 +5,8 @@ import {
   CustomFlowNode,
   CustomGraphInstance,
 } from "../flow/Nodes/CustomNodeType";
-import { $syncedAppState } from "../crdt/repo";
 import { generateFlowId } from "../globalStore/flowStore";
-import { useStore } from "@nanostores/react";
+// import { useStore } from "@nanostores/react";
 
 export interface GroupContextMenuProps {
   opened: boolean;
@@ -23,7 +22,8 @@ export const GroupContextMenu = ({
   pos,
   reactFlowInst,
 }: GroupContextMenuProps) => {
-  const appState = useStore($syncedAppState);
+  return "helo";
+  // const appState = useStore($syncedAppState);
 
   const nodes = appState.main.nodes;
   return (

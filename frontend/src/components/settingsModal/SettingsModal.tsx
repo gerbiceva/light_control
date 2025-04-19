@@ -16,12 +16,14 @@ import { $capabilities } from "../../globalStore/capabilitiesStore";
 import { downloadSettings } from "./fileUtils";
 import { useStore } from "@nanostores/react";
 import { $projectName, setProjectName } from "../../globalStore/projectStore";
-import { $syncedAppState } from "../../crdt/repo";
+// import { $syncedAppState } from "../../crdt/repo";
 
 export const SettingsModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const projectName = useStore($projectName);
-  const appState = useStore($syncedAppState);
+  // const appState = useStore($syncedAppState);
+
+  return "nedela";
 
   return (
     <>

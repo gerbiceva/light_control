@@ -1,9 +1,10 @@
 import { useStore } from "@nanostores/react";
 import { atom } from "nanostores";
-import { $syncedAppState, setSubgraphs } from "../crdt/repo";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { SubGraph } from "../components/Subgraph/Subgraph";
 import { generateGraphId } from "./flowStore";
+import { $syncedAppState } from "../crdt/globalSync";
+import { addSubgraph } from "../crdt/repo";
 
 interface SubgraphPageStore {
   activeGraph: "main" | number;
@@ -44,40 +45,50 @@ export const useSubgraphs = () => {
   const syncedStore = useStore($syncedAppState);
 
   const activeGraphObj = useMemo(() => {
-    if (syncedStore == undefined) {
-      return;
-    }
-    if (activeGraph == "main") {
-      return syncedStore.main;
-    }
-    return syncedStore.subgraphs.find((graph) => graph.id == activeGraph);
+    console.log("memo fired");
+
+    if (!syncedStore) return undefined;
+    console.log("memo defined", activeGraph);
+
+    return activeGraph === "main"
+      ? syncedStore.main
+      : syncedStore.subgraphs[activeGraph];
   }, [activeGraph, syncedStore]);
 
-  const setActiveGraph = useCallback((activeGraph: "main" | number) => {
+  useEffect(() => {
+    console.log({ activeGraphObj });
+  }, [activeGraphObj]);
+
+  const setActiveGraph = useCallback((graph: "main" | number) => {
     $subgraphPages.set({
       ...$subgraphPages.get(),
-      activeGraph: activeGraph,
+      activeGraph: graph,
     });
   }, []);
 
   const newSubGraph = useCallback(
     (name: string, description?: string) => {
       const newGraph = createEmptySubgraph(name, description);
-      setSubgraphs([newGraph, ...syncedStore.subgraphs]);
+      addSubgraph(newGraph);
       addVisibleSubgraph(newGraph.id);
       setActiveGraph(newGraph.id);
+      return newGraph;
     },
-    [setActiveGraph, syncedStore]
+    [setActiveGraph]
   );
+
+  const visibleGraphObj = useMemo(() => {
+    if (!syncedStore) return [];
+
+    return visibleGraphs
+      .map((id) => syncedStore.subgraphs[id])
+      .filter((graph) => graph !== undefined);
+  }, [visibleGraphs, syncedStore]);
 
   return {
     activeGraph: activeGraphObj,
     setActiveGraph,
     newSubGraph,
-    visibleGraphs: syncedStore
-      ? syncedStore.subgraphs.filter((graph) =>
-          visibleGraphs.includes(graph.id)
-        )
-      : [],
+    visibleGraphs: visibleGraphObj,
   };
 };

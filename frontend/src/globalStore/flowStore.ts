@@ -25,7 +25,9 @@ export const generateGraphId = () => {
 };
 
 export interface AppState {
-  subgraphs: SubGraph[];
+  subgraphs: {
+    [key: number]: SubGraph;
+  };
   main: SubGraph;
 }
 

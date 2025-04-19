@@ -1,29 +1,33 @@
 import * as Y from "yjs";
-import { WebsocketProvider } from "y-websocket";
 import { AppState } from "../globalStore/flowStore";
-import {
-  applyEdgeChanges,
-  applyNodeChanges,
-  EdgeChange,
-  NodeChange,
-} from "@xyflow/react";
+import { EdgeChange, NodeChange } from "@xyflow/react";
 import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
-import { atom } from "nanostores";
 import { SubGraph } from "../components/Subgraph/Subgraph";
 import { $subgraphPages } from "../globalStore/subgraphStore";
+import { WebsocketProvider } from "y-websocket";
 
 export const yAppState = new Y.Doc();
-// const yarray = yAppState.getArray("count");
-const roomName = "app-state";
-const port = 42069;
+export const roomName = "app-state";
+export const port = 42069;
+export const transactionName = "client-flow-update-origin";
 const YSyncStore = yAppState.getMap("syncedAppState"); // dont change the name
 
-const websocketProvider = new WebsocketProvider(
-  `ws:localhost:${port}`,
+export const websocketProvider = new WebsocketProvider(
+  `ws:${window.location.hostname}:${port}`,
   roomName,
-  yAppState
+  yAppState,
+  {
+    connect: true,
+  }
 );
 
+// websocketProvider.ws?.addEventListener("error", (er) => {
+//   console.log("we err", { er });
+// });
+// websocketProvider.ws?.addEventListener("message", (msg) => {
+//   const dec = new TextDecoder("utf-8");
+//   console.log("ws msg", { msg }, dec.decode(msg.data));
+// });
 websocketProvider.on("status", (wsStatusEv) => {
   console.log({ ev: wsStatusEv });
 });
@@ -31,65 +35,260 @@ websocketProvider.on("sync", (wsSyncEv) => {
   console.log({ ev: wsSyncEv });
 });
 
-export const updateState = () => {
-  setYState(getYState());
+// Add to repo.ts
+export const waitForSync = (): Promise<void> => {
+  return new Promise((resolve) => {
+    if (websocketProvider.synced) {
+      resolve();
+    } else {
+      const handler = () => {
+        websocketProvider.off("sync", handler);
+        resolve();
+      };
+      websocketProvider.on("sync", handler);
+    }
+  });
 };
 
-// type safety for this thing is non existent...just ...trust me
-export const getYState = () => {
-  return YSyncStore.toJSON().state as AppState;
+const clientTransaction = (transactionFunc: () => void) => {
+  Y.transact(yAppState, transactionFunc, transactionName);
 };
 
-// type safety for this thing is non existent...just ...trust me
-export const setYState = (state: AppState) => {
-  YSyncStore.set("state", { ...state });
+yAppState.on("update", (_, __, doc) => {
+  console.log(doc.toJSON());
+});
+
+export const initializeYState = async (): Promise<boolean> => {
+  try {
+    await waitForSync();
+    return true;
+  } catch (error) {
+    console.error("Failed to initialize Yjs state:", error);
+    return false;
+  }
+};
+
+export const getYState2 = () => {
+  const st = (YSyncStore.get("state") as Y.Map<AppState>) || undefined;
+  // console.log("store", st && st.toJSON());
+  return st;
+};
+
+const getYState = () => {
+  return getYState2().toJSON() as AppState;
+};
+
+export const getActiveYgraph2 = (): Y.Map<SubGraph> | undefined => {
+  const st = getYState2();
+  if (!st) {
+    console.error("Yjs state not initialized");
+    return undefined;
+  }
+
+  const activeGraphId = $subgraphPages.get().activeGraph;
+  if (!activeGraphId) {
+    console.error("No active graph ID found");
+    return undefined;
+  }
+
+  try {
+    if (activeGraphId === "main") {
+      return st.get("main") as Y.Map<SubGraph> | undefined;
+    }
+
+    const subgraphs = st.get("subgraphs") as Y.Map<Y.Map<SubGraph>> | undefined;
+    if (!subgraphs) {
+      console.error("Subgraphs collection not found");
+      return undefined;
+    }
+
+    return subgraphs.get(activeGraphId.toString());
+  } catch (error) {
+    console.error("Error accessing Yjs graph data:", error);
+    return undefined;
+  }
 };
 
 export const getActiveYgraph = () => {
-  const activeGraphId = $subgraphPages.get().activeGraph;
-  if (activeGraphId == "main") {
-    return getYState().main;
+  return (getActiveYgraph2()?.toJSON() as SubGraph) || undefined;
+};
+
+export const addSubgraph = (subgraph: SubGraph) => {
+  getYState().subgraphs[subgraph.id] = subgraph;
+};
+
+export const addEdge = (edge: CustomFlowEdge) => {
+  clientTransaction(() => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const yEdges = g.get("edges") as Y.Array<CustomFlowEdge> | undefined;
+    if (!yEdges) return;
+
+    const currentEdges = yEdges.toArray();
+    const existingIndex = currentEdges.findIndex((e) => e.id === edge.id);
+
+    if (existingIndex !== -1) {
+      yEdges.delete(existingIndex, 1);
+    }
+    yEdges.push([edge]);
+  });
+};
+
+const processSingleChange = (chage: NodeChange<CustomFlowNode>) => {
+  const g = getActiveYgraph2();
+  if (!g) return;
+
+  const yNodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+  if (!yNodes) return;
+  const change = chage;
+  const currentNodes = yNodes.toArray();
+  switch (change.type) {
+    case "add": {
+      console.log("added", change.item);
+
+      yNodes.push([change.item]);
+      return;
+    }
+
+    case "remove": {
+      const removeIndex = currentNodes.findIndex((n) => n.id === change.id);
+      if (removeIndex !== -1) yNodes.delete(removeIndex, 1);
+      console.log("removed", removeIndex);
+      return;
+    }
+
+    // case "dimensions":
+    case "select":
+    case "position": {
+      const updateIndex = currentNodes.findIndex((n) => n.id === change.id);
+      if (updateIndex !== -1) {
+        const updatedNode = {
+          ...currentNodes[updateIndex],
+          ...("position" in change ? { position: change.position } : {}),
+          ...("dimensions" in change ? { dimensions: change.dimensions } : {}),
+          ...("selected" in change ? { selected: change.selected } : {}),
+        };
+
+        console.log("change", change.type, updatedNode);
+
+        yNodes.delete(updateIndex, 1);
+        yNodes.insert(updateIndex, [updatedNode]);
+      }
+      return;
+    }
+
+    case "replace": {
+      const replaceIndex = currentNodes.findIndex((n) => n.id === change.id);
+      if (replaceIndex !== -1) {
+        // First delete the old node
+        yNodes.delete(replaceIndex, 1);
+        // Then add the new node at the same position
+        yNodes.insert(replaceIndex, [change.item]);
+      }
+      return;
+    }
   }
-  const g = getYState().subgraphs.find((graph) => graph.id == activeGraphId)!;
-  return g;
+  return;
 };
 
-export const addNode = (node: CustomFlowNode) => {
-  const g = getActiveYgraph();
-  g.nodes.push(node);
-  updateState();
+export const onNodesChange = (changes: NodeChange<CustomFlowNode>[]) => {
+  clientTransaction(() => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const yNodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+    if (!yNodes) return;
+
+    if (!changes.length) return;
+
+    changes.map((change) => {
+      processSingleChange(change);
+    });
+  });
 };
 
-export const setEdges = (edges: CustomFlowEdge[]) => {
-  const g = getActiveYgraph();
-  g.edges = edges;
-  updateState();
-};
+const processSingleEdgeChange = (change: EdgeChange<CustomFlowEdge>) => {
+  const g = getActiveYgraph2();
+  if (!g) return;
 
-export const setNodes = (nodes: CustomFlowNode[]) => {
-  const g = getActiveYgraph();
-  g.nodes = nodes;
-  updateState();
-};
+  const yEdges = g.get("edges") as Y.Array<CustomFlowEdge> | undefined;
+  if (!yEdges) return;
 
-export const $syncedAppState = atom<AppState>(getYState());
-YSyncStore.observe(() => {
-  $syncedAppState.set(getYState());
-});
+  const currentEdges = yEdges.toArray();
 
-export const setSubgraphs = (subgraphs: SubGraph[]) => {
-  getYState().subgraphs = subgraphs;
-  updateState();
-};
+  switch (change.type) {
+    case "add": {
+      console.log("edge added", change.item);
+      yEdges.push([change.item]);
+      return;
+    }
 
-export const onNodesChange = (change: NodeChange<CustomFlowNode>[]) => {
-  const g = getActiveYgraph();
-  g.nodes = applyNodeChanges<CustomFlowNode>(change, g.nodes);
-  updateState();
+    case "remove": {
+      const removeIndex = currentEdges.findIndex((e) => e.id === change.id);
+      if (removeIndex !== -1) {
+        yEdges.delete(removeIndex, 1);
+        console.log("edge removed", removeIndex);
+      }
+      return;
+    }
+
+    case "select": {
+      const updateIndex = currentEdges.findIndex((e) => e.id === change.id);
+      if (updateIndex !== -1) {
+        const updatedEdge = {
+          ...currentEdges[updateIndex],
+          selected: change.selected,
+        };
+        console.log("edge selection changed", updatedEdge);
+        yEdges.delete(updateIndex, 1);
+        yEdges.insert(updateIndex, [updatedEdge]);
+      }
+      return;
+    }
+
+    case "replace": {
+      const replaceIndex = currentEdges.findIndex((e) => e.id === change.id);
+      if (replaceIndex !== -1) {
+        yEdges.delete(replaceIndex, 1);
+        yEdges.insert(replaceIndex, [change.item]);
+        console.log("edge replaced", change.item);
+      }
+      return;
+    }
+  }
 };
 
 export const onEdgesChange = (changes: EdgeChange<CustomFlowEdge>[]) => {
-  const g = getActiveYgraph();
-  g.edges = applyEdgeChanges<CustomFlowEdge>(changes, g.edges);
-  updateState();
+  clientTransaction(() => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const yEdges = g.get("edges") as Y.Array<CustomFlowEdge> | undefined;
+    if (!yEdges) return;
+
+    if (!changes.length) return;
+
+    changes.forEach((change) => {
+      processSingleEdgeChange(change);
+    });
+  });
+};
+
+// Reusing your existing operations:
+export const addNode = (node: CustomFlowNode) => {
+  clientTransaction(() => {
+    const g = getActiveYgraph2();
+    if (!g) {
+      console.error("no active graph, cant find node");
+      return;
+    }
+
+    const nodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+    if (!nodes) {
+      console.error("no nodes key, cant complete node push");
+      return;
+    }
+    nodes.push([node]);
+  });
 };

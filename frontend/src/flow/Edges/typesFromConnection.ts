@@ -33,8 +33,8 @@ export const getConnectionProperties = (
   const g = getActiveYgraph();
   const nodes = g.nodes;
   const edges = g.edges;
-  //TODO: make an override that does not loop over nodes and gets a node from input. Use with AddInputOnEdgeDrop
 
+  //TODO: make an override that does not loop over nodes and gets a node from input. Use with AddInputOnEdgeDrop
   // get from node, namespace, type, capability and port
   const from = nodes.find((node) => node.id == edge.source);
 

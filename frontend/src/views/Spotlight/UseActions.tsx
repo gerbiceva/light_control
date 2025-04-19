@@ -12,43 +12,38 @@ import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
 import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
-import { getActiveYgraph, setEdges, setNodes } from "../../crdt/repo";
+import { addEdge, addNode } from "../../crdt/repo";
 
 export const useActions = (): CustomSpotlightGroups[] => {
   const serverCapabilities = useStore($serverCapabilities);
-  const g = getActiveYgraph();
-  const nodes = g.nodes;
 
-  const addNode = useCallback(
-    (node: CustomFlowNode) => {
-      const spotFilter = $spotFilter.get();
-      const cap = node.data.capability;
-      setNodes([...nodes, node]);
+  const createNewNode = useCallback((node: CustomFlowNode) => {
+    const spotFilter = $spotFilter.get();
+    const cap = node.data.capability;
+    addNode(node);
 
-      if (spotFilter && cap) {
-        setEdges(
-          spotFilter.type == "target"
-            ? addColoredEdge({
-                source: node.id,
-                sourceHandle: cap.outputs.filter(
-                  (port) => port.type == spotFilter.dataType
-                )[0].name,
-                target: spotFilter.fromHandle.nodeId,
-                targetHandle: spotFilter.fromHandle.id!,
-              })
-            : addColoredEdge({
-                source: spotFilter.fromHandle.nodeId,
-                sourceHandle: spotFilter.fromHandle.id!,
-                target: node.id,
-                targetHandle: cap.inputs.filter(
-                  (port) => port.type == spotFilter.dataType
-                )[0].name,
-              })
-        );
-      }
-    },
-    [nodes]
-  );
+    if (spotFilter && cap) {
+      addEdge(
+        spotFilter.type == "target"
+          ? addColoredEdge({
+              source: node.id,
+              sourceHandle: cap.outputs.filter(
+                (port) => port.type == spotFilter.dataType
+              )[0].name,
+              target: spotFilter.fromHandle.nodeId,
+              targetHandle: spotFilter.fromHandle.id!,
+            })
+          : addColoredEdge({
+              source: spotFilter.fromHandle.nodeId,
+              sourceHandle: spotFilter.fromHandle.id!,
+              target: node.id,
+              targetHandle: cap.inputs.filter(
+                (port) => port.type == spotFilter.dataType
+              )[0].name,
+            })
+      );
+    }
+  }, []);
 
   // SERVER CAPABILITES ONLY
   const actionsFromCapabilities: CustomSpotData[] = useMemo(() => {
@@ -60,7 +55,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
         capability: cap,
 
         onClick: () => {
-          addNode(generateNodeInstFromCapability(cap));
+          createNewNode(generateNodeInstFromCapability(cap));
         },
         leftSection: (
           <Avatar radius={0} color={getColorFromString(cap.namespace)[5]}>
@@ -69,7 +64,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
         ),
       };
     });
-  }, [addNode, serverCapabilities]);
+  }, [createNewNode, serverCapabilities]);
 
   const actions: CustomSpotlightGroups[] = useMemo(() => {
     if (!theme.colors) {

@@ -1,0 +1,234 @@
+import * as Y from "yjs";
+import { WebsocketProvider } from "y-websocket";
+import { AppState } from "../globalStore/flowStore";
+import {
+  applyEdgeChanges,
+  applyNodeChanges,
+  EdgeChange,
+  NodeChange,
+} from "@xyflow/react";
+import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
+import { SubGraph } from "../components/Subgraph/Subgraph";
+import { $subgraphPages } from "../globalStore/subgraphStore";
+
+export const yAppState = new Y.Doc();
+// const yarray = yAppState.getArray("count");
+const roomName = "app-state";
+const port = 42069;
+const YSyncStore = yAppState.getMap("syncedAppState"); // dont change the name
+
+const websocketProvider = new WebsocketProvider(
+  `ws:${window.location.hostname}:${port}`,
+  roomName,
+  yAppState
+);
+
+websocketProvider.on("status", (wsStatusEv) => {
+  console.log({ ev: wsStatusEv });
+});
+websocketProvider.on("sync", (wsSyncEv) => {
+  console.log({ ev: wsSyncEv });
+});
+
+// const updateState = () => {
+//   setYState(getYState());
+// };
+
+// // type safety for this thing is non existent...just ...trust me
+// export const getYState = () => {
+//   return YSyncStore.toJSON().state as AppState;
+// };
+
+// type safety for this thing is non existent...just ...trust me
+export const getYState2 = () => {
+  const st = (YSyncStore.get("state") as Y.Map<AppState>) || undefined;
+  // console.log("store", st && st.toJSON());
+  return st;
+};
+
+const getYState = () => {
+  return getYState2().toJSON() as AppState;
+};
+
+// // type safety for this thing is non existent...just ...trust me
+// export const setYState = (state: AppState) => {
+//   YSyncStore.set("state", { ...state });
+// };
+
+// export const getActiveYgraph = () => {
+//   const activeGraphId = $subgraphPages.get().activeGraph;
+//   if (activeGraphId == "main") {
+//     return getYState().main;
+//   }
+//   const g = getYState().subgraphs[activeGraphId];
+//   return g;
+// };
+
+export const getActiveYgraph2 = (): Y.Map<SubGraph> | undefined => {
+  const st = getYState2();
+  if (!st) {
+    console.error("Yjs state not initialized");
+    return undefined;
+  }
+
+  const activeGraphId = $subgraphPages.get().activeGraph;
+  if (!activeGraphId) {
+    console.error("No active graph ID found");
+    return undefined;
+  }
+
+  try {
+    if (activeGraphId === "main") {
+      return st.get("main") as Y.Map<SubGraph>;
+    }
+
+    const subgraphs = st.get("subgraphs") as Y.Map<Y.Map<SubGraph>>;
+    if (!subgraphs) {
+      console.error("Subgraphs collection not found");
+      return undefined;
+    }
+
+    return subgraphs.get(activeGraphId);
+  } catch (error) {
+    console.error("Error accessing Yjs graph data:", error);
+    return undefined;
+  }
+};
+
+export const getActiveYgraph = () => {
+  return (getActiveYgraph2()?.toJSON() as SubGraph) || undefined;
+};
+
+// export const $syncedAppState = atom<AppState | undefined>(
+//   (getYState2()?.toJSON() as AppState) || undefined
+// );
+
+// YSyncStore.observe(() => {
+//   console.log("state hcange", $syncedAppState.get());
+//   $syncedAppState.set(getYState2().toJSON() as AppState);
+// });
+// export const addSubgraph = (subgraph: SubGraph) => {
+//   getYState().subgraphs[subgraph.id] = subgraph;
+// };
+
+// export const addNode = (node: CustomFlowNode) => {
+//   const g = getActiveYgraph();
+//   // g.nodes.push(node);
+//   g.nodes = [...g.nodes, node];
+//   // console.log("push node", node);
+//   updateState();
+// };
+
+// export const setEdges = (edges: CustomFlowEdge[]) => {
+//   const g = getActiveYgraph();
+//   g.edges = edges;
+//   updateState();
+// };
+
+// export const setNodes = (nodes: CustomFlowNode[]) => {
+//   const g = getActiveYgraph();
+//   g.nodes = nodes;
+//   updateState();
+// };
+
+// export const $syncedAppState = atom<AppState>(getYState());
+
+// YSyncStore.observe(() => {
+//   // console.log("state hcange", $syncedAppState.get());
+//   $syncedAppState.set(getYState());
+// });
+
+export const addSubgraph = (subgraph: SubGraph) => {
+  getYState().subgraphs[subgraph.id] = subgraph;
+};
+
+// export const onNodesChange = (change: NodeChange<CustomFlowNode>[]) => {
+//   const g = getActiveYgraph();
+//   g.nodes = applyNodeChanges<CustomFlowNode>(change, g.nodes);
+//   updateState();
+// };
+
+// export const onEdgesChange = (changes: EdgeChange<CustomFlowEdge>[]) => {
+//   const g = getActiveYgraph();
+//   g.edges = applyEdgeChanges<CustomFlowEdge>(changes, g.edges);
+//   updateState();
+// };
+
+export const setEdges = (edges: CustomFlowEdge[]) => {
+  Y.transact(yAppState, () => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const edgesArray = g.get("edges") as Y.Array<CustomFlowEdge> | undefined;
+    if (!edgesArray) return;
+
+    edgesArray.delete(0, edgesArray.length);
+    edgesArray.push(edges);
+  });
+};
+
+export const setNodes = (nodes: CustomFlowNode[]) => {
+  Y.transact(yAppState, () => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const nodesArray = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+    if (!nodesArray) return;
+
+    nodesArray.delete(0, nodesArray.length);
+    nodesArray.push(nodes);
+  });
+};
+
+export const onNodesChange = (changes: NodeChange<CustomFlowNode>[]) => {
+  Y.transact(yAppState, () => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const yNodes = g.get("nodes") as Y.Array<CustomFlowNode>;
+    if (!yNodes) return;
+
+    const currentNodes = yNodes.toArray();
+    const newNodes = applyNodeChanges(changes, currentNodes);
+
+    // Efficient update - no need to manually trigger state update
+    yNodes.delete(0, yNodes.length);
+    yNodes.push(newNodes);
+  });
+};
+
+export const onEdgesChange = (changes: EdgeChange<CustomFlowEdge>[]) => {
+  console.log("ed", { changes });
+
+  Y.transact(yAppState, () => {
+    const g = getActiveYgraph2();
+    if (!g) return;
+
+    const yEdges = g.get("edges") as Y.Array<CustomFlowEdge> | undefined;
+    if (!yEdges) return;
+
+    const currentEdges = yEdges.toArray();
+    const newEdges = applyEdgeChanges(changes, currentEdges);
+
+    // Reuse setEdges for complete replacement (simple approach)
+    setEdges(newEdges);
+  });
+};
+
+// Reusing your existing operations:
+export const addNode = (node: CustomFlowNode) => {
+  Y.transact(yAppState, () => {
+    const g = getActiveYgraph2();
+    if (!g) {
+      console.error("no active graph, cant find node");
+      return;
+    }
+
+    const nodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+    if (!nodes) {
+      console.error("no nodes key, cant complete node push");
+      return;
+    }
+    nodes.push([node]);
+  });
+};

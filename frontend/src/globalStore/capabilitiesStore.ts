@@ -19,6 +19,8 @@ export function setCapabilites(capabilities: NodeCapability[]) {
 // initially get capabilities
 client.getCapabilities({}).then(
   (data) => {
+    // console.log(data.response.nodes);
+
     setCapabilites(data.response.nodes);
     notifSuccess({
       title: "Capabilities initialized",
