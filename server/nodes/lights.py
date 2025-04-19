@@ -1,4 +1,4 @@
-from datatypes import ColorArray, node, each_tick, initialize, generator
+from datatypes import ColorArray, node, each_tick, initialize, generator, Int
 import jax.numpy as jnp
 from matplotlib.colors import hsv_to_rgb
 import sacn

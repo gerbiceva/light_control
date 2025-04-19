@@ -135,3 +135,24 @@ def sin_curve() -> Curve:
         A sine wave curve function.
     """
     return sin(x)
+
+@node
+def sub_var(curve, name, value):
+    """
+    Sub Value
+
+    Substitute value in curve.
+
+    Parameters
+    ----------
+    curve : Curve
+    name : String
+        Converts a string to a curve.
+    value : Float
+
+    Returns
+    -------
+    curve : Curve
+        A string representing a curve.
+    """
+    return curve.subs(name, value)

@@ -2,13 +2,14 @@ from datatypes import Vector2D, node, initialize, Float, Int, generator
 import jax.numpy as jnp
 from evdev import InputDevice, ecodes, list_devices
 import threading
+import weakref
 
 @generator
 def make_gamepads():    
     devices: list[InputDevice] = []
     for device in [InputDevice(path) for path in list_devices()]:
         if "Controller" in device.name or "Wireless" in device.name:
-            devices.append(InputDevice(device.path))
+            devices.append(device)
 
     gamepads = []
     for device in devices:
@@ -59,8 +60,46 @@ def make_gamepads():
                     "Down",
                 ]
             def __init__(self):
-                self.thread = threading.Thread(target=self.loop)
-                self.device = device
+                weak_self_get = weakref.ref(self)
+                def loop():
+                    self = weak_self_get()
+                    for event in self.device.read_loop():
+                        if self.stop:
+                            break
+                        if event.type == ecodes.EV_KEY:  # Button presses
+                            self.buttons[self.codes_to_buttons[event.code]] = 1 if event.value else 0
+                        elif event.type == ecodes.EV_ABS:  # Analog inputs (axes)
+                            if event.code == ecodes.ABS_X:
+                                self.sticks["Left"] = self.sticks["Left"].at[0].set(event.value / 32768.0)
+                            elif event.code == ecodes.ABS_Y:
+                                self.sticks["Left"] = self.sticks["Left"].at[1].set(event.value / 32768.0)
+                            elif event.code == ecodes.ABS_RX:
+                                self.sticks["Right"] = self.sticks["Right"].at[0].set(event.value / 32768.0)
+                            elif event.code == ecodes.ABS_RY:
+                                self.sticks["Right"] = self.sticks["Right"].at[1].set(event.value / 32768.0)
+                            elif event.code == ecodes.ABS_HAT0X:
+                                if event.value == -1:
+                                    self.buttons["Left"] = 1
+                                elif event.value == 1:
+                                    self.buttons["Right"] = 1
+                                else:
+                                    self.buttons["Left"] = 0
+                                    self.buttons["Right"] = 0
+                            elif event.code == ecodes.ABS_HAT0Y:
+                                if event.value == -1:
+                                    self.buttons["Up"] = 1
+                                elif event.value == 1:
+                                    self.buttons["Down"] = 1
+                                else:
+                                    self.buttons["Up"] = 0
+                                    self.buttons["Down"] = 0
+                            elif event.code == ecodes.ABS_Z:
+                                # print(event)
+                                self.buttons["L2"] = float(event.value) / 255.0
+                            elif event.code == ecodes.ABS_RZ:
+                                self.buttons["R2"] = float(event.value) / 255.0
+                self.thread = threading.Thread(target=loop)
+                self.device = InputDevice(device.path)
                 self.buttons = {
                     "A": 0,
                     "B": 0,
@@ -101,42 +140,6 @@ def make_gamepads():
                 self.stop = False
                 self.thread.start()
 
-            def loop(self):
-                if self.stop:
-                    return
-                for event in self.device.read_loop():
-                    if event.type == ecodes.EV_KEY:  # Button presses
-                        self.buttons[self.codes_to_buttons[event.code]] = 1 if event.value else 0
-                    elif event.type == ecodes.EV_ABS:  # Analog inputs (axes)
-                        if event.code == ecodes.ABS_X:
-                            self.sticks["Left"] = self.sticks["Left"].at[0].set(event.value / 32768.0)
-                        elif event.code == ecodes.ABS_Y:
-                            self.sticks["Left"] = self.sticks["Left"].at[1].set(event.value / 32768.0)
-                        elif event.code == ecodes.ABS_RX:
-                            self.sticks["Right"] = self.sticks["Right"].at[0].set(event.value / 32768.0)
-                        elif event.code == ecodes.ABS_RY:
-                            self.sticks["Right"] = self.sticks["Right"].at[1].set(event.value / 32768.0)
-                        elif event.code == ecodes.ABS_HAT0X:
-                            if event.value == -1:
-                                self.buttons["Left"] = 1
-                            elif event.value == 1:
-                                self.buttons["Right"] = 1
-                            else:
-                                self.buttons["Left"] = 0
-                                self.buttons["Right"] = 0
-                        elif event.code == ecodes.ABS_HAT0Y:
-                            if event.value == -1:
-                                self.buttons["Up"] = 1
-                            elif event.value == 1:
-                                self.buttons["Down"] = 1
-                            else:
-                                self.buttons["Up"] = 0
-                                self.buttons["Down"] = 0
-                        elif event.code == ecodes.ABS_Z:
-                            # print(event)
-                            self.buttons["L2"] = float(event.value) / 255.0
-                        elif event.code == ecodes.ABS_RZ:
-                            self.buttons["R2"] = float(event.value) / 255.0
 
             def __call__(self) -> (Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Int, Float, Float, Vector2D, Vector2D):
                 return tuple(self.buttons[button] for button in self.button_names) + (
@@ -148,6 +151,7 @@ def make_gamepads():
 
             def __del__(self):
                 self.stop = True
-                # self.thread.join()
+                self.thread.join()
+                self.device.close()
         gamepads.append(Gamepad)
     return gamepads
