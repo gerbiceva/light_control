@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDownload, IconRecycle, IconSettings } from "@tabler/icons-react";
+import { IconDownload, IconSettings } from "@tabler/icons-react";
 // import { resetState } from "../../globalStore/flowStore";
 import { SettingsDrop } from "./SettingsDrop";
 import { $capabilities } from "../../globalStore/capabilitiesStore";

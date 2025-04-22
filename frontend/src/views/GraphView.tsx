@@ -26,7 +26,6 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Point } from "react-bezier-spline-editor/core";
 import { GroupContextMenu } from "../components/GroupContextMenu";
-import { addColoredEdge } from "../flow/Edges/addColoredEdge";
 import { isValidConnection } from "../flow/Edges/isValidCOnnection";
 import { addInputOnEdgeDrop } from "../flow/Nodes/BaseNodes/utils/addInputOnEdgeDrop";
 import { inputNodes } from "../flow/Nodes/BaseNodes/utils/RegisterNodes";
@@ -39,6 +38,7 @@ import { getColorFromEnum } from "../utils/colorUtils";
 import { addEdge, onEdgesChange, onNodesChange } from "../crdt/repo";
 import { useYjsState } from "../crdt/globalSync";
 import { useSubgraphs } from "../globalStore/subgraphStore";
+import { getColoredEdge } from "../flow/Edges/addColoredEdge";
 
 const fitViewOptions: FitViewOptions = {
   padding: 300,
@@ -81,7 +81,7 @@ export const NodeView = () => {
   );
 
   const onConnect: OnConnect = useCallback((connection) => {
-    addEdge(addColoredEdge(connection));
+    addEdge(getColoredEdge(connection));
   }, []);
 
   if (!activeGraph || !isReady) {

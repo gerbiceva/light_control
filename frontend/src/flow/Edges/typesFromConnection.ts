@@ -29,8 +29,11 @@ interface ConnectionTypesOut {
 }
 export const getConnectionProperties = (
   edge: Edge | Connection
-): ConnectionTypesOut => {
+): ConnectionTypesOut | undefined => {
   const g = getActiveYgraph();
+  if (!g) {
+    return;
+  }
   const nodes = g.nodes;
   const edges = g.edges;
 

@@ -10,7 +10,7 @@ import { CustomSpotData } from "./CustomSpot/CustomSpotData";
 import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
 import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
-import { addColoredEdge } from "../../flow/Edges/addColoredEdge";
+import { getColoredEdge } from "../../flow/Edges/addColoredEdge";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
 import { addEdge, addNode } from "../../crdt/repo";
 
@@ -25,7 +25,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
     if (spotFilter && cap) {
       addEdge(
         spotFilter.type == "target"
-          ? addColoredEdge({
+          ? getColoredEdge({
               source: node.id,
               sourceHandle: cap.outputs.filter(
                 (port) => port.type == spotFilter.dataType
@@ -33,7 +33,7 @@ export const useActions = (): CustomSpotlightGroups[] => {
               target: spotFilter.fromHandle.nodeId,
               targetHandle: spotFilter.fromHandle.id!,
             })
-          : addColoredEdge({
+          : getColoredEdge({
               source: spotFilter.fromHandle.nodeId,
               sourceHandle: spotFilter.fromHandle.id!,
               target: node.id,

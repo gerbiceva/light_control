@@ -159,7 +159,10 @@ export const addSubgraph = (subgraph: SubGraph) => {
   });
 };
 
-export const addEdge = (edge: CustomFlowEdge) => {
+export const addEdge = (edge: CustomFlowEdge | undefined) => {
+  if (!edge) {
+    return;
+  }
   clientTransaction(() => {
     const g = getActiveYgraph2();
     if (!g) return;

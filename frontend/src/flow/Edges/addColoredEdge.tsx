@@ -3,8 +3,11 @@ import { getConnectionProperties } from "./typesFromConnection";
 import { getColorFromEnum } from "../../utils/colorUtils";
 import { generateFlowId } from "../../globalStore/flowStore";
 
-export const addColoredEdge = (edgeParams: Connection) => {
+export const getColoredEdge = (edgeParams: Connection) => {
   const t = getConnectionProperties(edgeParams);
+  if (!t) {
+    return;
+  }
   const edge: Edge = {
     id: generateFlowId(),
     source: edgeParams.source,
