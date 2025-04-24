@@ -7,8 +7,10 @@ import { isCustomFlowNode } from "../../CustomNodeType";
 
 export const addInputOnEdgeDrop = (
   _event: MouseEvent | TouchEvent,
-  connectionState: FinalConnectionState,
+  connectionState: FinalConnectionState
 ) => {
+  console.log({ connectionState });
+
   if (
     !connectionState.fromNode ||
     !isCustomFlowNode(connectionState.fromNode)
@@ -17,33 +19,36 @@ export const addInputOnEdgeDrop = (
   }
 
   // when a connection is dropped on the pane it's not valid
-  if (!connectionState.isValid) {
-    if (
-      !connectionState.fromHandle ||
-      connectionState.fromNode == null ||
-      !connectionState.fromHandle.id
-    ) {
-      return;
-    }
-    const port = getPortFromNode(
-      connectionState.fromHandle,
-      connectionState.fromNode,
-      connectionState.fromHandle?.type,
-    );
-
-    const cap = connectionState.fromNode.data.capability;
-
-    if (!port || !cap) {
-      return;
-    }
-
-    freezeMousePos();
-    setSpotFilter({
-      type: connectionState.fromHandle?.type,
-      dataType: port.type,
-      fromCap: cap,
-      fromHandle: connectionState.fromHandle,
-    });
-    spotlight.open();
+  if (connectionState.isValid) {
+    return;
   }
+  // dropped on pane
+
+  if (
+    !connectionState.fromHandle ||
+    connectionState.fromNode == null ||
+    !connectionState.fromHandle.id
+  ) {
+    return;
+  }
+  const port = getPortFromNode(
+    connectionState.fromHandle,
+    connectionState.fromNode,
+    connectionState.fromHandle?.type
+  );
+
+  const cap = connectionState.fromNode.data.capability;
+
+  if (!port || !cap) {
+    return;
+  }
+
+  freezeMousePos();
+  setSpotFilter({
+    type: connectionState.fromHandle?.type,
+    dataType: port.type,
+    fromCap: cap,
+    fromHandle: connectionState.fromHandle,
+  });
+  spotlight.open();
 };

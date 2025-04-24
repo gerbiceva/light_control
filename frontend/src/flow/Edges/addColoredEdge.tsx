@@ -8,6 +8,7 @@ export const getColoredEdge = (edgeParams: Connection) => {
   if (!t) {
     return;
   }
+
   const edge: Edge = {
     id: generateFlowId(),
     source: edgeParams.source,
@@ -15,10 +16,11 @@ export const getColoredEdge = (edgeParams: Connection) => {
     target: edgeParams.target,
     targetHandle: edgeParams.targetHandle,
     style: {
-      stroke: getColorFromEnum(t.from?.type || 0)[4],
+      stroke: getColorFromEnum(t.from?.type || t.to?.type || 0)[4],
       strokeWidth: 3,
     },
   };
+  console.log(edge);
 
   return edge;
 };

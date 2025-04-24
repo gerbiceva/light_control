@@ -12,17 +12,19 @@ import {
   splitTypeAndNamespace,
 } from "../../../../sync/namespaceUtils";
 import { CustomFlowNode } from "../../CustomNodeType";
-import { addNode } from "../../../../crdt/repo";
+import { addEdge, addNode } from "../../../../crdt/repo";
+import { $spotFilter } from "../../../../globalStore/spotlightFilterStore";
+import { getColoredEdge } from "../../../Edges/addColoredEdge";
+import { NodeCapability } from "../../../../grpc/client_code/service";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
   (cap) => ({
     id: cap.name,
     label: cap.name,
     description: cap.description,
-    onClick: () =>
-      addNode(
-        generateNodeInstFromInput(mergeNamespaceAndType("primitive", cap.name))
-      ),
+    onClick: () => {
+      createNewNode(cap);
+    },
     capability: cap,
     leftSection: (
       <Avatar radius={0} color={getColorFromEnum(cap.outputs[0].type)[5]}>
@@ -32,6 +34,34 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
   })
 );
 
+const createNewNode = (cap: NodeCapability) => {
+  const spotFilter = $spotFilter.get();
+  const node = generateNodeInstFromInput(
+    mergeNamespaceAndType("primitive", cap.name)
+  );
+
+  console.log({ spotFilter });
+  console.log({ cap });
+
+  if (spotFilter && cap) {
+    addEdge(
+      spotFilter.type == "target"
+        ? getColoredEdge({
+            source: node.id,
+            sourceHandle: cap.name,
+            target: spotFilter.fromHandle.nodeId,
+            targetHandle: spotFilter.fromHandle.id!,
+          })
+        : getColoredEdge({
+            source: spotFilter.fromHandle.nodeId,
+            sourceHandle: spotFilter.fromHandle.id!,
+            target: node.id,
+            targetHandle: cap.name,
+          })
+    );
+  }
+  addNode(node);
+};
 export const generateNodeInstFromInput = (type: string): CustomFlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   const { type: strippedType } = splitTypeAndNamespace(type);
@@ -39,6 +69,8 @@ export const generateNodeInstFromInput = (type: string): CustomFlowNode => {
   if (!capability) {
     throw new Error(`Capability not found for type ${type}`);
   }
+
+  console.log(type);
 
   return {
     id: generateFlowId(),
