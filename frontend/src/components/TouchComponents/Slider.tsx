@@ -23,12 +23,13 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
 
     const clampedPercentage = Math.max(
       0,
-      Math.min(100, sliderPercent.current + currentDelta.current),
+      Math.min(100, sliderPercent.current + currentDelta.current)
     );
 
     thumbRef.current.style.height = `${clampedPercentage}%`;
   }, [thumbRef]);
 
+  // Touch handlers
   const touchStart = useCallback((event: TouchEvent) => {
     event.preventDefault();
     if (touch.current) return;
@@ -46,7 +47,7 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
     touch.current = null;
     const newPercent = Math.max(
       0,
-      Math.min(100, sliderPercent.current + currentDelta.current),
+      Math.min(100, sliderPercent.current + currentDelta.current)
     );
     sliderPercent.current = newPercent;
     currentDelta.current = 0;
@@ -68,7 +69,7 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
         currentDelta.current = (delta.y / 1.8 + fact / 3) * -1;
         const newPercentage = Math.max(
           0,
-          Math.min(100, sliderPercent.current + currentDelta.current),
+          Math.min(100, sliderPercent.current + currentDelta.current)
         );
 
         if (animationFrameId.current) {
@@ -81,36 +82,105 @@ export const Slider = ({ baseWidth = 300, onChange, onStop }: ISliderProps) => {
         });
       }
     },
-    [baseRef, onChange, updateThumbPosition],
+    [baseRef, onChange, updateThumbPosition]
   );
+
+  // Mouse handlers
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+    event.preventDefault();
+    if (touch.current) return;
+
+    touchStartPos.current = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    touch.current = { identifier: -1 } as Touch;
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      if (!touch.current || !baseRef.current) return;
+
+      const delta = {
+        x: (event.clientX - touchStartPos.current.x) / 2,
+        y: (event.clientY - touchStartPos.current.y) / 2,
+      };
+
+      currentDelta.current = delta.y * -1;
+      const newPercentage = Math.max(
+        0,
+        Math.min(100, sliderPercent.current + currentDelta.current)
+      );
+
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+
+      animationFrameId.current = requestAnimationFrame(() => {
+        onChange?.(newPercentage);
+        updateThumbPosition();
+      });
+    },
+    [baseRef, onChange, updateThumbPosition]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    if (!touch.current) return;
+
+    touch.current = null;
+    const newPercent = Math.max(
+      0,
+      Math.min(100, sliderPercent.current + currentDelta.current)
+    );
+    sliderPercent.current = newPercent;
+    currentDelta.current = 0;
+    updateThumbPosition();
+    onStop?.();
+  }, [onStop, updateThumbPosition]);
 
   useEffect(() => {
     const ref = baseRef.current;
     if (!ref) return;
 
     const options = { passive: false };
-    // touch input handler
+    // Touch event listeners
     ref.addEventListener("touchstart", touchStart, options);
     ref.addEventListener("touchend", touchEnd, options);
     ref.addEventListener("touchmove", touchMove, options);
     ref.addEventListener("touchcancel", touchEnd, options);
-    // // mouse input handler
-    // ref.addEventListener("mousedown", touchStart, options);
-    // ref.addEventListener("mouseup", touchEnd, options);
-    // ref.addEventListener("mousemove", touchMove, options);
-    // ref.addEventListener("mouseleave", touchEnd, options);
+
+    // Mouse event listeners
+    ref.addEventListener("mousedown", handleMouseDown, options);
+    ref.addEventListener("mousemove", handleMouseMove, options);
+    ref.addEventListener("mouseup", handleMouseUp, options);
+    ref.addEventListener("mouseleave", handleMouseUp, options);
 
     return () => {
+      // Cleanup touch listeners
       ref.removeEventListener("touchstart", touchStart);
       ref.removeEventListener("touchend", touchEnd);
       ref.removeEventListener("touchmove", touchMove);
       ref.removeEventListener("touchcancel", touchEnd);
 
+      // Cleanup mouse listeners
+      ref.removeEventListener("mousedown", handleMouseDown);
+      ref.removeEventListener("mousemove", handleMouseMove);
+      ref.removeEventListener("mouseup", handleMouseUp);
+      ref.removeEventListener("mouseleave", handleMouseUp);
+
       if (animationFrameId.current) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [baseRef, touchEnd, touchMove, touchStart]);
+  }, [
+    baseRef,
+    touchStart,
+    touchEnd,
+    touchMove,
+    handleMouseDown,
+    handleMouseMove,
+    handleMouseUp,
+  ]);
 
   return (
     <div

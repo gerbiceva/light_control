@@ -31,17 +31,8 @@ export const TouchUI = () => {
       const data = new Uint8Array([index, value]);
       sendWsData(data);
     },
-    [sendWsData],
+    [sendWsData]
   );
-
-  // start websocket connection on mount
-  // useEffect(() => {
-  //   start();
-
-  //   // (  return () => {
-  //   //     stop();
-  //   //   };)
-  // }, [start, stop]);
 
   if (!connected) {
     return <LoadingOverlay visible={true} />;
