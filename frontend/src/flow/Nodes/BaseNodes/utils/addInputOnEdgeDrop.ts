@@ -29,6 +29,7 @@ export const addInputOnEdgeDrop = (
   ) {
     return;
   }
+
   const port = getPortFromNode(
     connectionState.fromHandle,
     connectionState.fromNode,
@@ -42,6 +43,13 @@ export const addInputOnEdgeDrop = (
   }
 
   freezeMousePos();
+  console.log("spotlight filter:", {
+    type: connectionState.fromHandle?.type,
+    dataType: port.type,
+    fromCap: cap,
+    fromHandle: connectionState.fromHandle,
+  });
+
   setSpotFilter({
     type: connectionState.fromHandle?.type,
     dataType: port.type,

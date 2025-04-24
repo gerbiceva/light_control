@@ -11,7 +11,7 @@ import { mergeNamespaceAndType } from "../../../sync/namespaceUtils";
 import { CustomFlowNode } from "../CustomNodeType";
 
 export const generateNodeInstFromCapability = (
-  capability: NodeCapability,
+  capability: NodeCapability
 ): CustomFlowNode => {
   const pos = $flowInst.get()?.screenToFlowPosition($frozenMousePos.get());
   return {
@@ -28,20 +28,20 @@ export const generateNodeInstFromCapability = (
 };
 
 export const generateComputeNodeFromCapability = (
-  capability: NodeCapability,
+  capability: NodeCapability
 ) => {
   const inputStack = (
     <Stack gap="xs">
-      {capability.inputs.map((input) => (
-        <DynamicPort port={input} type="target" key={input.name} />
+      {capability.inputs.map((input, i) => (
+        <DynamicPort port={input} type="target" key={input.name} index={i} />
       ))}
     </Stack>
   );
 
   const outputStack = (
     <Stack gap="xs">
-      {capability.outputs.map((input) => (
-        <DynamicPort port={input} type="source" key={input.name} />
+      {capability.outputs.map((input, i) => (
+        <DynamicPort port={input} type="source" key={input.name} index={i} />
       ))}
     </Stack>
   );

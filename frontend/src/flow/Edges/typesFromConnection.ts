@@ -11,13 +11,14 @@ export const getPortFromNode = (
   if (!handle || !node) {
     return;
   }
+
   const fromCap = node.data.capability;
 
   if (type == "target") {
-    return fromCap?.inputs.find((port) => port.name == handle.id);
+    return fromCap?.inputs[parseInt(handle.id!)];
   }
   if (type == "source") {
-    return fromCap?.outputs.find((port) => port.name == handle.id);
+    return fromCap?.outputs[parseInt(handle.id!)];
   }
 };
 
@@ -42,16 +43,16 @@ export const getConnectionProperties = (
   const from = nodes.find((node) => node.id == edge.source);
 
   const fromCap = from ? from.data.capability : undefined;
-  const fromPort = fromCap?.outputs.find(
-    (cap) => cap.name == edge.sourceHandle
-  );
+  const fromPort = fromCap?.outputs[parseInt(edge.sourceHandle!)];
 
   // get to node, namespace, type, capability and port
   const to = nodes.find((node) => node.id == edge.target);
   const toCap = to ? to.data.capability : undefined;
-  const toPort = toCap?.inputs.find((cap) => cap.name == edge.targetHandle);
+  const targetHandleIndex = edge.targetHandle!;
+  const toPort = toCap?.inputs[parseInt(targetHandleIndex)];
+
   const targetEdges = edges.filter(
-    (edge) => edge.target == to?.id && edge.targetHandle == toPort?.name
+    (edge) => edge.target == to?.id && edge.targetHandle == targetHandleIndex
   );
 
   return {

@@ -7,9 +7,10 @@ import { HandleType } from "@xyflow/react";
 export interface IPortProps {
   port: Port;
   type: HandleType;
+  index: number;
 }
 
-export const DynamicPort = ({ port, type }: IPortProps) => {
+export const DynamicPort = ({ port, type, index }: IPortProps) => {
   const col = getColorFromEnum(port.type);
   return (
     <Flex
@@ -17,7 +18,7 @@ export const DynamicPort = ({ port, type }: IPortProps) => {
       align="center"
       gap="sm"
     >
-      <TypedHandle color={col[5]} id={port.name} type={type} />
+      <TypedHandle color={col[5]} id={index.toString()} type={type} />
       <Text size="xs">{port.name}</Text>
     </Flex>
   );

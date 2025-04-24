@@ -10,7 +10,7 @@ import { CustomSpotData } from "./CustomSpot/CustomSpotData";
 import { CustomSpotlightGroups } from "./CustomSpot/CustomSpotlight";
 import { getColorFromString } from "../../utils/colorUtils";
 import { $spotFilter } from "../../globalStore/spotlightFilterStore";
-import { getColoredEdge } from "../../flow/Edges/addColoredEdge";
+import { getColoredEdge } from "../../flow/Edges/getColoredEdge";
 import { CustomFlowNode } from "../../flow/Nodes/CustomNodeType";
 import { addEdge, addNode } from "../../crdt/repo";
 
@@ -23,25 +23,33 @@ export const useActions = (): CustomSpotlightGroups[] => {
     addNode(node);
 
     if (spotFilter && cap) {
-      addEdge(
-        spotFilter.type == "target"
-          ? getColoredEdge({
-              source: node.id,
-              sourceHandle: cap.outputs.filter(
-                (port) => port.type == spotFilter.dataType
-              )[0].name,
-              target: spotFilter.fromHandle.nodeId,
-              targetHandle: spotFilter.fromHandle.id!,
-            })
-          : getColoredEdge({
-              source: spotFilter.fromHandle.nodeId,
-              sourceHandle: spotFilter.fromHandle.id!,
-              target: node.id,
-              targetHandle: cap.inputs.filter(
-                (port) => port.type == spotFilter.dataType
-              )[0].name,
-            })
-      );
+      if (spotFilter.type == "target") {
+        cap.outputs.forEach((port, i) => {
+          if (port.type == spotFilter.dataType) {
+            return addEdge(
+              getColoredEdge({
+                source: node.id,
+                sourceHandle: i.toString(),
+                target: spotFilter.fromHandle.nodeId,
+                targetHandle: spotFilter.fromHandle.id!,
+              })
+            );
+          }
+        });
+      } else {
+        cap.outputs.forEach((port, i) => {
+          if (port.type == spotFilter.dataType) {
+            return addEdge(
+              getColoredEdge({
+                source: spotFilter.fromHandle.nodeId,
+                sourceHandle: spotFilter.fromHandle.id!,
+                target: node.id,
+                targetHandle: i.toString(),
+              })
+            );
+          }
+        });
+      }
     }
   }, []);
 

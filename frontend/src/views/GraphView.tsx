@@ -38,7 +38,7 @@ import { getColorFromEnum } from "../utils/colorUtils";
 import { addEdge, onEdgesChange, onNodesChange } from "../crdt/repo";
 import { useYjsState } from "../crdt/globalSync";
 import { useSubgraphs } from "../globalStore/subgraphStore";
-import { getColoredEdge } from "../flow/Edges/addColoredEdge";
+import { getColoredEdge } from "../flow/Edges/getColoredEdge";
 
 const fitViewOptions: FitViewOptions = {
   padding: 300,
@@ -81,6 +81,7 @@ export const NodeView = () => {
   );
 
   const onConnect: OnConnect = useCallback((connection) => {
+    console.log({ connection });
     addEdge(getColoredEdge(connection));
   }, []);
 

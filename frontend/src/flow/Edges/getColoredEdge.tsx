@@ -8,6 +8,7 @@ export const getColoredEdge = (edgeParams: Connection) => {
   if (!t) {
     return;
   }
+  // console.log(edgeParams);
 
   const edge: Edge = {
     id: generateFlowId(),

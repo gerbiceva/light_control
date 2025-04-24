@@ -14,16 +14,16 @@ import {
 import { CustomFlowNode } from "../../CustomNodeType";
 import { addEdge, addNode } from "../../../../crdt/repo";
 import { $spotFilter } from "../../../../globalStore/spotlightFilterStore";
-import { getColoredEdge } from "../../../Edges/addColoredEdge";
+import { getColoredEdge } from "../../../Edges/getColoredEdge";
 import { NodeCapability } from "../../../../grpc/client_code/service";
 
 export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
-  (cap) => ({
+  (cap, i) => ({
     id: cap.name,
     label: cap.name,
     description: cap.description,
     onClick: () => {
-      createNewNode(cap);
+      createNewNode(cap, i);
     },
     capability: cap,
     leftSection: (
@@ -34,7 +34,7 @@ export const inputNodesActions: CustomSpotData[] = primitiveCapabilities.map(
   })
 );
 
-const createNewNode = (cap: NodeCapability) => {
+const createNewNode = (cap: NodeCapability, capIndex: number) => {
   const spotFilter = $spotFilter.get();
   const node = generateNodeInstFromInput(
     mergeNamespaceAndType("primitive", cap.name)
@@ -45,7 +45,7 @@ const createNewNode = (cap: NodeCapability) => {
       spotFilter.type == "target"
         ? getColoredEdge({
             source: node.id,
-            sourceHandle: cap.name,
+            sourceHandle: capIndex.toString(),
             target: spotFilter.fromHandle.nodeId,
             targetHandle: spotFilter.fromHandle.id!,
           })
@@ -53,7 +53,7 @@ const createNewNode = (cap: NodeCapability) => {
             source: spotFilter.fromHandle.nodeId,
             sourceHandle: spotFilter.fromHandle.id!,
             target: node.id,
-            targetHandle: cap.name,
+            targetHandle: capIndex.toString(),
           })
     );
   }
