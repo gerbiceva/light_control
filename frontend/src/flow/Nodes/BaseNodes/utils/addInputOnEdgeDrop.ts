@@ -9,8 +9,6 @@ export const addInputOnEdgeDrop = (
   _event: MouseEvent | TouchEvent,
   connectionState: FinalConnectionState
 ) => {
-  console.log({ connectionState });
-
   if (
     !connectionState.fromNode ||
     !isCustomFlowNode(connectionState.fromNode)

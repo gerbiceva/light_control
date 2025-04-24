@@ -40,9 +40,6 @@ const createNewNode = (cap: NodeCapability) => {
     mergeNamespaceAndType("primitive", cap.name)
   );
 
-  console.log({ spotFilter });
-  console.log({ cap });
-
   if (spotFilter && cap) {
     addEdge(
       spotFilter.type == "target"
@@ -69,8 +66,6 @@ export const generateNodeInstFromInput = (type: string): CustomFlowNode => {
   if (!capability) {
     throw new Error(`Capability not found for type ${type}`);
   }
-
-  console.log(type);
 
   return {
     id: generateFlowId(),

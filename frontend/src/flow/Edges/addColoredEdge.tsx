@@ -20,7 +20,6 @@ export const getColoredEdge = (edgeParams: Connection) => {
       strokeWidth: 3,
     },
   };
-  console.log(edge);
 
   return edge;
 };
