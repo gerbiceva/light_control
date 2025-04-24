@@ -22,12 +22,12 @@ export const websocketProvider = new WebsocketProvider(
   }
 );
 
-websocketProvider.on("status", (wsStatusEv) => {
-  console.log({ ev: wsStatusEv });
-});
-websocketProvider.on("sync", (wsSyncEv) => {
-  console.log({ ev: wsSyncEv });
-});
+// websocketProvider.on("status", (wsStatusEv) => {
+//   console.log({ ev: wsStatusEv });
+// });
+// websocketProvider.on("sync", (wsSyncEv) => {
+//   console.log({ ev: wsSyncEv });
+// });
 
 // Add to repo.ts
 export const waitForSync = (): Promise<void> => {
@@ -48,9 +48,9 @@ const clientTransaction = (transactionFunc: () => void) => {
   Y.transact(yAppState, transactionFunc, transactionName);
 };
 
-yAppState.on("update", (_, __, doc) => {
-  console.log(doc.toJSON());
-});
+// yAppState.on("update", (_, __, doc) => {
+//   console.log(doc.toJSON());
+// });
 
 export const initializeYState = async (): Promise<boolean> => {
   try {
@@ -103,7 +103,7 @@ export const getActiveYgraph = () => {
   if (!g) {
     return;
   }
-  console.log({ g });
+  // console.log({ g });
 
   return (g.toJSON() as SubGraph) || undefined;
 };
@@ -194,7 +194,17 @@ const processSingleChange = (chage: NodeChange<CustomFlowNode>) => {
     }
 
     // case "dimensions":
-    // case "select":
+    case "select": {
+      const updateIndex = currentNodes.findIndex((n) => n.id === change.id);
+      if (updateIndex !== -1) {
+        const nodeToUpdate = yNodes.get(updateIndex);
+
+        //@ts-expect-error for Yjs types are plain wrong
+        nodeToUpdate.set("selected", change.selected);
+      }
+      return;
+    }
+
     case "position": {
       const updateIndex = currentNodes.findIndex((n) => n.id === change.id);
       if (updateIndex !== -1) {

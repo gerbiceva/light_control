@@ -12,7 +12,9 @@ syncedAppState = ydoc.get("syncedAppState", type=Map)
 def cb(events):
     for event in events:
         event: MapEvent = event
-        print(f"Target: {event.target}", f"kys:{event.keys}")
+        # print(f"Target: {event.target}")
+        # print(f"kys:{event.keys}")
+        print("change")
 
 
 async def client(port: int, room_name: str):

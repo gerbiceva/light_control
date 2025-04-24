@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/react";
 import { atom } from "nanostores";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { SubGraph } from "../components/Subgraph/Subgraph";
 import { generateGraphId } from "./flowStore";
 import { $syncedAppState } from "../crdt/globalSync";
@@ -52,9 +52,9 @@ export const useSubgraphs = () => {
       : syncedStore.subgraphs[activeGraph];
   }, [activeGraph, syncedStore]);
 
-  useEffect(() => {
-    console.log({ activeGraphObj });
-  }, [activeGraphObj]);
+  // useEffect(() => {
+  //   console.log({ activeGraphObj });
+  // }, [activeGraphObj]);
 
   const setActiveGraph = useCallback((graph: "main" | number) => {
     $subgraphPages.set({
