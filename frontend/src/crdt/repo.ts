@@ -5,6 +5,7 @@ import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
 import { SubGraph } from "../components/Subgraph/Subgraph";
 import { $subgraphPages } from "../globalStore/subgraphStore";
 import { WebsocketProvider } from "y-websocket";
+import { toShallowYMap } from "../ flowToY/syncUtils";
 
 export const yAppState = new Y.Doc();
 export const roomName = "app-state";
@@ -21,13 +22,6 @@ export const websocketProvider = new WebsocketProvider(
   }
 );
 
-// websocketProvider.ws?.addEventListener("error", (er) => {
-//   console.log("we err", { er });
-// });
-// websocketProvider.ws?.addEventListener("message", (msg) => {
-//   const dec = new TextDecoder("utf-8");
-//   console.log("ws msg", { msg }, dec.decode(msg.data));
-// });
 websocketProvider.on("status", (wsStatusEv) => {
   console.log({ ev: wsStatusEv });
 });
@@ -70,13 +64,8 @@ export const initializeYState = async (): Promise<boolean> => {
 
 export const getYState2 = () => {
   const st = (YSyncStore.get("state") as Y.Map<AppState>) || undefined;
-  // console.log("store", st && st.toJSON());
   return st;
 };
-
-// const getYState = () => {
-//   return getYState2().toJSON() as AppState;
-// };
 
 export const getActiveYgraph2 = (): Y.Map<SubGraph> | undefined => {
   const st = getYState2();
@@ -184,15 +173,16 @@ const processSingleChange = (chage: NodeChange<CustomFlowNode>) => {
   const g = getActiveYgraph2();
   if (!g) return;
 
-  const yNodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+  const yNodes = g.get("nodes") as Y.Array<Y.Map<CustomFlowNode>> | undefined;
   if (!yNodes) return;
   const change = chage;
-  const currentNodes = yNodes.toArray();
+  const currentNodes = yNodes
+    .toArray()
+    .map((node) => node.toJSON()) as CustomFlowNode[];
   switch (change.type) {
     case "add": {
       console.log("added", change.item);
-
-      yNodes.push([change.item]);
+      yNodes.push([toShallowYMap(change.item)]);
       return;
     }
 
@@ -204,21 +194,22 @@ const processSingleChange = (chage: NodeChange<CustomFlowNode>) => {
     }
 
     // case "dimensions":
-    case "select":
+    // case "select":
     case "position": {
       const updateIndex = currentNodes.findIndex((n) => n.id === change.id);
       if (updateIndex !== -1) {
-        const updatedNode = {
-          ...currentNodes[updateIndex],
-          ...("position" in change ? { position: change.position } : {}),
-          ...("dimensions" in change ? { dimensions: change.dimensions } : {}),
-          ...("selected" in change ? { selected: change.selected } : {}),
-        };
+        // const updatedNode = {
+        //   ...currentNodes[updateIndex],
+        //   ...("position" in change ? { position: change.position } : {}),
+        //   // ...("dimensions" in change ? { dimensions: change.dimensions } : {}),
+        //   // ...("selected" in change ? { selected: change.selected } : {}),
+        // };
 
-        console.log("change", change.type, updatedNode);
+        // console.log("change", change.type, updatedNode);
+        const nodeToUpdate = yNodes.get(updateIndex);
 
-        yNodes.delete(updateIndex, 1);
-        yNodes.insert(updateIndex, [updatedNode]);
+        //@ts-expect-error for Yjs types are plain wrong
+        nodeToUpdate.set("position", change.position);
       }
       return;
     }
@@ -229,7 +220,7 @@ const processSingleChange = (chage: NodeChange<CustomFlowNode>) => {
         // First delete the old node
         yNodes.delete(replaceIndex, 1);
         // Then add the new node at the same position
-        yNodes.insert(replaceIndex, [change.item]);
+        yNodes.insert(replaceIndex, [toShallowYMap(change.item)]);
       }
       return;
     }
@@ -329,11 +320,12 @@ export const addNode = (node: CustomFlowNode) => {
       return;
     }
 
-    const nodes = g.get("nodes") as Y.Array<CustomFlowNode> | undefined;
+    const nodes = g.get("nodes") as Y.Array<Y.Map<CustomFlowNode>> | undefined;
     if (!nodes) {
       console.error("no nodes key, cant complete node push");
       return;
     }
-    nodes.push([node]);
+
+    nodes.push([toShallowYMap(node)]);
   });
 };

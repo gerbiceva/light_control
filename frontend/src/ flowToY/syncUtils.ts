@@ -1,58 +1,39 @@
-import { CustomFlowEdge, CustomFlowNode } from "../flow/Nodes/CustomNodeType";
-import { getCapabilityFromNameNamespace } from "../globalStore/capabilitiesStore";
-import { generateFlowId } from "../globalStore/flowStore";
-import {
-  mergeNamespaceAndType,
-  splitTypeAndNamespace,
-} from "../sync/namespaceUtils";
-import { YEdge, YNode } from "./mixedStoreDto";
+import * as Y from "yjs";
 
-// NODES
-export const yToFlowNode = (ynode: YNode): CustomFlowNode | undefined => {
-  const cap = getCapabilityFromNameNamespace(ynode.name, ynode.namespace);
-  if (!cap) {
-    return;
+/**
+ * Converts a value to a shallow Y.Map.
+ * - For objects: creates a Y.Map with all enumerable own properties
+ * - For arrays: creates a Y.Map with index-number keys
+ * - For primitives: creates an empty Y.Map (or could wrap in a special key)
+ *
+ * @param value - The value to convert to a Y.Map
+ * @returns A new Y.Map containing the shallow representation
+ */
+export function toShallowYMap<T>(value: T): Y.Map<T> {
+  const yMap = new Y.Map<T>();
+
+  if (value === null || value === undefined) {
+    throw new Error("Empty or undefined " + value);
   }
 
-  return {
-    data: {
-      capability: cap,
-      value: ynode.value,
-    },
-    id: ynode.id,
-    position: ynode.position,
-    type: mergeNamespaceAndType(ynode.namespace, ynode.name),
-  };
-};
+  if (typeof value === "object") {
+    // Handle arrays (convert to {0: val, 1: val, ...})
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        yMap.set(index.toString(), item);
+      });
+    }
+    // Handle plain objects
+    else {
+      Object.entries(value).forEach(([key, val]) => {
+        yMap.set(key, val);
+      });
+    }
+  }
+  // Optionally handle primitives by wrapping them
+  // else {
+  //     yMap.set('value', value);
+  // }
 
-export const flowToYNode = (node: CustomFlowNode): YNode | undefined => {
-  const { namespace, type } = splitTypeAndNamespace(node.type!);
-  return {
-    id: node.id,
-    name: type,
-    namespace,
-    position: node.position,
-    state: "idle",
-    value: node.data.value,
-  };
-};
-
-// EDGES
-export const yToFlowEdge = (edge: YEdge): CustomFlowEdge => {
-  return {
-    id: generateFlowId(),
-    source: edge.fromNodeId,
-    sourceHandle: edge.fromNodeHandle,
-    target: edge.toNodeId,
-    targetHandle: edge.toNodeHandle,
-  };
-};
-
-export const flowToYEdge = (edge: CustomFlowEdge): YEdge => {
-  return {
-    fromNodeId: edge.source,
-    fromNodeHandle: edge.sourceHandle!,
-    toNodeId: edge.target,
-    toNodeHandle: edge.targetHandle!,
-  };
-};
+  return yMap;
+}
